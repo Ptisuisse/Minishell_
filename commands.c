@@ -1,5 +1,19 @@
 #include "minishell.h"
 
+//void	command_manager(t_command *command_list, t_data data)
+//{
+//	int	exec;
+
+//	while (command_list)
+//	{
+//		exec = select_commands(command_list, data);
+//		if (exec == -1)
+//			exit(1);
+//		command_list = command_list->next;
+//	}
+//	free_commands(command_list);
+//}
+
 void	start_builtins(char **command, t_data data)
 {
 	if (ft_strcmp(command[0], "exit"))
@@ -108,4 +122,3 @@ int	pwd_cmd(void)
 		return (0);
 	}
 }
-

@@ -24,8 +24,6 @@ int	check_builtins(char **command, t_data data)
 		status = 1;
 	if (status == 1)
 		start_builtins(command, data);
-	//else
-	//	printf("No such command.\n");
 	return (status);
 }
 
@@ -171,37 +169,37 @@ void	print_commands(t_command *command_list)
 	}
 }
 
-void	free_commands(t_command *command_list)
-{
-	int			j;
-	t_command	*temp;
-
-	while (command_list)
-	{
-		temp = command_list;
-		command_list = command_list->next;
-		j = 0;
-		while (temp->args[j])
-			free(temp->args[j++]);
-		free(temp->input_file);
-		free(temp->output_file);
-		free(temp->append_file);
-		free(temp);
-	}
-}
-
 //void	free_commands(t_command *command_list)
 //{
-//	t_command	*tmp;
+//	int			j;
+//	t_command	*temp;
 
-//	if (!command_list)
-//		return ;
 //	while (command_list)
 //	{
-//		tmp = command_list->next;
-//		free(command_list);
-//		command_list = tmp;
+//		temp = command_list;
+//		command_list = command_list->next;
+//		j = 0;
+//		while (temp->args[j])
+//			free(temp->args[j++]);
+//		free(temp->input_file);
+//		free(temp->output_file);
+//		free(temp->append_file);
+//		free(temp);
 //	}
-//	command_list = NULL;
-//	free(command_list);
 //}
+
+void	free_commands(t_command *command_list)
+{
+	t_command	*tmp;
+
+	if (!command_list)
+		return ;
+	while (command_list)
+	{
+		tmp = command_list->next;
+		free(command_list);
+		command_list = tmp;
+	}
+	command_list = NULL;
+	free(command_list);
+}

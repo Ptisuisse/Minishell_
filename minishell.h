@@ -12,7 +12,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-
 # define MAX_TOKENS 100
 
 typedef struct s_command
@@ -25,6 +24,7 @@ typedef struct s_command
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;
+	int					pid;
 }						t_command;
 
 // typedef struct s_command_node
@@ -40,7 +40,8 @@ typedef struct s_data
 }						t_data;
 
 /*prompt*/
-
+t_command				*ft_lstlst(t_command *lst);
+void					command_manager(t_command *command_list, t_data data);
 /*utils.*/
 void					free_commands(t_command *command_list);
 int						open_quote(char *line);
@@ -71,5 +72,6 @@ void					handle_signal(int sig);
 int						signal_handle(void);
 void					ft_create_pipe(t_command *command, t_data data);
 int						choose_command(t_command *command, t_data data);
+int						execute_piped_commands(t_command *command);
 
 #endif
