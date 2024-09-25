@@ -29,7 +29,7 @@ int	check_builtins(char **command, t_data data)
 	return (status);
 }
 
-void	parse_argument(const char **input, char *buffer, int *buf_index)
+void	parse_argument(const char **input, char *buffer, int *buf_index) // test
 {
 	char	quote_type;
 	int		in_quotes;
