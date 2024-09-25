@@ -44,6 +44,8 @@ void	ft_pipe(t_command *command, t_data data)
 		waitpid(command->pid, NULL, 0);
 	}
 }
+
+
 // close(command->pipe[0]);
 // dup2(command->pipe[1], STDOUT_FILENO);
 // close(command->pipe[1]);
