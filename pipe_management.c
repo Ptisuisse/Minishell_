@@ -13,7 +13,7 @@ int	select_commands(t_command *commands, t_data data)
 		result = choose_command(commands, data);
 	return (result);
 }
-
+mes couilles
 /*ANCIENNE VERSION*/
 
 // int	select_commands(t_command *commands, t_data data)
