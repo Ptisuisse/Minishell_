@@ -15,13 +15,13 @@ int	main(char **envp)
 	int		fd4;
 	int		fd1[2];
 
-	pipe(fd);
+	pipe(fd1);
 	fd[1] = open("test.txt", O_RDWR);
 	id = fork();
 	if (id == 0)
 	{
 		close(fd1[0]);
-		fd1[1] = dup2(fd[1], 1);
+		fd1[1] = dup2(fd[1], STDOUT_FILENO); ----->> 
 		write(fd1[1], "Hella\n", 6);
 		//execl("usr/bin/grep", "grep", "-c", "H", fd1, NULL);
 		execl("usr/bin/wc", "wc", "-l", fd1, NULL);

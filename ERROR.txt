@@ -1,0 +1,5 @@
+OUR MINISH : Minishell > echo hello "|"| echo world
+hello || echo world
+
+BASH : lvan-slu@2B7:~/Documents/Minishell$ echo hello "|"| echo world
+world

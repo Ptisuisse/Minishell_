@@ -13,6 +13,8 @@
 # include <unistd.h>
 
 # define MAX_TOKENS 100
+# define READ_END 0
+# define WRITE_END 1
 
 typedef struct s_command
 {
@@ -39,8 +41,8 @@ typedef struct s_data
 	// struct s_data	next;
 }						t_data;
 
-/*prompt*/
-t_command				*ft_lstlst(t_command *lst);
+	/*prompt*/
+t_command *ft_lstlst(t_command *lst);
 void					command_manager(t_command *command_list, t_data data);
 /*utils.*/
 void					free_commands(t_command *command_list);
