@@ -1,20 +1,6 @@
 #include "minishell.h"
 
-//void	command_manager(t_command *command_list, t_data data)
-//{
-//	int	exec;
-
-//	while (command_list)
-//	{
-//		exec = select_commands(command_list, data);
-//		if (exec == -1)
-//			exit(1);
-//		command_list = command_list->next;
-//	}
-//	free_commands(command_list);
-//}
-
-void	start_builtins(char **command, t_data data)
+void	start_builtins(char **command)
 {
 	if (ft_strcmp(command[0], "exit"))
 		exit(0);
@@ -24,41 +10,23 @@ void	start_builtins(char **command, t_data data)
 		cd_cmd(command[1]);
 	else if (ft_strcmp(command[0], "pwd"))
 		pwd_cmd();
-	else if (ft_strcmp(command[0], "env"))
-		env_cmd(data);
+	// else if (ft_strcmp(command[0], "env"))
+	// 	env_cmd(data);
 }
 
-int	choose_command(t_command *command, t_data data)
+int	choose_command(t_command *command)
 {
 	int	result;
 
 	result = -1;
-	if (check_builtins(command->args, data))
+	if (check_builtins(command->args))
 		result = 0;
-	else if (execute_command(command->args[0], command->args))
-		result = 0;
-	return (result);
-}
-
-int	execute_command(char *pathname, char **args)
-{
-	char	*path;
-	int		pid;
-
-	pid = fork();
-	path = ft_strjoin("/bin/", pathname);
-	if (pid == 0)
+	else
 	{
-		if (execve(path, args, NULL) == -1)
-		{
-			printf("execve\n");
-			free(path);
-			return (0);
-		}
+		exec_command(command->args[0], command->args);
+		result = 0;
 	}
-	waitpid(pid, NULL, 0);
-	free(path);
-	return (1);
+	return (result);
 }
 
 void	env_cmd(t_data data)

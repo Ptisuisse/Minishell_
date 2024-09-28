@@ -5,10 +5,7 @@ int	main(int argc, char **argv, char **envp)
 	char		*input;
 	t_command	*command_list;
 	t_data		data;
-	int			wpid;
-	int			status2;
 
-	// int			exec;
 	(void)argc;
 	(void)argv;
 	command_list = NULL;
@@ -27,19 +24,9 @@ int	main(int argc, char **argv, char **envp)
 		}
 		// print_commands(command_list);
 		free(input);
-		select_commands(command_list, data);
-		wpid = 0;
-		int status = 0;
-		status2 = 0;
-		while (wpid != -1)
-		{
-			wpid = waitpid(-1, &status, 0);
-			if (wpid == command_list->pid)
-				status2 = status;
-		}
+		execute_commands(command_list);
 		free_commands(command_list);
 		command_list = NULL;
-		////		add_history(input);
 	}
 	return (0);
 }

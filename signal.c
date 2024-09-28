@@ -1,6 +1,6 @@
 #include "minishell.h"
 
- void	handle_signal(int sig)
+void	handle_signal(int sig)
 {
 	if (sig == SIGINT) //<<------- Autre soluce [ctrl +c ] sig 2 ?
 		write(1, "\nMinishell > ", 13);
@@ -9,7 +9,7 @@
 	return ;
 }
 
- int	signal_handle(void)
+int	signal_handle(void)
 {
 	struct sigaction sa;
 
