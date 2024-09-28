@@ -1,37 +1,37 @@
 #include "minishell.h"
 
-void execute_commands(t_command *commands) 
+void commands_manager(t_command *commands, t_data *data)
 {
     t_command *cmd = commands;
     int prev_pipe_read = -1;
     int status;
 
-    while (cmd) 
+    while (cmd)
 	{
         if (cmd->next)
             pipe(cmd->pipe);
         cmd->pid = fork();
-		if (cmd->pid == 0) 
+		if (cmd->pid == 0)
 		{
-            if (prev_pipe_read != -1) 
+            if (prev_pipe_read != -1)
 			{
                 dup2(prev_pipe_read, STDIN_FILENO);
                 close(prev_pipe_read);
             }
-            if (cmd->next) 
+            if (cmd->next)
 			{
                 close(cmd->pipe[READ_END]);
                 dup2(cmd->pipe[WRITE_END], STDOUT_FILENO);
                 close(cmd->pipe[WRITE_END]);
             }
-			choose_command(cmd);
+			choose_command(cmd, data);
             exit(EXIT_FAILURE);
-        } 
+        }
 		else
 		{
-            if (prev_pipe_read != -1) 
+            if (prev_pipe_read != -1)
                 close(prev_pipe_read);
-            if (cmd->next) 
+            if (cmd->next)
 			{
                 close(cmd->pipe[WRITE_END]);
                 prev_pipe_read = cmd->pipe[READ_END];

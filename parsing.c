@@ -1,29 +1,31 @@
 #include "minishell.h"
 
-int	check_builtins(char **command)
+int	check_builtins(char **command, t_data *data)
 {
 	int	status;
 
 	// printf("Je suis dans check_builtins\n");
 	status = 0;
-	if (ft_strcmp(command[0], "$"))
+	if (!ft_strcmp(command[0], "$"))
 		status = 1;
-	if (ft_strcmp(command[0], "exit"))
+	if (!ft_strcmp(command[0], "exit"))
 		status = 1;
-	else if (ft_strcmp(command[0], "echo"))
+	else if (!ft_strcmp(command[0], "echo"))
 		status = 1;
-	else if (ft_strcmp(command[0], "cd"))
+	else if (!ft_strcmp(command[0], "cd"))
 		status = 1;
-	else if (ft_strcmp(command[0], "export"))
+	else if (!ft_strcmp(command[0], "export"))
 		status = 1;
-	else if (ft_strcmp(command[0], "unset"))
+	else if (!ft_strcmp(command[0], "unset"))
 		status = 1;
-	else if (ft_strcmp(command[0], "env"))
+	else if (!ft_strcmp(command[0], "env"))
 		status = 1;
-	else if (ft_strcmp(command[0], "pwd"))
+	else if (!ft_strcmp(command[0], "pwd"))
+		status = 1;
+	else if (!ft_strcmp(command[0], "clear"))
 		status = 1;
 	if (status == 1)
-		start_builtins(command);
+		start_builtins(command, data);
 	return (status);
 }
 
@@ -169,27 +171,7 @@ void	print_commands(t_command *command_list)
 	}
 }
 
-// void	free_commands(t_command *command_list)
-//{
-//	int			j;
-//	t_command	*temp;
-
-//	while (command_list)
-//	{
-//		temp = command_list;
-//		command_list = command_list->next;
-//		j = 0;
-//		while (temp->args[j])
-//			free(temp->args[j++]);
-//		free(temp->input_file);
-//		free(temp->output_file);
-//		free(temp->append_file);
-//		free(temp);
-//	}
-//}
-
-
- void	free_commands(t_command *command_list)
+void	free_commands(t_command *command_list)
 {
 	t_command	*tmp;
 

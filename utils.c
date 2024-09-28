@@ -1,5 +1,18 @@
 #include "minishell.h"
 
+// void	printf_list(t_env *env_list)
+//{
+//	t_env	*tmp;
+
+//	tmp = env_list;
+//	while (tmp)
+//	{
+//		printf("[%d]%s", i, tmp->name);
+//		printf("%s\n", tmp->value);
+//		tmp = tmp->next;
+//	}
+//}
+
 char	*ft_strcpy(char *dst, const char *src)
 {
 	size_t	i;
@@ -38,8 +51,5 @@ int	ft_strcmp(const char *s1, const char *s2)
 	i = 0;
 	while (*(s1 + i) && *(s1 + i) == *(s2 + i))
 		i++;
-	if (*((unsigned char *)s1 + i) - *((unsigned char *)s2 + i) == 0)
-		return (1);
-	else
-		return (0);
+	return (*((unsigned char *)s1 + i) - *((unsigned char *)s2 + i));
 }

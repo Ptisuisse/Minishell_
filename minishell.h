@@ -26,8 +26,15 @@ typedef struct s_command
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;
-	pid_t					pid;
+	pid_t				pid;
 }						t_command;
+
+typedef struct s_env
+{
+	char				*name;
+	char				*value;
+	struct s_env		*next;
+}						t_env;
 
 // typedef struct s_command_node
 //	{
@@ -38,42 +45,50 @@ typedef struct s_command
 typedef struct s_data
 {
 	char				**env;
+	t_env				*env_list;
 	// struct s_data	next;
 }						t_data;
 
+void					create_env_list(t_data *data);
+void					printf_list(t_env *env_list);
+void					clear_cmd(void);
+void					free_env(t_env *command_list);
 /*prompt*/
 
 /*utils.*/
-int	ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcat(char *dest, const char *src);
-char	*ft_strcpy(char *dst, const char *src);
+int						ft_strcmp(const char *s1, const char *s2);
+char					*ft_strcat(char *dest, const char *src);
+char					*ft_strcpy(char *dst, const char *src);
 /*commands*/
-void	start_builtins(char **command);
-int	choose_command(t_command *command);
-void	env_cmd(t_data data);
-int	echo_cmd(char **args);
-int	cd_cmd(char *path);
-int	pwd_cmd(void);
+void					start_builtins(char **command, t_data *data);
+int						choose_command(t_command *command, t_data *data);
+void					env_cmd(t_data *data);
+int						echo_cmd(char **args, t_data *data);
+int						cd_cmd(char *path);
+int						pwd_cmd(void);
+int						export_cmd(t_data *data);
 /*pipe_management*/
-void execute_commands(t_command *commands);
-int	exec_command(char *pathname, char **args);
+void					commands_manager(t_command *commands, t_data *data);
+int						exec_command(char *pathname, char **args);
 /*parsing*/
-int	check_builtins(char **command);
-void	parse_argument(const char **input, char *buffer, int *buf_index);
-void	parse_redirection(const char **input, t_command *cmd);
-int	parse_command(const char **input, t_command *cmd);
-int	parse_command_line(const char *input, t_command **command_list);
-void	print_commands(t_command *command_list);
-void	free_commands(t_command *command_list);
+int						check_builtins(char **command, t_data *data);
+void					parse_argument(const char **input, char *buffer,
+							int *buf_index);
+void					parse_redirection(const char **input, t_command *cmd);
+int						parse_command(const char **input, t_command *cmd);
+int						parse_command_line(const char *input,
+							t_command **command_list);
+void					print_commands(t_command *command_list);
+void					free_commands(t_command *command_list);
 /*parsingutils*/
-t_command	*init_command(void);
-t_command	*ft_lstlst(t_command *lst);
-void	append_command_node(t_command **lst, t_command *new);
-void	quoting_choice(bool *double_q, bool *sing_q, int *index, char c);
-int	open_quote(char *line);
+t_command				*init_command(void);
+t_command				*ft_lstlst(t_command *lst);
+void					append_command_node(t_command **lst, t_command *new);
+void					quoting_choice(bool *double_q, bool *sing_q, int *index,
+							char c);
+int						open_quote(char *line);
 /*signal*/
-void	handle_signal(int sig);
-int	signal_handle(void);
-
+void					handle_signal(int sig);
+int						signal_handle(void);
 
 #endif
