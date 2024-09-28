@@ -2,15 +2,13 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	char		*input;
+	t_command	*command_list;
+	t_data		data;
+
 	(void)argc;
 	(void)argv;
-
-	char *input;
-	int status;
-	int exec;
-	t_command *temp;
-	t_command *command_list = NULL;
-	t_data data;
+	command_list = NULL;
 	data.env = envp;
 	while (1)
 	{
@@ -26,24 +24,9 @@ int	main(int argc, char **argv, char **envp)
 		}
 		// print_commands(command_list);
 		free(input);
-		temp = command_list;
-		// command_manager(command_list, data);
-		while (command_list)
-		{
-			exec = select_commands(command_list, data);
-			if (exec == -1)
-				exit(1);
-			command_list = command_list->next;
-		}
-		temp = ft_lstlst(temp);
-		while (temp)
-		{
-			waitpid(temp->pid, &status, 0);
-			temp = temp->prev;
-		}
+		execute_commands(command_list);
 		free_commands(command_list);
-		free_commands(temp);
-		////		add_history(input);
+		command_list = NULL;
 	}
 	return (0);
 }

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	check_builtins(char **command, t_data data)
+int	check_builtins(char **command)
 {
 	int	status;
 
@@ -23,7 +23,7 @@ int	check_builtins(char **command, t_data data)
 	else if (ft_strcmp(command[0], "pwd"))
 		status = 1;
 	if (status == 1)
-		start_builtins(command, data);
+		start_builtins(command);
 	return (status);
 }
 
@@ -169,7 +169,7 @@ void	print_commands(t_command *command_list)
 	}
 }
 
-//void	free_commands(t_command *command_list)
+// void	free_commands(t_command *command_list)
 //{
 //	int			j;
 //	t_command	*temp;
@@ -188,7 +188,8 @@ void	print_commands(t_command *command_list)
 //	}
 //}
 
-void	free_commands(t_command *command_list)
+
+ void	free_commands(t_command *command_list)
 {
 	t_command	*tmp;
 
@@ -201,5 +202,4 @@ void	free_commands(t_command *command_list)
 		command_list = tmp;
 	}
 	command_list = NULL;
-	free(command_list);
 }
