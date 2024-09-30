@@ -12,8 +12,9 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-
 # define MAX_TOKENS 100
+# define READ_END 0
+# define WRITE_END 1
 
 typedef struct s_command
 {
@@ -25,6 +26,7 @@ typedef struct s_command
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;
+	pid_t					pid;
 }						t_command;
 
 // typedef struct s_command_node
@@ -43,6 +45,7 @@ typedef struct s_data
 
 /*utils.*/
 
+
 void	print_commands(t_command *command_list);
 void					free_commands(t_command *command_list);
 int						open_quote(const char *line);
@@ -53,16 +56,17 @@ char					*ft_strcpy(char *dst, const char *src);
 char					*ft_strcat(char *dst, const char *src);
 int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
-int						pwd_cmd(void);
-int						check_builtins(char **command, t_data data);
-int						cd_cmd(char *path);
-int						execute_command(char *pathname, char **args);
-int						select_commands(t_command *commands, t_data data);
-void					start_builtins(char **command, t_data data);
-int						echo_cmd(char **args);
-void					env_cmd(t_data data);
-// void		create_fork(char *pathname, char **args);
+void	start_builtins(char **command);
+int	choose_command(t_command *command);
+void	env_cmd(t_data data);
+int	echo_cmd(char **args);
+int	cd_cmd(char *path);
+int	pwd_cmd(void);
+/*pipe_management*/
+void execute_commands(t_command *commands);
+int	exec_command(char *pathname, char **args);
 /*parsing*/
+
 
 void	parse_argument(const char **input, char *buffer, int *buf_index);
 void	parse_redirection(const char **input, t_command *cmd);
@@ -79,11 +83,10 @@ char *search_dollar(const char *input);
 int						parse_command_line(const char *input,
 							t_command **command_list);
 int						parse_command(const char **input, t_command *cmd);
+
 /*signal*/
-void					ft_pipe(t_command *command, t_data data);
-void					handle_signal(int sig);
-int						signal_handle(void);
-void					ft_create_pipe(t_command *command, t_data data);
-int						choose_command(t_command *command, t_data data);
+void	handle_signal(int sig);
+int	signal_handle(void);
+
 
 #endif
