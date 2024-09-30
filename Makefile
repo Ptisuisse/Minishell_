@@ -5,6 +5,7 @@ SRCS =	parsing.c \
 		utils.c \
 		parsingutils.c \
 		pipe_management.c \
+		redirect_management.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc

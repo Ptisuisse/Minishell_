@@ -1,6 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft/libft.h"
+# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -8,6 +9,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
@@ -21,7 +23,9 @@ typedef struct s_command
 	char				*command;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
+	int					input_fd;
 	char				*output_file;
+	int					output_fd;
 	char				*append_file;
 	int					pipe[2];
 	struct s_command	*next;
@@ -90,5 +94,9 @@ int						open_quote(char *line);
 /*signal*/
 void					handle_signal(int sig);
 int						signal_handle(void);
+
+/*redirect_management.c*/
+void					redirect_input(t_command *command);
+void					redirect_output(t_command *command);
 
 #endif

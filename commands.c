@@ -86,7 +86,6 @@ void	env_cmd(t_data *data)
 	tmp = data->env_list;
 	while (tmp)
 	{
-		printf("[%d]%s=%s\n", i, tmp->name, tmp->value);
 		i++;
 		tmp = tmp->next;
 	}
