@@ -60,9 +60,15 @@ void					free_env(t_env *command_list);
 /*prompt*/
 
 /*utils.*/
-int						ft_strcmp(const char *s1, const char *s2);
-char					*ft_strcat(char *dest, const char *src);
+void	print_commands(t_command *command_list);
+void					free_commands(t_command *command_list);
+int						open_quote(const char *line);
+t_command				*init_command(void);
+void					append_command_node(t_command **head,
+							t_command *new_node);
 char					*ft_strcpy(char *dst, const char *src);
+char					*ft_strcat(char *dst, const char *src);
+int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
 void					start_builtins(char **command, t_data *data);
 int						choose_command(t_command *command, t_data *data);
@@ -75,22 +81,24 @@ int						export_cmd(t_data *data);
 void					commands_manager(t_command *commands, t_data *data);
 int						exec_command(char *pathname, char **args);
 /*parsing*/
-int						check_builtins(char **command, t_data *data);
-void					parse_argument(const char **input, char *buffer,
-							int *buf_index);
-void					parse_redirection(const char **input, t_command *cmd);
-int						parse_command(const char **input, t_command *cmd);
+
+/*parsingutils*/
+void	parse_argument(const char **input, char *buffer, int *buf_index);
+void	parse_redirection(const char **input, t_command *cmd);
+int check_for_pipe(const char **input);
+char	*get_env_value(const char *input, int *i);
+int	check_quotes(const char **input, char *quote_type);
+void	handle_quotes(const char **input, char *buffer, int *buf_index,char quote_type);
+void	skip_spaces(const char **input);
+void	handle_dollar_sign(const char **input, char *buffer, int *buf_index);
+void	handle_double_quotes(const char **input, char *buffer, int *buf_index);
+void	handle_single_quotes(const char **input, char *buffer, int *buf_index);
+char *search_dollar(const char *input);
+//void					print_commands(t_command *command_list);
 int						parse_command_line(const char *input,
 							t_command **command_list);
-void					print_commands(t_command *command_list);
-void					free_commands(t_command *command_list);
-/*parsingutils*/
-t_command				*init_command(void);
-t_command				*ft_lstlst(t_command *lst);
-void					append_command_node(t_command **lst, t_command *new);
-void					quoting_choice(bool *double_q, bool *sing_q, int *index,
-							char c);
-int						open_quote(char *line);
+int						parse_command(const char **input, t_command *cmd);
+
 /*signal*/
 void					handle_signal(int sig);
 int						signal_handle(void);
