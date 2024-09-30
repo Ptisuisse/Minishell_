@@ -5,6 +5,9 @@ SRCS =	parsing.c \
 		utils.c \
 		parsingutils.c \
 		pipe_management.c \
+		env_var.c \
+		dollar.c \
+		redirections.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc
@@ -15,7 +18,7 @@ NAME = $(EXEC)
 
 $(NAME): $(OBJS)
 	$(MAKE) -j -C libft/ -s
-	$(CC) $(CFLAGS) -o $(EXEC) -lreadline $(OBJS) -Llibft -lft -I./libft
+	$(CC) $(CFLAGS) -o $(EXEC) $(OBJS) -Llibft -lft -I./libft -lreadline 
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

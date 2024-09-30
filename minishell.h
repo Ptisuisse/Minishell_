@@ -42,8 +42,10 @@ typedef struct s_data
 /*prompt*/
 
 /*utils.*/
+
+void	print_commands(t_command *command_list);
 void					free_commands(t_command *command_list);
-int						open_quote(char *line);
+int						open_quote(const char *line);
 t_command				*init_command(void);
 void					append_command_node(t_command **head,
 							t_command *new_node);
@@ -61,7 +63,19 @@ int						echo_cmd(char **args);
 void					env_cmd(t_data data);
 // void		create_fork(char *pathname, char **args);
 /*parsing*/
-void					print_commands(t_command *command_list);
+
+void	parse_argument(const char **input, char *buffer, int *buf_index);
+void	parse_redirection(const char **input, t_command *cmd);
+int check_for_pipe(const char **input);
+char	*get_env_value(const char *input, int *i);
+int	check_quotes(const char **input, char *quote_type);
+void	handle_quotes(const char **input, char *buffer, int *buf_index,char quote_type);
+void	skip_spaces(const char **input);
+void	handle_dollar_sign(const char **input, char *buffer, int *buf_index);
+void	handle_double_quotes(const char **input, char *buffer, int *buf_index);
+void	handle_single_quotes(const char **input, char *buffer, int *buf_index);
+char *search_dollar(const char *input);
+//void					print_commands(t_command *command_list);
 int						parse_command_line(const char *input,
 							t_command **command_list);
 int						parse_command(const char **input, t_command *cmd);
