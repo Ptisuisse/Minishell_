@@ -3,7 +3,7 @@
 void	handle_signal(int sig)
 {
 	if (sig == SIGINT) //<<------- Autre soluce [ctrl +c ] sig 2 ?
-		write(1, "\nMinishell > ", 13);
+		write(1, "\nMiniBash > ", 13);
 	else if (sig == SIGSEGV)
 		exit(1); // <<-------- FREE [ctrl + d] sig 11
 	return ;

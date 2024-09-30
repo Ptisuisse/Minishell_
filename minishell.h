@@ -1,6 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft/libft.h"
+# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -8,6 +9,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
@@ -21,13 +23,22 @@ typedef struct s_command
 	char				*command;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
+	int					input_fd;
 	char				*output_file;
+	int					output_fd;
 	char				*append_file;
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;
-	pid_t					pid;
+	pid_t				pid;
 }						t_command;
+
+typedef struct s_env
+{
+	char				*name;
+	char				*value;
+	struct s_env		*next;
+}						t_env;
 
 // typedef struct s_command_node
 //	{
@@ -38,14 +49,17 @@ typedef struct s_command
 typedef struct s_data
 {
 	char				**env;
+	t_env				*env_list;
 	// struct s_data	next;
 }						t_data;
 
+void					create_env_list(t_data *data);
+void					printf_list(t_env *env_list);
+void					clear_cmd(void);
+void					free_env(t_env *command_list);
 /*prompt*/
 
 /*utils.*/
-
-
 void	print_commands(t_command *command_list);
 void					free_commands(t_command *command_list);
 int						open_quote(const char *line);
@@ -56,18 +70,19 @@ char					*ft_strcpy(char *dst, const char *src);
 char					*ft_strcat(char *dst, const char *src);
 int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
-void	start_builtins(char **command);
-int	choose_command(t_command *command);
-void	env_cmd(t_data data);
-int	echo_cmd(char **args);
-int	cd_cmd(char *path);
-int	pwd_cmd(void);
+void					start_builtins(char **command, t_data *data);
+int						choose_command(t_command *command, t_data *data);
+void					env_cmd(t_data *data);
+int						echo_cmd(char **args, t_data *data);
+int						cd_cmd(char *path);
+int						pwd_cmd(void);
+int						export_cmd(t_data *data);
 /*pipe_management*/
-void execute_commands(t_command *commands);
-int	exec_command(char *pathname, char **args);
+void					commands_manager(t_command *commands, t_data *data);
+int						exec_command(char *pathname, char **args);
 /*parsing*/
 
-
+/*parsingutils*/
 void	parse_argument(const char **input, char *buffer, int *buf_index);
 void	parse_redirection(const char **input, t_command *cmd);
 int check_for_pipe(const char **input);
@@ -85,8 +100,11 @@ int						parse_command_line(const char *input,
 int						parse_command(const char **input, t_command *cmd);
 
 /*signal*/
-void	handle_signal(int sig);
-int	signal_handle(void);
+void					handle_signal(int sig);
+int						signal_handle(void);
 
+/*redirect_management.c*/
+void					redirect_input(t_command *command);
+void					redirect_output(t_command *command);
 
 #endif

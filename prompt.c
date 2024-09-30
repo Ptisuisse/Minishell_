@@ -10,6 +10,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	command_list = NULL;
 	data.env = envp;
+	create_env_list(&data);
+	// printf_list(data.env_list);
 	while (1)
 	{
 		signal_handle();
@@ -24,7 +26,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		// print_commands(command_list);
 		free(input);
-		execute_commands(command_list);
+		commands_manager(command_list, &data);
 		free_commands(command_list);
 		command_list = NULL;
 	}

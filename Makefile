@@ -5,6 +5,7 @@ SRCS =	parsing.c \
 		utils.c \
 		parsingutils.c \
 		pipe_management.c \
+		redirect_management.c \
 		env_var.c \
 		dollar.c \
 		redirections.c \
