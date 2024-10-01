@@ -29,13 +29,21 @@ run_test() {
 }
 
 # Test cases
-run_test "Simple echo" 'echo Hello' 'Hello'
 
-run_test "Echo with pipe" 'echo "|"|echo s' 's'
+run_test "Simple echo" "echo Hello" "Hello"
+run_test "Simple echo" 'echo "$"' '$'
+run_test "Simple echo" "echo '$'" '$'
+run_test "Echo with pipe" "echo \"\" | echo s" "s"
 
-run_test "Echo with single quotes" "echo '|'| echo a" 'a'
+run_test "Echo with dollar sign inside single quotes" "echo \"'\"\$\"'\"" "''"
 
-run_test "Echo with double quotes" 'echo "s"' 's'
+run_test "Echo with USER variable and single quotes" "echo \"'$USER'\"" "'lubov'"
+
+run_test "Echo with pipe and pipe character" "echo \"|\" | echo s" "s"
+
+run_test "Echo with single quotes" "echo '|' | echo a" "a"
+
+run_test "Echo with escaped single quotes around USER" "echo \"'\"\$USER\"'\"" "'lubov'"
 
 run_test "Echo with environment variable" 'echo $USER' "$USER"
 
