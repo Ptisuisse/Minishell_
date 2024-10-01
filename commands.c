@@ -39,22 +39,22 @@ void	create_env_list(t_data *data)
 	}
 }
 
-void	start_builtins(char **command, t_data *data)
+void    start_builtins(char **command, t_data *data)
 {
-	if (!ft_strcmp(command[0], "exit"))
-		exit(0);
-	else if (!ft_strcmp(command[0], "echo"))
-		echo_cmd(command, data);
-	else if (!ft_strcmp(command[0], "cd"))
-		cd_cmd(command[1]);
-	else if (!ft_strcmp(command[0], "pwd"))
-		pwd_cmd();
-	else if (!ft_strcmp(command[0], "env"))
-		env_cmd(data);
-	else if (!ft_strcmp(command[0], "export"))
-		export_cmd(data);
-	else if (!ft_strcmp(command[0], "clear"))
-		clear_cmd();
+    if (!(ft_strcmp(command[0], "exit")))
+        exit(0);
+    else if (!(ft_strcmp(command[0], "echo")))
+        echo_cmd(command, data);
+    else if (!(ft_strcmp(command[0], "cd")))
+        cd_cmd(command[1]);
+    else if (!(ft_strcmp(command[0], "pwd")))
+        pwd_cmd();
+    else if (!(ft_strcmp(command[0], "env")))
+        env_cmd(data);
+    else if (!(ft_strcmp(command[0], "export")))
+        export_cmd(data);
+    else if (!(ft_strcmp(command[0], "clear")))
+        clear_cmd();
 }
 
 void	clear_cmd(void)
@@ -77,28 +77,25 @@ int	choose_command(t_command *command, t_data *data)
 	return (result);
 }
 
-void	env_cmd(t_data *data)
+void    env_cmd(t_data *data)
 {
-	t_env	*tmp;
-	int		i;
+    t_env    *tmp;
 
-	i = 0;
-	tmp = data->env_list;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
+    tmp = data->env_list;
+    while (tmp)
+    {
+        printf("%s=%s\n", tmp->name, tmp->value);
+        tmp = tmp->next;
+    }
 }
 
 int	echo_cmd(char **args, t_data *data)
 {
-	t_env	*env;
 	int		newline;
 	int		i;
 	int		j;
 
-	(void)args;
+	(void)data;
 	newline = 1;
 	i = 1;
 	while (args[i])
@@ -112,19 +109,6 @@ int	echo_cmd(char **args, t_data *data)
 			{
 				newline = 0;
 				i++;
-			}
-		}
-		if (args[i][0] == '$') // ----> voir pour gerer autrement
-		{
-			env = data->env_list;
-			while (env)
-			{
-				if (ft_strcmp(env->name, args[i] + 1) == 0)
-				{
-					printf("%s", env->value);
-					break ;
-				}
-				env = env->next;
 			}
 		}
 		else
