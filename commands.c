@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	create_env_list(t_data *data)
+void	create_env_list(char **envp, t_env **env_list)
 {
 	int		i;
 	t_env	*new;
@@ -8,29 +8,29 @@ void	create_env_list(t_data *data)
 	char	*equal_sign;
 
 	i = 0;
-	while (data->env[i])
+	while (envp[i])
 	{
-		new = (t_env *)malloc(sizeof(t_env));
+		new = malloc(sizeof(t_env));
 		if (!new)
 			return ;
 		new->next = NULL;
-		equal_sign = ft_strchr(data->env[i], '=');
+		equal_sign = ft_strchr(envp[i], '=');
 		if (equal_sign)
 		{
-			new->name = ft_substr(data->env[i], 0, equal_sign - data->env[i]);
+			new->name = ft_substr(envp[i], 0, equal_sign - envp[i]);
 			equal_sign++;
 			new->value = ft_strdup(equal_sign);
 		}
 		else
 		{
-			new->name = ft_strdup(data->env[i]);
+			new->name = ft_strdup(envp[i]);
 			new->value = NULL;
 		}
 		if (i == 0)
-			data->env_list = new;
+			*env_list = new;
 		else
 		{
-			tmp = data->env_list;
+			tmp = *env_list;
 			while (tmp->next)
 				tmp = tmp->next;
 			tmp->next = new;
@@ -39,23 +39,22 @@ void	create_env_list(t_data *data)
 	}
 }
 
-void	start_builtins(t_command *command, t_data *data)
+void	start_builtins(t_command *command, t_env **env_list)
 {
 	if (!(ft_strcmp(command->args[0], "exit")))
 		exit(0);
 	else if (!(ft_strcmp(command->args[0], "echo")))
-		echo_cmd(command->args, data);
+		echo_cmd(command->args, *env_list);
 	else if (!(ft_strcmp(command->args[0], "cd")))
 		cd_cmd(command->args[1]);
 	else if (!(ft_strcmp(command->args[0], "pwd")))
 		pwd_cmd();
 	else if (!(ft_strcmp(command->args[0], "env")))
-		env_cmd(data);
+		env_cmd(*env_list);
 	else if (!(ft_strcmp(command->args[0], "export")))
-		export_cmd(data, command);
-	// envoyer la struct dans cette fonctionpour eviter pb i think
+		*env_list = export_cmd(*env_list, command);
 	else if (!(ft_strcmp(command->args[0], "unset")))
-		unset_cmd(command->args[1], data);
+		unset_cmd(command->args[1], *env_list);
 	else if (!(ft_strcmp(command->args[0], "clear")))
 		clear_cmd();
 }
@@ -65,12 +64,12 @@ void	clear_cmd(void)
 	system("clear");
 }
 
-int	choose_command(t_command *command, t_data *data)
+int	choose_command(t_command *command, t_env **env_list)
 {
 	int	result;
 
 	result = -1;
-	if (check_builtins(command, data))
+	if (check_builtins(command, env_list))
 		result = 0;
 	else
 	{
@@ -95,41 +94,74 @@ int	pwd_cmd(void)
 		return (0);
 	}
 }
-  
-int	echo_cmd(char **args, t_data *data)
-{
-	int	newline;
-	int	i;
-	int	j;
 
-	(void)data;
+// int	echo_cmd(char **args, t_data *data)
+// {
+// 	int	newline;
+// 	int	i;
+// 	int	j;
+
+// 	(void)data;
+// 	newline = 1;
+// 	i = 1;
+// 	while (args[i])
+// 	{
+// 		if (args[i][0] == '-' && args[i][1] == 'n')
+// 		{
+// 			j = 1;
+// 			while (args[i][j] == 'n')
+// 				j++;
+// 			if (args[i][j] == '\0')
+// 			{
+// 				newline = 0;
+// 				i++;
+// 			}
+// 		}
+// 		printf("%s", args[i]);
+// 		if (args[i + 1] != NULL)
+// 			printf(" ");
+// 		i++;
+// 	}
+// 	if (newline)
+// 		printf("\n");
+// 	return (1);
+// }
+
+int echo_cmd(char **args, t_env *data) 
+{
+    int newline; 
+    int i; 
+	
 	newline = 1;
 	i = 1;
-	while (args[i])
+	(void)data;
+    while (args[i] && args[i][0] == '-' && args[i][1] == 'n') 
 	{
-		if (args[i][0] == '-' && args[i][1] == 'n')
+        int j = 1;
+        while (args[i][j] == 'n')
+            j++;
+        if (args[i][j] == '\0') 
 		{
-			j = 2;
-			while (args[i][j] == 'n')
-				j++;
-			if (args[i][j] == '\0')
-			{
-				newline = 0;
-				i++;
-			}
-		}
-		else
-			printf("%s", args[i]);
-		if (args[i + 1] != NULL)
-			printf(" ");
-		i++;
-	}
-	if (newline)
-		printf("\n");
-	return (1);
+            newline = 0;
+            i++;
+        } 
+		else 
+            break;
+    }
+    while (args[i]) 
+	{
+        printf("%s", args[i]);
+        i++;
+        if (args[i]) 
+            printf(" ");
+    }
+    if (newline) 
+        printf("\n");
+    return 1;
 }
 
-int	cd_cmd(char *path)
+
+ int	cd_cmd(const char *path)
 {
 	if (chdir(path) != 0)
 	{
@@ -138,25 +170,18 @@ int	cd_cmd(char *path)
 	}
 	return (1);
 }
-// void	env_cmd(t_data *data)
-//{
-//	while (data->env_list)
-//	{
-//		printf("%s=%s\n", data->env_list->name, data->env_list->value);
-//		data->env_list = data->env_list->next;
-//	}
-//}
 
-void	env_cmd(t_data *data)
+void	env_cmd(t_env *env_list)
 {
-	t_env	*tmp;
+	t_env	*head;
 
-	tmp = data->env_list;
-	while (tmp)
+	head = env_list;
+	while (env_list)
 	{
-		printf("%s=%s\n", tmp->name, tmp->value);
-		tmp = tmp->next;
+		printf("%s=%s\n", env_list->name, env_list->value);
+		env_list = env_list->next;
 	}
+	env_list = head;
 }
 
 void	sorted_insert(t_env **head_ref, t_env *new_node)
@@ -221,7 +246,7 @@ int	ft_is_valid(char *arg)
 	return (0);
 }
 
-void	export_args(char *arg, t_env **env_list)
+t_env	*export_args(char *arg, t_env *env_list)
 {
 	t_env	*tmp;
 	t_env	*new_node;
@@ -229,7 +254,7 @@ void	export_args(char *arg, t_env **env_list)
 	char	*name;
 	char	*value;
 
-	tmp = *env_list;
+	tmp = env_list;
 	equal_sign = strchr(arg, '=');
 	if (equal_sign)
 	{
@@ -251,7 +276,7 @@ void	export_args(char *arg, t_env **env_list)
 				tmp->value = value;
 			}
 			free(name);
-			return ;
+			return(NULL);
 		}
 		tmp = tmp->next;
 	}
@@ -261,64 +286,66 @@ void	export_args(char *arg, t_env **env_list)
 		perror("malloc");
 		free(name);
 		free(value);
-		return ;
+		return(NULL);
 	}
 	new_node->name = name;
 	new_node->value = value;
-	new_node->next = *env_list;
-	*env_list = new_node;
+	new_node->next = env_list;
+	env_list = new_node;
+	return (env_list);
 }
 
-int	export_cmd(t_data *data, t_command *command)
+t_env	*export_cmd(t_env *env_list, t_command *command)
 {
-	t_data	*tmp;
+	t_env	*head;
 
-	tmp = data;
+	head = env_list;
 	if (command->args[1] != NULL)
 	{
-		if (!ft_is_valid(command->args[1]))
-			return (0);
-		export_args(command->args[1], &data->env_list);
+		if (ft_is_valid(command->args[1]))
+			return (NULL);
+		env_list = export_args(command->args[1], env_list);
+		printf_list(env_list);
 	}
 	else
 	{
-		sort_env_list(&data->env_list);
-		while (tmp->env_list)
+		sort_env_list(&env_list);
+		while (env_list)
 		{
-			if (tmp->env_list->name[0] == '_')
-				tmp->env_list = tmp->env_list->next;
-			printf("declare -x %s", tmp->env_list->name);
-			if (tmp->env_list->value[0] != '\0')
-				printf("=\"%s\"\n", tmp->env_list->value);
+			if (env_list->name[0] == '_')
+				env_list = env_list->next;
+			printf("declare -x %s", env_list->name);
+			if (env_list->value[0] != '\0')
+				printf("=\"%s\"\n", env_list->value);
 			else
 				printf("\n");
-			tmp->env_list = tmp->env_list->next;
+			env_list = env_list->next;
 		}
 	}
-	return (1);
+	return (env_list);
 }
 
-void	unset_cmd(char *path, t_data *data)
+void	unset_cmd(char *path, t_env *env_list)
 {
-	int		i;
-	t_env	*tmp;
+	//int		i;
+	t_env	*head;
 	t_env	*prev;
 
-	i = 0;
+	//i = 0;
 	prev = NULL;
-	tmp = data->env_list;
-	while (tmp)
+	head = env_list;
+	while (env_list)
 	{
-		if (ft_strcmp(tmp->name, path) == 0)
+		if (ft_strcmp(env_list->name, path) == 0)
 		{
 			if (prev == NULL)
-				tmp = tmp->next;
+				env_list = env_list->next;
 			else
-				prev->next = tmp->next;
+				prev->next = env_list->next;
 		}
-		prev = tmp;
-		tmp = tmp->next;
+		prev = env_list;
+		env_list = env_list->next;
 	}
-	data->env_list = tmp;
-	printf_list(data->env_list);
+	env_list = head;
+	//printf_list(env_list);
 }

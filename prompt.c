@@ -4,14 +4,17 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
 	t_command	*command_list;
-	t_data		data;
+	//t_data		data;
+	t_env	*env_list;
+
+	env_list = malloc(sizeof(t_env));
 
 	(void)argc;
 	(void)argv;
 	command_list = NULL;
-	data.env = envp;
-	create_env_list(&data);
-	//printf_list(data.env_list);
+	//data.env = envp;
+	create_env_list(envp, &env_list);
+	//printf_list(env_list);
 	while (1)
 	{
 		signal_handle();
@@ -26,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		//print_commands(command_list);
 		free(input);
-		commands_manager(command_list, &data);
+		commands_manager(command_list, &env_list);
 		free_commands(command_list);
 		command_list = NULL;
 	}

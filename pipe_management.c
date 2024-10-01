@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	commands_manager(t_command *commands, t_data *data)
+void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
 	int			prev_pipe_read;
@@ -30,7 +30,8 @@ void	commands_manager(t_command *commands, t_data *data)
 				dup2(cmd->pipe[WRITE_END], STDOUT_FILENO);
 				close(cmd->pipe[WRITE_END]);
 			}
-			choose_command(cmd, data);
+			choose_command(cmd, env_list);
+			printf_list(*env_list);
 			exit(EXIT_FAILURE);
 		}
 		else
