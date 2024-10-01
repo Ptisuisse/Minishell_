@@ -11,14 +11,18 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 	{
 		if (**input == '"' || **input == '\'')
 		{
-			in_quotes = 1; 
+			in_quotes = 1; // = handle_quotes(input, buffer, buf_index, quote_type);
 			quote_type = **input; 
+			//printf("quotes %c\n", **input);
 			handle_quotes(input, buffer, buf_index, quote_type);
 			if (**input == quote_type)
 				(*input)++;
 		}
 		else if (**input == '$')
-			handle_dollar_sign(input, buffer, buf_index);
+			{
+				handle_dollar_sign(input, buffer, buf_index);
+				//printf("dollar %c\n", **input);
+				}
 		else if ((**input == ' ' && !in_quotes) || (**input == '|'))
 			break;  
 		else
@@ -31,10 +35,12 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 void	handle_quotes(const char **input, char *buffer, int *buf_index,
 	char quote_type)
 {
+	//int		in_quotes;
 	if (quote_type == '"')
 		handle_double_quotes(input, buffer, buf_index);
 	else
 		handle_single_quotes(input, buffer, buf_index);
+	//ret
 }
 
 int parse_arguments(const char **input, t_command *cmd, int *arg_index) {

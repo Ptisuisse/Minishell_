@@ -87,6 +87,7 @@ void					commands_manager(t_command *commands, t_data *data);
 int						exec_command(char *pathname, char **args);
 /*parsing*/
 
+int	check_builtins(char **command, t_data *data);
 /*parsingutils*/
 void					parse_argument(const char **input, char *buffer,
 							int *buf_index);

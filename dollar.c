@@ -3,7 +3,7 @@
 
 int	check_builtins(t_command *command, t_data *data)
 {
-	int	status;
+    int    status;
 
 	status = 0;
 	if (ft_strcmp(command->args[0], "$") == 0)
@@ -47,8 +47,8 @@ void	process_dollar(const char **input, char *buffer, int *buf_index,
 	}
 	else
 		buffer[*buf_index] = '\0';
-	if (**input == quote_type)
-		(*input)++;
+	//if (**input == quote_type)
+	//	(*input)++;
 	while (**input)
 		(*input)++;
 }
@@ -60,8 +60,8 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 	quote_type = '\0';
 	if (*(*input + 1) == '\'' || *(*input + 1) == '"')
 		quote_type = *(*input + 1);
-	if (**input == quote_type)
-		(*input)++;
+	//if (**input == quote_type)
+	//	(*input)++;
 	process_dollar(input, buffer, buf_index, quote_type);
 }
 
@@ -70,17 +70,31 @@ static void	handle_dollar(const char *input, int *i, char *result,
 {
 	char	*env_value;
 
+	//printf("dollar = %c\n", input[*i]);
 	(*i)++;
 	if (input[*i] == '?')
-		return ; // handle $? as needed
+		return; // handle $? as needed
+	//printf("dollar 2 = %c\n", input[*i]);
 	env_value = get_env_value(input, i);
+	//printf("dollar 3 = %c\n", input[*i]);
+	//printf("dollar 4 = %s\n", env_value);
 	if (env_value)
 	{
 		while (*env_value)
 			result[(*result_index)++] = *env_value++;
 	}
-	else
-		(*i)++;
+	else if (!env_value && (input[*i] == '"' || input[*i] == '\'') && !ft_isalpha(input[*i + 1]))
+		{
+			//printf("dollar 5 %c\n", input[*i]);
+			//(*i)++;
+			result[(*result_index)++] = '$';
+			}
+	else // if (ft_isprint(input[*i]))
+		{
+			//printf("dollar %c\n", input[*i]);
+			//result[(*result_index)++] = '$';
+			(*i)++;
+			}
 }
 
 char	*search_dollar(const char *input)
@@ -94,7 +108,9 @@ char	*search_dollar(const char *input)
 	while (ft_isprint(input[i]))
 	{
 		if (input[i] == '$' && input[i + 1])
-			handle_dollar(input, &i, result, &result_index);
+			{
+				
+				handle_dollar(input, &i, result, &result_index);}
 		else
 			result[result_index++] = input[i++];
 	}

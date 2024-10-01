@@ -44,32 +44,19 @@ char	*ft_strcat(char *dest, const char *src)
 	return (dest);
 }
 
-int	ft_strcmp(const char *s1, const char *s2)
+int    ft_strcmp(const char *s1, const char *s2)
 {
-	int			a;
+    int            a;
 
-	a = 0;
-	while (s1[a] != '\0')
-	{
-		if (s1[a] != s2[a])
-			return (s1[a] - s2[a]);
-		a++;
-	}
-	return (0);
+    a = 0;
+    while (s1[a] != '\0')
+    {
+        if (s1[a] != s2[a])
+            return (s1[a] - s2[a]);
+        a++;
+    }
+    return (0);
 }
-
-// int	ft_strcmp(const char *s1, const char *s2)
-//{
-//	int i;
-
-//	i = 0;
-//	while (*(s1 + i) && *(s1 + i) == *(s2 + i))
-//		i++;
-//	if (*((unsigned char *)s1 + i) - *((unsigned char *)s2 + i) == 0)
-//		return (1);
-//	else
-//		return (0);
-//}
 
 void	print_commands(t_command *command_list)
 {

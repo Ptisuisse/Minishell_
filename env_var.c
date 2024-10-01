@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:05:25 by lisambet          #+#    #+#             */
-/*   Updated: 2024/09/30 09:27:07 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:58:15 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,15 @@ void	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 
 	quote_type = **input;
 	(*input)++;
-	if (**input == quote_type)
-		(*input)++;
+	//if (**input == quote_type)
+	//	(*input)++;
+	//printf("dollar %c\n", **input);
 	dollar = search_dollar(*input);
+	//printf("dollar 2 %c\n", **input);
 	temp_index = 0;
 	if (dollar)
 	{
+		//printf("dollar 3 %c\n", **input);
 		while (dollar[temp_index] && dollar[temp_index] != quote_type)
 			buffer[(*buf_index)++] = dollar[temp_index++];
 		free(dollar);
@@ -56,7 +59,15 @@ void	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 			buffer[(*buf_index)++] = *(*input)++;
 	}
 	while (**input && **input != quote_type)
-		(*input)++;
+		(*input)++;	
+	if 	(**input && **input == quote_type)
+	{		
+		if 	(**input && (**input == '"' || **input == '\''))
+			(*input)++;
+	}
+	//printf("ALAL %s\n", *input);
+	//if (**input != quote_type)
+	//	(*input)++;
 }
 
 void	handle_single_quotes(const char **input, char *buffer, int *buf_index)

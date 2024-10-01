@@ -95,6 +95,7 @@ int	pwd_cmd(void)
 		return (0);
 	}
 }
+  
 int	echo_cmd(char **args, t_data *data)
 {
 	int	newline;
