@@ -2,16 +2,16 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	char		*input;
+	t_command	*command_list;
+	t_data		data;
+
 	(void)argc;
 	(void)argv;
-
-	char *input;
-	int exec;
-	t_command *command_list = NULL;
-	t_data data;
-	int in = dup(STDIN_FILENO);
-	int out = dup(STDOUT_FILENO);
+	command_list = NULL;
 	data.env = envp;
+	create_env_list(&data);
+	//printf_list(data.env_list);
 	while (1)
 	{
 		signal_handle();
@@ -25,19 +25,10 @@ int	main(int argc, char **argv, char **envp)
 			return (1);
 		}
 		//print_commands(command_list);
-		while (command_list)
-		{
-			 exec = select_commands(command_list, data);
-			 if (exec == -1)
-				exit(1);
-			command_list = command_list->next;
-		}
+		free(input);
+		commands_manager(command_list, &data);
 		free_commands(command_list);
-		dup2(in, STDIN_FILENO);
-		dup2(out, STDOUT_FILENO);
-		//free_commands(temp);
-		////		add_history(input);
-		//		free(input);
+		command_list = NULL;
 	}
 	return (0);
 }

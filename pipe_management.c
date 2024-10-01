@@ -1,120 +1,71 @@
 #include "minishell.h"
 
-int	select_commands(t_command *commands, t_data data)
+void	commands_manager(t_command *commands, t_data *data)
 {
-	int	result;
+	t_command	*cmd;
+	int			prev_pipe_read;
+	int			status;
 
-	if (commands->next != NULL)
+	cmd = commands;
+	prev_pipe_read = -1;
+	if (cmd->input_fd == 1)
+		redirect_input(cmd);
+	if (cmd->output_fd == 1)
+		redirect_output(cmd);
+	while (cmd)
 	{
-		ft_pipe(commands, data);
-		result = 0;
+		if (cmd->next)
+			pipe(cmd->pipe);
+		cmd->pid = fork();
+		if (cmd->pid == 0)
+		{
+			if (prev_pipe_read != -1)
+			{
+				dup2(prev_pipe_read, STDIN_FILENO);
+				close(prev_pipe_read);
+			}
+			if (cmd->next)
+			{
+				close(cmd->pipe[READ_END]);
+				dup2(cmd->pipe[WRITE_END], STDOUT_FILENO);
+				close(cmd->pipe[WRITE_END]);
+			}
+			choose_command(cmd, data);
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			if (prev_pipe_read != -1)
+				close(prev_pipe_read);
+			if (cmd->next)
+			{
+				close(cmd->pipe[WRITE_END]);
+				prev_pipe_read = cmd->pipe[READ_END];
+			}
+			cmd = cmd->next;
+		}
 	}
-	else
-		result = choose_command(commands, data);
-	return (result);
+	while (wait(&status) > 0)
+		;
 }
 
-/*ANCIENNE VERSION*/
-
-// int	select_commands(t_command *commands, t_data data)
-//{
-//	int	result;
-//	int	pipe_std[2];
-
-//	result = -1;
-//	(void)data;
-//	pipe(pipe_std);
-//	if (commands->next != NULL)
-//	{
-//		ft_pipe(commands, data);
-//		result = 0;
-//	}
-//	else
-//	{
-//		result = choose_command(commands, data);
-//	}
-//	return (result);
-//}
-
-/*ANCIENNE VERSION*/
-
-// void	ft_pipe(t_command *command, t_data data)
-//{
-//	int	status;
-//	int	pid;
-
-//	pipe(command->pipe);
-//	pid = fork();
-//	if (pid == 0)
-//	{
-//		close(command->pipe[0]);
-//		dup2(command->pipe[1], STDOUT_FILENO);
-//		close(command->pipe[1]);
-//		choose_command(command, data);
-//	}
-//	else
-//		close(command->pipe[0]);
-//	waitpid(pid, &status, 0);
-//}
-
-void	ft_pipe(t_command *command, t_data data)
+int	exec_command(char *pathname, char **args)
 {
-	int	pid;
-	int	status;
+	char *path;
+	int pid;
 
-	int pipefd[2]; // Descripteurs de pipe
-	if (pipe(pipefd) == -1)
+	pid = fork();
+	path = ft_strjoin("/bin/", pathname);
+	if (pid == 0)
 	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	pid = fork(); // Fork pour exécuter la commande
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	if (pid == 0) // Enfant
-	{
-		// Si la commande précédente existe, redirige l'entrée vers le pipe
-		if (command->prev != NULL)
+		if (execve(path, args, NULL) == -1)
 		{
-			dup2(command->prev->pipe[0], STDIN_FILENO);
-				// Redirige entrée standard vers le pipe précédent
-			close(command->prev->pipe[0]);
-				// Ferme la lecture du pipe précédent
-			close(command->prev->pipe[1]);
-				// Ferme l'écriture du pipe précédent
+			printf("%s: command not found\n", pathname);
+			free(path);
+			return (0);
 		}
-		// Si ce n'est pas la dernière commande, redirige la sortie vers le pipe
-		if (command->next != NULL)
-		{
-			dup2(pipefd[1], STDOUT_FILENO);
-				// Redirige la sortie standard vers l'écriture du pipe
-			close(pipefd[0]);               // Ferme l'extrémité de lecture
-			close(pipefd[1]);               // Ferme l'extrémité d'écriture
-		}
-		// Exécute la commande ou le builtin
-		choose_command(command, data);
-		exit(EXIT_SUCCESS); // On termine le processus enfant
 	}
-	else // Parent
-	{
-		// Si une commande précédente existe, ferme les pipes de cette commande
-		if (command->prev != NULL)
-		{
-			close(command->prev->pipe[0]);
-				// Ferme l'extrémité de lecture du pipe précédent
-			close(command->prev->pipe[1]);
-				// Ferme l'extrémité d'écriture du pipe précédent
-		}
-		if (command->next != NULL)
-		{
-			command->pipe[0] = pipefd[0];
-				// L'extrémité de lecture du pipe actuel devient entrée pour la prochaine commande
-			command->pipe[1] = pipefd[1]; // L'extrémité d'écriture
-		}
-		// Attendre la fin du processus enfant
-		waitpid(pid, &status, 0);
-	}
+	waitpid(pid, NULL, 0);
+	free(path);
+	return (1);
 }

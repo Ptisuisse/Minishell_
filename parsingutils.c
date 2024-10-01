@@ -77,7 +77,7 @@ void	quoting_choice(bool *double_q, bool *sing_q, int *index, char c)
 	}
 }
 
-int	open_quote(char *line)
+int	open_quote(const char *line)
 {
 	bool double_q = false;
 	bool sing_q = false;
