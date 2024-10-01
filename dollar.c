@@ -1,35 +1,38 @@
 
 #include "minishell.h"
 
-int    check_builtins(char **command, t_data *data)
+int	check_builtins(t_command *command, t_data *data)
 {
     int    status;
 
-    status = 0;
-    if (ft_strcmp(command[0], "$") == 0)
-        status = 1;
-    else if (!(ft_strcmp(command[0], "exit")))
-        status = 1;
-    else if (!(ft_strcmp(command[0], "echo")))
-        status = 1;
-    else if (!(ft_strcmp(command[0], "cd")))
-        status = 1;
-    else if (!(ft_strcmp(command[0], "export")))
-        status = 1;
-    else if (!(ft_strcmp(command[0], "unset")))
-        status = 1;
-    else if (!(ft_strcmp(command[0], "env")))
-        status = 1;
-    else if (!(ft_strcmp(command[0], "pwd")))
-        status = 1;
-    else if (!(ft_strcmp(command[0], "clear")))
-        clear_cmd();
-    if (status == 1)
-        start_builtins(command, data);
-    return (status);
+	status = 0;
+	if (ft_strcmp(command->args[0], "$") == 0)
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "exit")))
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "echo")))
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "cd")))
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "export")))
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "unset")))
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "env")))
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "pwd")))
+		status = 1;
+	else if (!(ft_strcmp(command->args[0], "clear")))
+		clear_cmd();
+	else if (!(ft_strcmp(command->args[0], "unset")))
+		status = 1;
+	if (status == 1)
+		start_builtins(command, data);
+	return (status);
 }
 
-void	process_dollar(const char **input, char *buffer, int *buf_index, char quote_type)
+void	process_dollar(const char **input, char *buffer, int *buf_index,
+		char quote_type)
 {
 	char	*dollar;
 	int		temp_index;
@@ -52,8 +55,9 @@ void	process_dollar(const char **input, char *buffer, int *buf_index, char quote
 
 void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 {
-	char	quote_type = '\0';
+	char	quote_type;
 
+	quote_type = '\0';
 	if (*(*input + 1) == '\'' || *(*input + 1) == '"')
 		quote_type = *(*input + 1);
 	//if (**input == quote_type)
@@ -61,7 +65,8 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 	process_dollar(input, buffer, buf_index, quote_type);
 }
 
-static void	handle_dollar(const char *input, int *i, char *result, int *result_index)
+static void	handle_dollar(const char *input, int *i, char *result,
+		int *result_index)
 {
 	char	*env_value;
 

@@ -72,6 +72,4 @@ void	redirect_management(t_command *command)
 		redirect_output(command);
 	if (command->append_file)
 		redirect_append_output(command);
-	//if (command->
-	//	redirect_append_input(command);
 }

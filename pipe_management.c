@@ -60,7 +60,7 @@ int	exec_command(char *pathname, char **args)
 	{
 		if (execve(path, args, NULL) == -1)
 		{
-			printf("execve\n");
+			printf("%s: command not found\n", pathname);
 			free(path);
 			return (0);
 		}

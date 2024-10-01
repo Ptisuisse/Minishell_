@@ -53,6 +53,9 @@ typedef struct s_data
 	// struct s_data	next;
 }						t_data;
 
+/*dollar.c*/
+int						check_builtins(t_command *command, t_data *data);
+
 void					create_env_list(t_data *data);
 void					printf_list(t_env *env_list);
 void					clear_cmd(void);
@@ -60,7 +63,7 @@ void					free_env(t_env *command_list);
 /*prompt*/
 
 /*utils.*/
-void	print_commands(t_command *command_list);
+void					print_commands(t_command *command_list);
 void					free_commands(t_command *command_list);
 int						open_quote(const char *line);
 t_command				*init_command(void);
@@ -70,13 +73,15 @@ char					*ft_strcpy(char *dst, const char *src);
 char					*ft_strcat(char *dst, const char *src);
 int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
-void					start_builtins(char **command, t_data *data);
+void					start_builtins(t_command *command, t_data *data);
 int						choose_command(t_command *command, t_data *data);
 void					env_cmd(t_data *data);
 int						echo_cmd(char **args, t_data *data);
 int						cd_cmd(char *path);
 int						pwd_cmd(void);
-int						export_cmd(t_data *data);
+int						export_cmd(t_data *data, t_command *command);
+void					export_args(char *arg, t_env **env_list);
+void					unset_cmd(char *path, t_data *data);
 /*pipe_management*/
 void					commands_manager(t_command *commands, t_data *data);
 int						exec_command(char *pathname, char **args);
@@ -84,18 +89,23 @@ int						exec_command(char *pathname, char **args);
 
 int	check_builtins(char **command, t_data *data);
 /*parsingutils*/
-void	parse_argument(const char **input, char *buffer, int *buf_index);
-void	parse_redirection(const char **input, t_command *cmd);
-int check_for_pipe(const char **input);
-char	*get_env_value(const char *input, int *i);
-int	check_quotes(const char **input, char *quote_type);
-void	handle_quotes(const char **input, char *buffer, int *buf_index,char quote_type);
-void	skip_spaces(const char **input);
-void	handle_dollar_sign(const char **input, char *buffer, int *buf_index);
-void	handle_double_quotes(const char **input, char *buffer, int *buf_index);
-void	handle_single_quotes(const char **input, char *buffer, int *buf_index);
-char *search_dollar(const char *input);
-//void					print_commands(t_command *command_list);
+void					parse_argument(const char **input, char *buffer,
+							int *buf_index);
+void					parse_redirection(const char **input, t_command *cmd);
+int						check_for_pipe(const char **input);
+char					*get_env_value(const char *input, int *i);
+int						check_quotes(const char **input, char *quote_type);
+void					handle_quotes(const char **input, char *buffer,
+							int *buf_index, char quote_type);
+void					skip_spaces(const char **input);
+void					handle_dollar_sign(const char **input, char *buffer,
+							int *buf_index);
+void					handle_double_quotes(const char **input, char *buffer,
+							int *buf_index);
+void					handle_single_quotes(const char **input, char *buffer,
+							int *buf_index);
+char					*search_dollar(const char *input);
+// void					print_commands(t_command *command_list);
 int						parse_command_line(const char *input,
 							t_command **command_list);
 int						parse_command(const char **input, t_command *cmd);
