@@ -1,51 +1,61 @@
 #include "minishell.h"
 
+void	test_pipe(t_command *commands, t_env **env_list)
+{
+	if (commands->next != NULL)
+		commands_manager(commands, env_list);
+	else
+		choose_command(commands, env_list);
+}
+
 void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
-	int			prev_pipe_read;
+	//int			prev_pipe_read;
 	int			status;
 
 	cmd = commands;
-	prev_pipe_read = -1;
-	if (cmd->input_fd == 1)
-		redirect_input(cmd);
-	if (cmd->output_fd == 1)
-		redirect_output(cmd);
-	while (cmd)
+	//prev_pipe_read = -1;
+	if (commands->input_fd == 1)
+		redirect_input(commands);
+	if (commands->output_fd == 1)
+		redirect_output(commands);
+	//int i = 0;
+	while (commands)
 	{
-		if (cmd->next)
-			pipe(cmd->pipe);
-		cmd->pid = fork();
-		if (cmd->pid == 0)
-		{
-			if (prev_pipe_read != -1)
+			if (commands->next)
+				pipe(commands->pipe);
+			commands->pid = fork();
+			if (commands->pid == 0)
 			{
-				dup2(prev_pipe_read, STDIN_FILENO);
-				close(prev_pipe_read);
+				if (commands->prev)
+				{
+					dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
+					close(commands->prev->pipe[READ_END]);
+				}
+				if (commands->next)
+				{
+					close(commands->pipe[READ_END]);
+					dup2(commands->pipe[WRITE_END], STDOUT_FILENO);
+					close(commands->pipe[WRITE_END]);
+				}
+				choose_command(commands, env_list);
+				break ;
+				//exit(EXIT_FAILURE);
 			}
-			if (cmd->next)
+			else
 			{
-				close(cmd->pipe[READ_END]);
-				dup2(cmd->pipe[WRITE_END], STDOUT_FILENO);
-				close(cmd->pipe[WRITE_END]);
+        	   if (commands->next)
+        	        close(commands->pipe[WRITE_END]);
+				if (commands->prev)
+				{
+					close(commands->prev->pipe[READ_END]);
+					//prev_pipe_read = commands->pipe[READ_END];
+				}
+				commands = commands->next;
 			}
-			choose_command(cmd, env_list);
-			printf_list(*env_list);
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			if (prev_pipe_read != -1)
-				close(prev_pipe_read);
-			if (cmd->next)
-			{
-				close(cmd->pipe[WRITE_END]);
-				prev_pipe_read = cmd->pipe[READ_END];
-			}
-			cmd = cmd->next;
-		}
 	}
+	commands = cmd;
 	while (wait(&status) > 0)
 		;
 }

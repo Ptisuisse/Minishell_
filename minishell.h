@@ -54,6 +54,8 @@ typedef struct s_data
 	// struct s_data	next;
 }						t_data;
 
+
+void	test_pipe(t_command *commands, t_env **env_list);
 /*dollar.c*/
 int						check_builtins(t_command *command, t_env **env_list);
 
@@ -77,7 +79,7 @@ int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
 void					start_builtins(t_command *command, t_env **env_list);
 int						choose_command(t_command *command, t_env **env_list);
-void					env_cmd(t_env *env);
+void					env_cmd(t_command *command, t_env *env);
 int						echo_cmd(char **args, t_env *env);
 int						cd_cmd(const char *path);
 int						pwd_cmd(void);
