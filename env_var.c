@@ -32,12 +32,14 @@ char	*get_env_value(const char *input, int *i)
 	return (env_value);
 }
 
-void	handle_double_quotes(const char **input, char *buffer, int *buf_index)
+int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 {
 	char	quote_type;
 	char	*dollar;
 	int		temp_index;
+	int		in_quotes;
 
+	in_quotes = 1;
 	quote_type = **input;
 	(*input)++;
 	//if (**input == quote_type)
@@ -46,17 +48,43 @@ void	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 	dollar = search_dollar(*input);
 	//printf("dollar 2 %c\n", **input);
 	temp_index = 0;
+	while (**input)
+	{
 	if (dollar)
 	{
-		//printf("dollar 3 %c\n", **input);
+		//printf("dollar 3 %s\n", dollar);
 		while (dollar[temp_index] && dollar[temp_index] != quote_type)
-			buffer[(*buf_index)++] = dollar[temp_index++];
+			{
+				//printf("dollar 4 %c\n", dollar[temp_index]);
+				if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type)
+					{
+						// if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type && dollar[temp_index + 2] == '\0')
+						// 	{
+						// 		printf("dollar AAAA %s\n", dollar);
+						// 		buffer[(*buf_index)++] = dollar[temp_index++];
+						// 		break;
+						// 	}
+						while (**input && **input != quote_type)
+							(*input)++;	
+						//git addprintf("dollar 5 %s\n", dollar);
+						in_quotes = 0;
+						return in_quotes;}
+				buffer[(*buf_index)++] = dollar[temp_index++];
+				}
+		//printf("dollar 3 %s\n", dollar);
 		free(dollar);
+		while (**input && **input != quote_type)
+       		(*input)++;
+		//printf("input %c\n", **input);
+		in_quotes = 0;
+    // Stop further processing after dollar is handled
+    	return in_quotes;
 	}
 	else
 	{
 		while (**input && **input != quote_type)
 			buffer[(*buf_index)++] = *(*input)++;
+		break;
 	}
 	while (**input && **input != quote_type)
 		(*input)++;	
@@ -65,17 +93,22 @@ void	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 		if 	(**input && (**input == '"' || **input == '\''))
 			(*input)++;
 	}
+	}
 	//printf("ALAL %s\n", *input);
 	//if (**input != quote_type)
 	//	(*input)++;
+	return in_quotes;
 }
 
-void	handle_single_quotes(const char **input, char *buffer, int *buf_index)
+int	handle_single_quotes(const char **input, char *buffer, int *buf_index)
 {
 	char	quote_type;
+	int		in_quotes;
 
+	in_quotes = 1;
 	quote_type = '\'';
 	(*input)++;
 	while (**input && **input != quote_type)
 		buffer[(*buf_index)++] = *(*input)++;
+	return in_quotes;
 }

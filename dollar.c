@@ -102,10 +102,12 @@ char	*search_dollar(const char *input)
 	i = 0;
 	while (ft_isprint(input[i]))
 	{
-		if (input[i] == '$' && input[i + 1])
+		if (input[i] == '$' && ft_isalpha(input[i + 1]))
 			{
 				
 				handle_dollar(input, &i, result, &result_index);}
+		else if (input[i] == '$' && !ft_isalpha(input[i + 1]) && ft_isprint(input[i + 1]))
+			return 0;
 		else
 			result[result_index++] = input[i++];
 	}

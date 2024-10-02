@@ -11,36 +11,38 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 	{
 		if (**input == '"' || **input == '\'')
 		{
-			in_quotes = 1; // = handle_quotes(input, buffer, buf_index, quote_type);
 			quote_type = **input; 
-			//printf("quotes %c\n", **input);
-			handle_quotes(input, buffer, buf_index, quote_type);
+			in_quotes = handle_quotes(input, buffer, buf_index, quote_type);
+			//printf("quotes %s\n %c\n %d\n", buffer, **input, in_quotes);
+			//handle_quotes(input, buffer, buf_index, quote_type);
 			if (**input == quote_type)
 				(*input)++;
 		}
-		else if (**input == '$')
+		else if (**input == '$'&& !in_quotes)
 			{
 				handle_dollar_sign(input, buffer, buf_index);
 				//printf("dollar %c\n", **input);
 				}
 		else if ((**input == ' ' && !in_quotes) || (**input == '|'))
 			break;  
-		else
+		else 
 			buffer[(*buf_index)++] = *(*input)++;
-		in_quotes = 0; 
+		//rintf("quotes 2 %s\n", *input);
+		//in_quotes = 0; 
 	}
 	buffer[*buf_index] = '\0';  
 }
 
-void	handle_quotes(const char **input, char *buffer, int *buf_index,
+int	handle_quotes(const char **input, char *buffer, int *buf_index,
 	char quote_type)
 {
-	//int		in_quotes;
-	if (quote_type == '"')
-		handle_double_quotes(input, buffer, buf_index);
-	else
-		handle_single_quotes(input, buffer, buf_index);
-	//ret
+	(void)quote_type;
+	int		in_quotes;
+	//if (quote_type == '"')
+		in_quotes = handle_double_quotes(input, buffer, buf_index);
+	//else
+	//	handle_single_quotes(input, buffer, buf_index);
+	return in_quotes;
 }
 
 int parse_arguments(const char **input, t_command *cmd, int *arg_index) {
