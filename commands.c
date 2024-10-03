@@ -11,7 +11,7 @@ void	start_builtins(t_command *command, t_env **env_list)
 	else if (!(ft_strcmp(command->args[0], "pwd")))
 		pwd_cmd();
 	else if (!(ft_strcmp(command->args[0], "env")))
-		env_cmd(command, *env_list);
+		env_cmd(*env_list);
 	else if (!(ft_strcmp(command->args[0], "export")))
 		*env_list = export_cmd(*env_list, command);
 	else if (!(ft_strcmp(command->args[0], "unset")))
@@ -88,35 +88,35 @@ int	pwd_cmd(void)
 // 	return (1);
 // }
 
-int echo_cmd(char **args, t_env *data) 
+int echo_cmd(char **args, t_env *data)
 {
-    int newline; 
-    int i; 
-	
+    int newline;
+    int i;
+
 	newline = 1;
 	i = 1;
 	(void)data;
-    while (args[i] && args[i][0] == '-' && args[i][1] == 'n') 
+    while (args[i] && args[i][0] == '-' && args[i][1] == 'n')
 	{
         int j = 1;
         while (args[i][j] == 'n')
             j++;
-        if (args[i][j] == '\0') 
+        if (args[i][j] == '\0')
 		{
             newline = 0;
             i++;
-        } 
-		else 
+        }
+		else
             break;
     }
-    while (args[i]) 
+    while (args[i])
 	{
         printf("%s", args[i]);
         i++;
-        if (args[i]) 
+        if (args[i])
             printf(" ");
     }
-    if (newline) 
+    if (newline)
         printf("\n");
     return 1;
 }
