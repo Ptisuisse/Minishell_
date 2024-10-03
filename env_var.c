@@ -44,18 +44,18 @@ int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 	(*input)++;
 	//if (**input == quote_type)
 	//	(*input)++;
-	//printf("dollar %c\n", **input);
+	printf("dollar %s\n", *input);
 	dollar = search_dollar(*input);
-	//printf("dollar 2 %c\n", **input);
+	printf("dollar 2 %c\n", **input);
 	temp_index = 0;
 	while (**input)
 	{
 	if (dollar)
 	{
-		//printf("dollar 3 %s\n", dollar);
-		while (dollar[temp_index] && dollar[temp_index] != quote_type)
+		printf("dollar 3 %s\n", dollar);
+		while (dollar[temp_index]) // && dollar[temp_index] != quote_type
 			{
-				//printf("dollar 4 %c\n", dollar[temp_index]);
+				printf("dollar 4 %c\n", dollar[temp_index]);
 				if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type)
 					{
 						// if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type && dollar[temp_index + 2] == '\0')
@@ -82,8 +82,10 @@ int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 	}
 	else
 	{
+		printf("dollar 5 %c\n", dollar[temp_index]);
 		while (**input && **input != quote_type)
 			buffer[(*buf_index)++] = *(*input)++;
+		return in_quotes;
 		break;
 	}
 	while (**input && **input != quote_type)

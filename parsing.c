@@ -13,8 +13,7 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 		{
 			quote_type = **input; 
 			in_quotes = handle_quotes(input, buffer, buf_index, quote_type);
-			//printf("quotes %s\n %c\n %d\n", buffer, **input, in_quotes);
-			//handle_quotes(input, buffer, buf_index, quote_type);
+			printf("quotes %s\n %c\n %d\n", buffer, **input, in_quotes);
 			if (**input == quote_type)
 				(*input)++;
 		}
@@ -36,12 +35,13 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 int	handle_quotes(const char **input, char *buffer, int *buf_index,
 	char quote_type)
 {
-	(void)quote_type;
 	int		in_quotes;
-	//if (quote_type == '"')
+
+	in_quotes = 1;
+	if (quote_type == '"')
 		in_quotes = handle_double_quotes(input, buffer, buf_index);
-	//else
-	//	handle_single_quotes(input, buffer, buf_index);
+	else
+		handle_single_quotes(input, buffer, buf_index);
 	return in_quotes;
 }
 
