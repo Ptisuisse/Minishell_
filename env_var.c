@@ -31,86 +31,111 @@ char	*get_env_value(const char *input, int *i)
 	env_value = getenv(temp);
 	return (env_value);
 }
+int handle_double_quotes(const char **input, char *buffer, int *buf_index) {
+    //char *dollar;
+   // int temp_index = 0;
 
-int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
-{
-	char	quote_type;
-	char	*dollar;
-	int		temp_index;
-	int		in_quotes;
-
-	in_quotes = 1;
-	quote_type = **input;
-	(*input)++;
-	//if (**input == quote_type)
-	//	(*input)++;
-	printf("dollar %s\n", *input);
-	dollar = search_dollar(*input);
-	printf("dollar 2 %c\n", **input);
-	temp_index = 0;
-	while (**input)
-	{
-	if (dollar)
-	{
-		printf("dollar 3 %s\n", dollar);
-		while (dollar[temp_index]) // && dollar[temp_index] != quote_type
-			{
-				printf("dollar 4 %c\n", dollar[temp_index]);
-				if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type)
-					{
-						// if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type && dollar[temp_index + 2] == '\0')
-						// 	{
-						// 		printf("dollar AAAA %s\n", dollar);
-						// 		buffer[(*buf_index)++] = dollar[temp_index++];
-						// 		break;
-						// 	}
-						while (**input && **input != quote_type)
-							(*input)++;	
-						//git addprintf("dollar 5 %s\n", dollar);
-						in_quotes = 0;
-						return in_quotes;}
-				buffer[(*buf_index)++] = dollar[temp_index++];
-				}
-		//printf("dollar 3 %s\n", dollar);
-		free(dollar);
-		while (**input && **input != quote_type)
-       		(*input)++;
-		//printf("input %c\n", **input);
-		in_quotes = 0;
-    // Stop further processing after dollar is handled
-    	return in_quotes;
-	}
-	else
-	{
-		printf("dollar 5 %c\n", dollar[temp_index]);
-		while (**input && **input != quote_type)
-			buffer[(*buf_index)++] = *(*input)++;
-		return in_quotes;
-		break;
-	}
-	while (**input && **input != quote_type)
-		(*input)++;	
-	if 	(**input && **input == quote_type)
-	{		
-		if 	(**input && (**input == '"' || **input == '\''))
-			(*input)++;
-	}
-	}
-	//printf("ALAL %s\n", *input);
-	//if (**input != quote_type)
-	//	(*input)++;
-	return in_quotes;
+    (*input)++; // Skip the opening quote
+    while (**input && **input != '"') {
+        if (**input == '$' && ft_isalpha((*input)[1])) {
+            handle_dollar_sign(input, buffer, buf_index);
+        } else {
+            buffer[(*buf_index)++] = *(*input)++;
+        }
+    }
+    (*input)++; // Skip the closing quote
+    buffer[*buf_index] = '\0';
+    return 1; // indicate we're done with double quotes
+}
+int handle_single_quotes(const char **input, char *buffer, int *buf_index) {
+    (*input)++; // Skip the opening quote
+    while (**input && **input != '\'') {
+        buffer[(*buf_index)++] = *(*input)++;
+    }
+    (*input)++; // Skip the closing quote
+    return 0; // indicate we're done with single quotes
 }
 
-int	handle_single_quotes(const char **input, char *buffer, int *buf_index)
-{
-	char	quote_type;
-	int		in_quotes;
 
-	in_quotes = 1;
-	quote_type = '\'';
-	(*input)++;
-	while (**input && **input != quote_type)
-		buffer[(*buf_index)++] = *(*input)++;
-	return in_quotes;
-}
+// int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
+// {
+// 	char	quote_type;
+// 	char	*dollar;
+// 	int		temp_index;
+// 	int		in_quotes;
+
+// 	in_quotes = 1;
+// 	quote_type = **input;
+// 	(*input)++;
+// 	//if (**input == quote_type)
+// 	//	(*input)++;
+// 	printf("dollar %s\n", *input);
+// 	dollar = search_dollar(*input);
+// 	printf("dollar 2 %c\n", **input);
+// 	temp_index = 0;
+// 	while (**input)
+// 	{
+// 	if (dollar)
+// 	{
+// 		printf("dollar 3 %s\n", dollar);
+// 		while (dollar[temp_index]) // && dollar[temp_index] != quote_type
+// 			{
+// 				printf("dollar 4 %c\n", dollar[temp_index]);
+// 				if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type)
+// 					{
+// 						// if (dollar[temp_index] == '$' && dollar[temp_index + 1] == quote_type && dollar[temp_index + 2] == '\0')
+// 						// 	{
+// 						// 		printf("dollar AAAA %s\n", dollar);
+// 						// 		buffer[(*buf_index)++] = dollar[temp_index++];
+// 						// 		break;
+// 						// 	}
+// 						while (**input && **input != quote_type)
+// 							(*input)++;	
+// 						//git addprintf("dollar 5 %s\n", dollar);
+// 						in_quotes = 0;
+// 						return in_quotes;}
+// 				buffer[(*buf_index)++] = dollar[temp_index++];
+// 				}
+// 		//printf("dollar 3 %s\n", dollar);
+// 		free(dollar);
+// 		while (**input && **input != quote_type)
+//        		(*input)++;
+// 		//printf("input %c\n", **input);
+// 		in_quotes = 0;
+//     // Stop further processing after dollar is handled
+//     	return in_quotes;
+// 	}
+// 	else
+// 	{
+// 		printf("dollar 5 %c\n", dollar[temp_index]);
+// 		while (**input && **input != quote_type)
+// 			buffer[(*buf_index)++] = *(*input)++;
+// 		return in_quotes;
+// 		break;
+// 	}
+// 	while (**input && **input != quote_type)
+// 		(*input)++;	
+// 	if 	(**input && **input == quote_type)
+// 	{		
+// 		if 	(**input && (**input == '"' || **input == '\''))
+// 			(*input)++;
+// 	}
+// 	}
+// 	//printf("ALAL %s\n", *input);
+// 	//if (**input != quote_type)
+// 	//	(*input)++;
+// 	return in_quotes;
+// }
+
+// int	handle_single_quotes(const char **input, char *buffer, int *buf_index)
+// {
+// 	char	quote_type;
+// 	int		in_quotes;
+
+// 	in_quotes = 1;
+// 	quote_type = '\'';
+// 	(*input)++;
+// 	while (**input && **input != quote_type)
+// 		buffer[(*buf_index)++] = *(*input)++;
+// 	return in_quotes;
+// }
