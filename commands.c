@@ -121,8 +121,7 @@ int echo_cmd(char **args, t_env *data)
     return 1;
 }
 
-
- int	cd_cmd(const char *path)
+int	cd_cmd(const char *path)
 {
 	if (chdir(path) != 0)
 	{

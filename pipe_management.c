@@ -11,16 +11,13 @@ void	test_pipe(t_command *commands, t_env **env_list)
 void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
-	//int			prev_pipe_read;
 	int			status;
 
 	cmd = commands;
-	//prev_pipe_read = -1;
 	if (commands->input_fd == 1)
 		redirect_input(commands);
 	if (commands->output_fd == 1)
 		redirect_output(commands);
-	//int i = 0;
 	while (commands)
 	{
 			if (commands->next)
@@ -40,18 +37,14 @@ void	commands_manager(t_command *commands, t_env **env_list)
 					close(commands->pipe[WRITE_END]);
 				}
 				choose_command(commands, env_list);
-				break ;
-				//exit(EXIT_FAILURE);
+				exit(EXIT_SUCCESS);
 			}
 			else
 			{
-        	   if (commands->next)
-        	        close(commands->pipe[WRITE_END]);
+				if (commands->next)
+					close(commands->pipe[WRITE_END]);
 				if (commands->prev)
-				{
 					close(commands->prev->pipe[READ_END]);
-					//prev_pipe_read = commands->pipe[READ_END];
-				}
 				commands = commands->next;
 			}
 	}
@@ -66,7 +59,7 @@ int	exec_command(char *pathname, char **args)
 	int pid;
 
 	pid = fork();
-	path = ft_strjoin("/bin/", pathname);
+	path = ft_strjoin("/bin/", pathname); //creer une fonction savoir si path valide ou non car faire /bin/ls dans le terminal ne marche pas
 	if (pid == 0)
 	{
 		if (execve(path, args, NULL) == -1)

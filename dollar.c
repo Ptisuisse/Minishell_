@@ -65,8 +65,7 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 	process_dollar(input, buffer, buf_index, quote_type);
 }
 
-static void	handle_dollar(const char *input, int *i, char *result,
-		int *result_index)
+static void	handle_dollar(const char *input, int *i, char *result, int *result_index)
 {
 	char	*env_value;
 

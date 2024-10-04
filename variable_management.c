@@ -48,11 +48,13 @@ void	env_cmd(t_env *env_list)
 	head = env_list;
 	while (env_list)
 	{
-		if (!env_list->value[0])
+		if (!env_list->value)
 			env_list = env_list->next;
 		else
+		{
 			printf("%s=%s\n", env_list->name, env_list->value);
-		env_list = env_list->next;
+			env_list = env_list->next;
+		}
 	}
 	env_list = head;
 }
@@ -95,23 +97,6 @@ void	sort_env_list(t_env **head_ref)
 	*head_ref = sorted;
 }
 
-int	ft_is_valid(char *arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '_')
-		{
-			printf("Minishell: export: `%s': not a valid identifier\n", arg);
-			return (0);
-		}
-		i++;
-	}
-	return (0);
-}
-
 t_env	*export_args(char *arg, t_env *env_list)
 {
 	t_env	*tmp;
@@ -130,7 +115,7 @@ t_env	*export_args(char *arg, t_env *env_list)
 	else
 	{
 		name = ft_strdup(arg);
-		value = ft_strdup("");
+		value = NULL;
 	}
 	while (tmp)
 	{
@@ -152,13 +137,52 @@ t_env	*export_args(char *arg, t_env *env_list)
 		perror("malloc");
 		free(name);
 		free(value);
-		return(NULL);
+		return (NULL);
 	}
 	new_node->name = name;
 	new_node->value = value;
 	new_node->next = env_list;
 	env_list = new_node;
 	return (env_list);
+}
+
+int	ft_is_valid(char **arg)
+{
+	int i;
+	int j;
+
+	i = 1;
+	while (arg[i])
+	{
+		j = 0;
+		while (arg[i][j])
+		{
+			if(arg[i][0] == '_')
+			{
+				if (arg[i][1] == '\0')
+				{
+					printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
+					return (0);
+				}
+			}
+			else if (arg[i][j] == '=')
+			{
+				if (!ft_isalnum(arg[i][j - 1]))
+				{
+					printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
+					return (0);
+				}
+			}
+			else if ((!ft_isalnum(arg[i][j]) || ft_isdigit(arg[i][0])) || arg[i][j] == '_')
+			{
+				printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
+				return (0);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (1);
 }
 
 t_env	*export_cmd(t_env *env_list, t_command *command)
@@ -168,11 +192,11 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 	head = env_list;
 	if (command->args[1] != NULL)
 	{
-		if (ft_is_valid(command->args[1]))
-			return (NULL);
+		if (!ft_is_valid(command->args))
+			return (head);
 		env_list = export_args(command->args[1], env_list);
 		if (env_list != NULL)
-			head = env_list; 
+			head = env_list;
 	}
 	else
 	{
@@ -187,10 +211,10 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 				else
 					break ;
 			}
-			if (current->value[0] != '\0')
-				printf("declare -x %s=\"%s\"\n", current->name, current->value);
-			else
+			if (current->value == NULL)
 				printf("declare -x %s\n", current->name);
+			else
+				printf("declare -x %s=\"%s\"\n", current->name, current->value);
 			current = current->next;
 		}
 	}
@@ -216,5 +240,5 @@ void	unset_cmd(char *path, t_env *env_list)
 		prev = env_list;
 		env_list = env_list->next;
 	}
-	env_list = head;
+	env_list = prev;
 }
