@@ -22,9 +22,10 @@ int	main(int argc, char **argv, char **envp)
 		{
 			printf("Error parsing command line.\n");
 			free(input);
-			//return (1);
+			return (1);
 		}
-		test_pipe(command_list, &env_list);
+		if (ft_isprint(*input))
+			test_pipe(command_list, &env_list);
 		free(input);
 		free_commands(command_list);
 		command_list = NULL;
