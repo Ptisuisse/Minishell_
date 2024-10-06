@@ -9,16 +9,20 @@ void parse_argument(const char **input, char *buffer, int *buf_index) {
             quote_type = **input; 
             in_quotes = handle_quotes(input, buffer, buf_index, quote_type);
             // Move past the closing quote
-            if (**input == quote_type) {
+            if (**input == quote_type) 
+			{
                 (*input)++;
             }
+			in_quotes = 0;
         } else if (**input == '$' && !in_quotes) {
-            handle_dollar_sign(input, buffer, buf_index);
+           // printf("quotes %s\n %s\n %d\n", buffer, *input, in_quotes);
+			handle_dollar_sign(input, buffer, buf_index);
         } else if ((**input == ' ' && !in_quotes) || (**input == '|')) {
             break;  
         } else {
             buffer[(*buf_index)++] = *(*input)++;
         }
+		//printf("quotes %s\n %s\n %d\n", buffer, *input, in_quotes);
     }
     buffer[*buf_index] = '\0';  
 }

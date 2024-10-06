@@ -29,15 +29,19 @@ int    check_builtins(char **command, t_data *data)
     return (status);
 }
 
-void process_dollar(const char **input, char *buffer, int *buf_index, char quote_type) {
+void process_dollar(const char **input, char *buffer, int *buf_index, char quote_type) // echo "'"$"'" problem here
+{
     char *dollar;
     int temp_index;
+	//int len;
+
 
 	(void)quote_type;
     dollar = search_dollar(*input); // Fetch the variable value
     temp_index = 0;
-
+	//printf("dollar 1 %c\n", **input);
     if (dollar) {
+		//printf("dollar 3 %s\n", dollar);
         while (dollar[temp_index]) { // Copy the dollar content
             buffer[(*buf_index)++] = dollar[temp_index++];
         }
@@ -56,17 +60,33 @@ void process_dollar(const char **input, char *buffer, int *buf_index, char quote
 void handle_dollar_sign(const char **input, char *buffer, int *buf_index) {
     char quote_type = '\0';
 
-    // Check if the next character after $ is a quote
+    // Check if the next character after $ is a quote (either single or double)
     if (*(*input + 1) == '\'' || *(*input + 1) == '"') {
-        quote_type = *(*input + 1);
+        quote_type = *(*input + 1);  // Set the quote type
+        (*input)++; // Skip the quote character
     }
 
-    process_dollar(input, buffer, buf_index, quote_type); // Process the dollar sign
+    // If the quote type was detected, skip until we find the matching closing quote
+    if (quote_type != '\0') {
+// Treat $ as a literal character
+        (*input)++;  // Skip the $
+
+        while (**input && **input != quote_type) {
+            buffer[(*buf_index)++] = *(*input)++;
+        }
+        if (**input == quote_type) {
+            (*input)++; // Skip the closing quote
+        }
+    } else {
+        // Process dollar normally if it's not followed by a quote
+        process_dollar(input, buffer, buf_index, quote_type);
+    }
 }
 int handle_dollar(const char *input, int *i, char *result, int *result_index) {
     char *env_value;
 
     (*i)++;
+	//printf("dollar 2 %c\n", *input);
     if (input[*i] == '?') {
         // Handle special case for `$?` (exit status)
         // You would need to set an appropriate value in `result` here
@@ -209,7 +229,7 @@ char *search_dollar(const char *input) {
     char result[1024];
     int result_index = 0;
     int i = 0;
-
+	//printf("dollar 8 %s\n", input);
     while (ft_isprint(input[i])) {
         // Skip over any single or double quotes
         if (input[i] == '"' || input[i] == '\'') {
@@ -220,7 +240,14 @@ char *search_dollar(const char *input) {
         if (input[i] == '$' && ft_isalpha(input[i + 1])) {
             // Handle variable expansion here
             handle_dollar(input, &i, result, &result_index);
-        } else {
+        } 
+		// else if (input[i] == '$' && input[i] == '"') // go here, only delete dollar
+		// 	{
+		// 		result[result_index] = '\0';
+		// 		i++; 
+		// 		return 0;
+		// 		}
+		else {
             result[result_index++] = input[i++];
         }
     }
