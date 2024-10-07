@@ -3,82 +3,40 @@
 void	parse_argument(const char **input, char *buffer, int *buf_index)
 {
 	char	quote_type;
-	int		in_quotes;
 
-	in_quotes = 0;
 	skip_spaces(input);
 	while (**input)
 	{
 		if (**input == '"' || **input == '\'')
 		{
 			quote_type = **input;
-			in_quotes = handle_quotes(input, buffer, buf_index, quote_type);
-			if (**input == quote_type)
-				(*input)++;
-			in_quotes = 0;
+			handle_quotes(input, buffer, buf_index, quote_type);
 		}
-		else if (**input == '$' && !in_quotes)
+		else if (**input == '$')
 			handle_dollar_sign(input, buffer, buf_index);
-		else if ((**input == ' ' && !in_quotes) || (**input == '|'))
+		else if ((**input == ' ') || (**input == '|'))
 			break ;
 		else
 			buffer[(*buf_index)++] = *(*input)++;
 	}
 	buffer[*buf_index] = '\0';
 }
-
-int	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type)
+void	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type)
 {
-	if (quote_type == '"')
-		return (handle_double_quotes(input, buffer, buf_index));
-	else
-		return (handle_single_quotes(input, buffer, buf_index));
+	(*input)++;
+	while (**input && **input != quote_type)
+	{
+		if (quote_type == '"' && **input == '$' && ft_isalpha((*input)[1]))
+			handle_dollar_sign(input, buffer, buf_index);
+		else
+			buffer[(*buf_index)++] = *(*input)++;
+	}
+	if (**input == quote_type)
+		(*input)++;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int parse_arguments(const char **input, t_command *cmd, int *arg_index) {
+int parse_arguments(const char **input, t_command *cmd, int *arg_index) 
+{
     char buffer[1024];
     int buf_index = 0;
 
@@ -88,7 +46,8 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index) {
     return buf_index;
 }
 
-int parse_command(const char **input, t_command *cmd) {
+int parse_command(const char **input, t_command *cmd) 
+{
     int arg_index = 0;
 
     while (**input && **input != '|') {

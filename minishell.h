@@ -89,7 +89,7 @@ void	parse_redirection(const char **input, t_command *cmd);
 int check_for_pipe(const char **input);
 char	*get_env_value(const char *input, int *i);
 int	check_quotes(const char **input, char *quote_type);
-int	handle_quotes(const char **input, char *buffer, int *buf_index,char quote_type);
+void	handle_quotes(const char **input, char *buffer, int *buf_index,char quote_type);
 void	skip_spaces(const char **input);
 void	handle_dollar_sign(const char **input, char *buffer, int *buf_index);
 int	handle_double_quotes(const char **input, char *buffer, int *buf_index);

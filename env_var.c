@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 #include "minishell.h"
 
 void	skip_spaces(const char **input)
@@ -30,7 +18,8 @@ char	*get_env_value(const char *input, int *i)
 	temp[temp_index] = '\0';
 	env_value = getenv(temp);
 	return (env_value);
-}int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
+}
+int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 {
 	(*input)++;
 	while (**input && **input != '"')

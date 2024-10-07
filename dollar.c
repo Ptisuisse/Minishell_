@@ -1,31 +1,31 @@
 #include "minishell.h"
 
-int	check_builtins(char **command, t_data *data)
+int    check_builtins(char **command, t_data *data)
 {
-	int	status;
+    int    status;
 
-	status = 0;
-	if (ft_strcmp(command[0], "$") == 0)
-		status = 1;
-	else if (!ft_strcmp(command[0], "exit"))
-		status = 1;
-	else if (!ft_strcmp(command[0], "echo"))
-		status = 1;
-	else if (!ft_strcmp(command[0], "cd"))
-		status = 1;
-	else if (!ft_strcmp(command[0], "export"))
-		status = 1;
-	else if (!ft_strcmp(command[0], "unset"))
-		status = 1;
-	else if (!ft_strcmp(command[0], "env"))
-		status = 1;
-	else if (!ft_strcmp(command[0], "pwd"))
-		status = 1;
-	else if (!ft_strcmp(command[0], "clear"))
-		clear_cmd();
-	if (status == 1)
-		start_builtins(command, data);
-	return (status);
+    status = 0;
+    if (ft_strcmp(command[0], "$") == 0)
+        status = 1;
+    else if (ft_strcmp(command[0], "exit") == 0)
+        status = 1;
+    else if (ft_strcmp(command[0], "echo") == 0 && ft_strlen(command[0]) == 4) 
+        status = 1;
+    else if (ft_strcmp(command[0], "cd") == 0 && ft_strlen(command[0]) == 2) 
+        status = 1;
+    else if (ft_strcmp(command[0], "export") == 0 && ft_strlen(command[0]) == 6) 
+        status = 1;
+    else if (ft_strcmp(command[0], "unset") == 0 && ft_strlen(command[0]) == 5) 
+        status = 1;
+    else if (ft_strcmp(command[0], "env") == 0 && ft_strlen(command[0]) == 3) 
+        status = 1;
+    else if (ft_strcmp(command[0], "pwd") == 0 && ft_strlen(command[0]) == 3) 
+        status = 1;
+    else if (ft_strcmp(command[0], "clear") == 0 && ft_strlen(command[0]) == 5) 
+        clear_cmd();
+    if (status == 1)
+        start_builtins(command, data);
+    return (status);
 }
 
 void	process_dollar(const char **input, char *buffer, int *buf_index)
