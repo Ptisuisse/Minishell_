@@ -1,83 +1,82 @@
 #include "minishell.h"
-void parse_argument(const char **input, char *buffer, int *buf_index) {
-    char quote_type;
-    int in_quotes = 0;
 
-    skip_spaces(input);
-    while (**input) {
-        if (**input == '"' || **input == '\'') {
-            quote_type = **input; 
-            in_quotes = handle_quotes(input, buffer, buf_index, quote_type);
-            // Move past the closing quote
-            if (**input == quote_type) 
-			{
-                (*input)++;
-            }
+void	parse_argument(const char **input, char *buffer, int *buf_index)
+{
+	char	quote_type;
+	int		in_quotes;
+
+	in_quotes = 0;
+	skip_spaces(input);
+	while (**input)
+	{
+		if (**input == '"' || **input == '\'')
+		{
+			quote_type = **input;
+			in_quotes = handle_quotes(input, buffer, buf_index, quote_type);
+			if (**input == quote_type)
+				(*input)++;
 			in_quotes = 0;
-        } else if (**input == '$' && !in_quotes) {
-           // printf("quotes %s\n %s\n %d\n", buffer, *input, in_quotes);
+		}
+		else if (**input == '$' && !in_quotes)
 			handle_dollar_sign(input, buffer, buf_index);
-        } else if ((**input == ' ' && !in_quotes) || (**input == '|')) {
-            break;  
-        } else {
-            buffer[(*buf_index)++] = *(*input)++;
-        }
-		//printf("quotes %s\n %s\n %d\n", buffer, *input, in_quotes);
-    }
-    buffer[*buf_index] = '\0';  
-}
-int handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type) {
-    if (quote_type == '"') {
-        return handle_double_quotes(input, buffer, buf_index);
-    } else {
-        return handle_single_quotes(input, buffer, buf_index);
-    }
+		else if ((**input == ' ' && !in_quotes) || (**input == '|'))
+			break ;
+		else
+			buffer[(*buf_index)++] = *(*input)++;
+	}
+	buffer[*buf_index] = '\0';
 }
 
-// void	parse_argument(const char **input, char *buffer, int *buf_index)
-// {
-// 	char	quote_type;
-// 	int		in_quotes;
+int	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type)
+{
+	if (quote_type == '"')
+		return (handle_double_quotes(input, buffer, buf_index));
+	else
+		return (handle_single_quotes(input, buffer, buf_index));
+}
 
-// 	in_quotes = 0;
-// 	skip_spaces(input);
-// 	while (**input)
-// 	{
-// 		if (**input == '"' || **input == '\'')
-// 		{
-// 			quote_type = **input; 
-// 			in_quotes = handle_quotes(input, buffer, buf_index, quote_type);
-// 			printf("quotes %s\n %c\n %d\n", buffer, **input, in_quotes);
-// 			if (**input == quote_type)
-// 				(*input)++;
-// 		}
-// 		else if (**input == '$'&& !in_quotes)
-// 			{
-// 				handle_dollar_sign(input, buffer, buf_index);
-// 				//printf("dollar %c\n", **input);
-// 				}
-// 		else if ((**input == ' ' && !in_quotes) || (**input == '|'))
-// 			break;  
-// 		else 
-// 			buffer[(*buf_index)++] = *(*input)++;
-// 		//rintf("quotes 2 %s\n", *input);
-// 		//in_quotes = 0; 
-// 	}
-// 	buffer[*buf_index] = '\0';  
-// }
 
-// int	handle_quotes(const char **input, char *buffer, int *buf_index,
-// 	char quote_type)
-// {
-// 	int		in_quotes;
 
-// 	in_quotes = 1;
-// 	if (quote_type == '"')
-// 		in_quotes = handle_double_quotes(input, buffer, buf_index);
-// 	else
-// 		handle_single_quotes(input, buffer, buf_index);
-// 	return in_quotes;
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int parse_arguments(const char **input, t_command *cmd, int *arg_index) {
     char buffer[1024];
@@ -116,7 +115,7 @@ int	parse_command_line(const char *input, t_command **command_list)
 
 	if (open_quote((char *)input))
 		return (1);
-	while (*input) //<<--- leak : Invalid read of size 1
+	while (*input) 
 	{
 		new_node = init_command();
 		if (!new_node)
