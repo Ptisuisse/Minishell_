@@ -1,6 +1,6 @@
 SRCS =	parsing.c \
 		commands.c \
-		prompt.c \
+		main.c \
 		signal.c \
 		utils.c \
 		parsingutils.c \
@@ -9,6 +9,7 @@ SRCS =	parsing.c \
 		env_var.c \
 		dollar.c \
 		redirections.c \
+		variable_management.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc

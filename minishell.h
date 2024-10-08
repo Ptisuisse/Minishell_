@@ -1,18 +1,18 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft/libft.h"
+# include <unistd.h>
 # include <fcntl.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <unistd.h>
 
 # define MAX_TOKENS 100
 # define READ_END 0
@@ -37,6 +37,7 @@ typedef struct s_env
 {
 	char				*name;
 	char				*value;
+	char **env;
 	struct s_env		*next;
 }						t_env;
 
@@ -53,10 +54,14 @@ typedef struct s_data
 	// struct s_data	next;
 }						t_data;
 
-/*dollar.c*/
-int						check_builtins(t_command *command, t_data *data);
 
-void					create_env_list(t_data *data);
+void	test_pipe(t_command *commands, t_env **env_list);
+t_env	*ftlstlst(t_env *lst);
+/*dollar.c*/
+int						check_builtins(t_command *command, t_env **env_list);
+
+///void					create_env_list(t_data *data);
+void	create_env_list(char **envp, t_env **env_list);
 void					printf_list(t_env *env_list);
 void					clear_cmd(void);
 void					free_env(t_env *command_list);
@@ -73,21 +78,20 @@ char					*ft_strcpy(char *dst, const char *src);
 char					*ft_strcat(char *dst, const char *src);
 int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
-void					start_builtins(t_command *command, t_data *data);
-int						choose_command(t_command *command, t_data *data);
-void					env_cmd(t_data *data);
-int						echo_cmd(char **args, t_data *data);
-int						cd_cmd(char *path);
+void					start_builtins(t_command *command, t_env **env_list);
+int						choose_command(t_command *command, t_env **env_list);
+void					env_cmd(t_env *env);
+int						echo_cmd(char **args, t_env *env);
+int						cd_cmd(const char *path);
 int						pwd_cmd(void);
-int						export_cmd(t_data *data, t_command *command);
-void					export_args(char *arg, t_env **env_list);
-void					unset_cmd(char *path, t_data *data);
+t_env					*export_cmd(t_env *env, t_command *command);
+t_env					*export_args(char *arg, t_env *env_list);
+void					unset_cmd(char *path, t_env *env);
 /*pipe_management*/
-void					commands_manager(t_command *commands, t_data *data);
+void					commands_manager(t_command *commands, t_env **env_list);
 int						exec_command(char *pathname, char **args);
 /*parsing*/
 
-int	check_builtins(char **command, t_data *data);
 /*parsingutils*/
 void					parse_argument(const char **input, char *buffer,
 							int *buf_index);

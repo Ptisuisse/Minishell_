@@ -12,7 +12,8 @@ t_command	*init_command(void)
 	element->append_file = NULL;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
-	
+	element->prev = NULL;
+	// element->content = content;
 	return (element);
 }
 
@@ -37,6 +38,7 @@ void	append_command_node(t_command **lst, t_command *new)
 	{
 		tmp = ft_lstlst(*lst);
 		tmp->next = new;
+		new->prev = tmp;
 	}
 	return ;
 }
