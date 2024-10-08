@@ -42,20 +42,6 @@ void	append_command_node(t_command **lst, t_command *new)
 	}
 	return ;
 }
-// void	append_command_node(t_command **head, t_command *new_node)
-//{
-//	t_command	*temp;
-
-//	if (!*head)
-//	{
-//		*head = new_node;
-//		return ;
-//	}
-//	temp = *head;
-//	while (temp->next)
-//		temp = temp->next;
-//	temp->next = new_node;
-//}
 
 void	quoting_choice(bool *double_q, bool *sing_q, int *index, char c)
 {
