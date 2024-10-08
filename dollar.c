@@ -1,7 +1,7 @@
 
 #include "minishell.h"
 
-int	check_builtins(t_command *command, t_data *data)
+int	check_builtins(t_command *command, t_env **env_list)
 {
     int    status;
 
@@ -27,7 +27,7 @@ int	check_builtins(t_command *command, t_data *data)
 	else if (!(ft_strcmp(command->args[0], "unset")))
 		status = 1;
 	if (status == 1)
-		start_builtins(command, data);
+		start_builtins(command, env_list);
 	return (status);
 }
 
@@ -65,8 +65,7 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 	process_dollar(input, buffer, buf_index, quote_type);
 }
 
-static void	handle_dollar(const char *input, int *i, char *result,
-		int *result_index)
+static void	handle_dollar(const char *input, int *i, char *result, int *result_index)
 {
 	char	*env_value;
 
