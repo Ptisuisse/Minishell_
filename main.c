@@ -4,14 +4,14 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
 	t_command	*command_list;
-	t_data		data;
+	t_env	*env_list;
+
+	env_list = malloc(sizeof(t_env));
 
 	(void)argc;
 	(void)argv;
 	command_list = NULL;
-	data.env = envp;
-	create_env_list(&data);
-	//printf_list(data.env_list);
+	create_env_list(envp, &env_list);
 	while (1)
 	{
 		signal_handle();
@@ -24,9 +24,9 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			return (1);
 		}
-		//print_commands(command_list);
+		if (ft_isprint(*input))
+			test_pipe(command_list, &env_list);
 		free(input);
-		commands_manager(command_list, &data);
 		free_commands(command_list);
 		command_list = NULL;
 	}

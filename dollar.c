@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	check_builtins(t_command *command, t_data *data)
+int	check_builtins(t_command *command, t_env **env_list)
 {
     int    status;
 
