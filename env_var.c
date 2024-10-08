@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   env_var.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 17:05:25 by lisambet          #+#    #+#             */
-/*   Updated: 2024/09/30 20:58:15 by lisambet         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 void	skip_spaces(const char **input)
@@ -31,51 +19,111 @@ char	*get_env_value(const char *input, int *i)
 	env_value = getenv(temp);
 	return (env_value);
 }
-
-void	handle_double_quotes(const char **input, char *buffer, int *buf_index)
+int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 {
-	char	quote_type;
-	char	*dollar;
-	int		temp_index;
-
-	quote_type = **input;
 	(*input)++;
-	//if (**input == quote_type)
-	//	(*input)++;
-	//printf("dollar %c\n", **input);
-	dollar = search_dollar(*input);
-	//printf("dollar 2 %c\n", **input);
-	temp_index = 0;
-	if (dollar)
+	while (**input && **input != '"')
 	{
-		//printf("dollar 3 %c\n", **input);
-		while (dollar[temp_index] && dollar[temp_index] != quote_type)
-			buffer[(*buf_index)++] = dollar[temp_index++];
-		free(dollar);
-	}
-	else
-	{
-		while (**input && **input != quote_type)
+		if (**input == '$' && ft_isalpha((*input)[1]))
+			handle_dollar_sign(input, buffer, buf_index);
+		else
 			buffer[(*buf_index)++] = *(*input)++;
 	}
-	while (**input && **input != quote_type)
-		(*input)++;	
-	if 	(**input && **input == quote_type)
-	{		
-		if 	(**input && (**input == '"' || **input == '\''))
-			(*input)++;
-	}
-	//printf("ALAL %s\n", *input);
-	//if (**input != quote_type)
-	//	(*input)++;
-}
-
-void	handle_single_quotes(const char **input, char *buffer, int *buf_index)
-{
-	char	quote_type;
-
-	quote_type = '\'';
 	(*input)++;
-	while (**input && **input != quote_type)
-		buffer[(*buf_index)++] = *(*input)++;
+	buffer[*buf_index] = '\0';
+	return (1);
 }
+
+int	handle_single_quotes(const char **input, char *buffer, int *buf_index)
+{
+	(*input)++;
+	while (**input && **input != '\'')
+		buffer[(*buf_index)++] = *(*input)++;
+	(*input)++;
+	return (0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

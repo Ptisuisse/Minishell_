@@ -3,47 +3,40 @@
 void	parse_argument(const char **input, char *buffer, int *buf_index)
 {
 	char	quote_type;
-	int		in_quotes;
 
-	in_quotes = 0;
 	skip_spaces(input);
 	while (**input)
 	{
 		if (**input == '"' || **input == '\'')
 		{
-			in_quotes = 1; // = handle_quotes(input, buffer, buf_index, quote_type);
-			quote_type = **input; 
-			//printf("quotes %c\n", **input);
+			quote_type = **input;
 			handle_quotes(input, buffer, buf_index, quote_type);
-			if (**input == quote_type)
-				(*input)++;
 		}
 		else if (**input == '$')
-			{
-				handle_dollar_sign(input, buffer, buf_index);
-				//printf("dollar %c\n", **input);
-				}
-		else if ((**input == ' ' && !in_quotes) || (**input == '|'))
-			break;  
+			handle_dollar_sign(input, buffer, buf_index);
+		else if ((**input == ' ') || (**input == '|'))
+			break ;
 		else
 			buffer[(*buf_index)++] = *(*input)++;
-		in_quotes = 0; 
 	}
-	buffer[*buf_index] = '\0';  
+	buffer[*buf_index] = '\0';
 }
-
-void	handle_quotes(const char **input, char *buffer, int *buf_index,
-	char quote_type)
+void	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type)
 {
-	//int		in_quotes;
-	if (quote_type == '"')
-		handle_double_quotes(input, buffer, buf_index);
-	else
-		handle_single_quotes(input, buffer, buf_index);
-	//ret
+	(*input)++;
+	while (**input && **input != quote_type)
+	{
+		if (quote_type == '"' && **input == '$' && ft_isalpha((*input)[1]))
+			handle_dollar_sign(input, buffer, buf_index);
+		else
+			buffer[(*buf_index)++] = *(*input)++;
+	}
+	if (**input == quote_type)
+		(*input)++;
 }
 
-int parse_arguments(const char **input, t_command *cmd, int *arg_index) {
+int parse_arguments(const char **input, t_command *cmd, int *arg_index) 
+{
     char buffer[1024];
     int buf_index = 0;
 
@@ -53,7 +46,8 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index) {
     return buf_index;
 }
 
-int parse_command(const char **input, t_command *cmd) {
+int parse_command(const char **input, t_command *cmd) 
+{
     int arg_index = 0;
 
     while (**input && **input != '|') {
@@ -80,7 +74,7 @@ int	parse_command_line(const char *input, t_command **command_list)
 
 	if (open_quote((char *)input))
 		return (1);
-	while (*input) //<<--- leak : Invalid read of size 1
+	while (*input) 
 	{
 		new_node = init_command();
 		if (!new_node)
