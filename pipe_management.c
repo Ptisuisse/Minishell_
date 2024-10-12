@@ -53,28 +53,32 @@ void	commands_manager(t_command *commands, t_env **env_list)
 		;
 }
 
-char	*check_path(char *pathname)
+int	check_path(char *pathname)
 {
-	if (!ft_strcmp(pathname, "/bin/"))
-		pathname = ft_strjoin("/bin/", pathname);
-	printf("check_path%s\n", pathname);
-	return pathname;
+	if (!ft_strncmp(pathname, "/bin/", 5))
+		return (1);
+	return (0);
 }
 
 int	exec_command(char *pathname, char **args)
 {
 	int pid;
+	char *path;
 
-	pathname = check_path(pathname);
+	if (!check_path(pathname))
+		path = ft_strjoin("/bin/", pathname);
+	else
+		path = ft_strdup(pathname);
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(pathname, args, NULL) == -1)
+		if (execve(path, args, NULL) == -1)
 		{
 			printf("%s: command not found\n", pathname);
 			return (0);
 		}
 	}
+	free(path);
 	waitpid(pid, NULL, 0);
 	return (1);
 }
