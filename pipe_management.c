@@ -53,23 +53,28 @@ void	commands_manager(t_command *commands, t_env **env_list)
 		;
 }
 
+char	*check_path(char *pathname)
+{
+	if (!ft_strcmp(pathname, "/bin/"))
+		pathname = ft_strjoin("/bin/", pathname);
+	printf("check_path%s\n", pathname);
+	return pathname;
+}
+
 int	exec_command(char *pathname, char **args)
 {
-	char *path;
 	int pid;
 
+	pathname = check_path(pathname);
 	pid = fork();
-	path = ft_strjoin("/bin/", pathname); //creer une fonction savoir si path valide ou non car faire /bin/ls dans le terminal ne marche pas
 	if (pid == 0)
 	{
-		if (execve(path, args, NULL) == -1)
+		if (execve(pathname, args, NULL) == -1)
 		{
 			printf("%s: command not found\n", pathname);
-			free(path);
 			return (0);
 		}
 	}
 	waitpid(pid, NULL, 0);
-	free(path);
 	return (1);
 }
