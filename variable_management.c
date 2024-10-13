@@ -228,7 +228,7 @@ void	unset_cmd(char *path, t_env *env_list)
 
 	prev = NULL;
 	head = env_list;
-	while (env_list)
+	while (head)
 	{
 		if (ft_strcmp(env_list->name, path) == 0)
 		{

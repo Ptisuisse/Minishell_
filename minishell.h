@@ -107,7 +107,7 @@ void					handle_dollar_sign(const char **input, char *buffer,
 
 int handle_double_quotes(const char **input, char *buffer, int *buf_index);
 int	handle_single_quotes(const char **input, char *buffer, int *buf_index);
-char					*search_dollar(const char *input);
+char					*search_dollar(const char *input, char quote_type);
 // void					print_commands(t_command *command_list);
 int						parse_command_line(const char *input,
 							t_command **command_list);

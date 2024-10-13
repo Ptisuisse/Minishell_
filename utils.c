@@ -1,17 +1,17 @@
 #include "minishell.h"
 
- void	printf_list(t_env *env_list)
-{
-	t_env	*tmp;
+//  void	printf_list(t_env *env_list)
+// {
+// 	t_env	*tmp;
 
-	tmp = env_list;
-	while (tmp)
-	{
-		printf("%s=", tmp->name);
-		printf("%s\n", tmp->value);
-		tmp = tmp->next;
-	}
-}
+// 	tmp = env_list;
+// 	while (tmp)
+// 	{
+// 		printf("%s=", tmp->name);
+// 		printf("%s\n", tmp->value);
+// 		tmp = tmp->next;
+// 	}
+// }
 
 char	*ft_strcpy(char *dst, const char *src)
 {

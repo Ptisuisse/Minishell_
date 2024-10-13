@@ -33,6 +33,10 @@ run_test() {
 run_test "Simple echo" "echo Hello" "Hello"
 run_test "Simple echo" 'echo "$"' '$'
 run_test "Simple echo" "echo '$'" '$'
+run_test "Echo unset variable without quotes" "echo \$s" ""
+run_test "Echo unset variable with single quotes" "echo '\$s'" '$s'
+run_test "Echo unset variable with double quotes" "echo \"\$s\"" ""
+run_test "Echo with partial unset variable" "echo sdcs\$asf" "sdcs"
 run_test "Echo with pipe" "echo \"\" | echo s" "s"
 
 run_test "Echo with dollar sign inside single quotes" "echo \"'\"\$\"'\"" "''"
