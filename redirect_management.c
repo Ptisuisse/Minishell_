@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	redirect_input(t_command *command) // >
+void	redirect_input(t_command *command)
 {
 	char	*filename;
 	int		fd;
@@ -16,7 +16,7 @@ void	redirect_input(t_command *command) // >
 	close(fd);
 }
 
-void	redirect_output(t_command *command) // <
+void	redirect_output(t_command *command)
 {
 	char	*filename;
 	int		fd;
