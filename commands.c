@@ -3,11 +3,11 @@
 void	start_builtins(t_command *command, t_env **env_list)
 {
 	if (!(ft_strcmp(command->args[0], "exit")))
-		exit_cmd(ft_atoi(command->args[1]));
+		exit_cmd(command);
 	else if (!(ft_strcmp(command->args[0], "echo")))
 		echo_cmd(command->args);
 	else if (!(ft_strcmp(command->args[0], "cd")))
-		cd_cmd(command->args[1], *env_list);
+		cd_cmd(command, *env_list);
 	else if (!(ft_strcmp(command->args[0], "pwd")))
 		pwd_cmd();
 	else if (!(ft_strcmp(command->args[0], "env")))
@@ -40,12 +40,17 @@ int	choose_command(t_command *command, t_env **env_list)
 	return (result);
 }
 
-int	exit_cmd(int args)
+int	exit_cmd(t_command *command)
 {
-	exit(args);
+	if (ft_strcmp(command->args[0], "exit") == 0 && command->args[2])
+	{
+		printf("Minishell: exit: too many arguments\n");
+		g_exit_code = 1;
+	}
+	return (0);
 }
 
-int	pwd_cmd(void)
+void	pwd_cmd(void)
 {
 	char	*cwd;
 
@@ -54,12 +59,12 @@ int	pwd_cmd(void)
 	{
 		printf("%s\n", cwd);
 		free(cwd);
-		return (1);
+		g_exit_code = 0;
 	}
 	else
 	{
 		printf("Error : pwd\n");
-		return (0);
+		g_exit_code = 1;
 	}
 }
 
@@ -90,7 +95,7 @@ void echo_cmd(char **args)
 	}
 	if (newline)
 		printf("\n");
-	exit_cmd(0);
+	g_exit_code = 0;
 }
 
 //int echo_cmd(char **args, t_env *data)
@@ -144,25 +149,30 @@ void	update_env(t_env *env_list, char *name, char *value)
 	env_list = head;
 }
 
-int	cd_cmd(const char *path, t_env *env_list)
+void	cd_cmd(t_command *command, t_env *env_list)
 {
 	char	*oldpwd;
 	char	*newpwd;
 
 	oldpwd = getcwd(NULL, 0);
-	if (!path)
-		path = ft_strdup(getenv("HOME"));
-	if (chdir(path) < 0)
+	if (!command->args[1])
+		command->args[1] = ft_strdup(getenv("HOME"));
+	if (command->args[2])
 	{
-		printf("Minishell: cd: %s: No such file or directory\n", path);
-		free(oldpwd);
-		return (0);
+				printf("Minishell: cd: %s too many arguments\n", command->args[1]);
+		g_exit_code = 1;
 	}
+	else if (chdir(command->args[1]) < 0)
+	{
+		printf("Minishell: cd: %s: No such file or directory\n", command->args[1]);
+		g_exit_code = 1;
+	}
+	else
+		g_exit_code = 0;
 	newpwd = getcwd(NULL, 0);
 	update_env(env_list, "PWD", newpwd);
 	update_env(env_list, "OLDPWD", oldpwd);
 	free(oldpwd);
 	free(newpwd);
-	return (1);
 }
 
