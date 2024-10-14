@@ -22,6 +22,7 @@ typedef struct s_command
 {
 	char				*command;
 	char				*args[MAX_TOKENS];
+	int					exit_code;
 	char				*input_file;
 	int					input_fd;
 	char				*output_file;
@@ -79,10 +80,11 @@ char					*ft_strcpy(char *dst, const char *src);
 char					*ft_strcat(char *dst, const char *src);
 int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
+int						exit_cmd(int args);
 void					start_builtins(t_command *command, t_env **env_list);
 int						choose_command(t_command *command, t_env **env_list);
 void					env_cmd(t_env *env);
-int						echo_cmd(char **args);
+void						echo_cmd(char **args);
 int						cd_cmd(const char *path, t_env *env_list);
 int						pwd_cmd(void);
 t_env					*export_cmd(t_env *env, t_command *command);

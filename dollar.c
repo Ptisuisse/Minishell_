@@ -81,7 +81,7 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 
 	(*i)++;
 	if (input[*i] == '?')
-		return (0);
+		return(0);
 	env_value = get_env_value(input, i);
 	if (env_value)
 	{

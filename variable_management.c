@@ -152,6 +152,7 @@ int	ft_is_valid(char **arg)
 	int j;
 
 	i = 1;
+
 	while (arg[i])
 	{
 		j = 0;
@@ -161,7 +162,7 @@ int	ft_is_valid(char **arg)
 			{
 				if (arg[i][1] == '\0')
 				{
-					printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
+					printf("1Minishell: export: `%s': not a valid identifier\n", arg[i]);
 					return (0);
 				}
 			}
@@ -169,13 +170,13 @@ int	ft_is_valid(char **arg)
 			{
 				if (!ft_isalnum(arg[i][j - 1]))
 				{
-					printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
+					printf("2Minishell: export: `%s': not a valid identifier\n", arg[i]);
 					return (0);
 				}
 			}
 			else if ((!ft_isalnum(arg[i][j]) || ft_isdigit(arg[i][0])) || arg[i][j] == '_')
 			{
-				printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
+				printf("3Minishell: export: `%s': not a valid identifier\n", arg[i]);
 				return (0);
 			}
 			j++;
@@ -188,7 +189,9 @@ int	ft_is_valid(char **arg)
 t_env	*export_cmd(t_env *env_list, t_command *command)
 {
 	t_env	*head;
+	t_env	*current;
 
+	current = NULL;
 	head = env_list;
 	if (command->args[1] != NULL)
 	{
@@ -201,7 +204,7 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 	else
 	{
 		sort_env_list(&head);
-		t_env *current = head;
+		current = head;
 		while (current)
 		{
 			if (current->name[0] == '_' && current->name[1] == '\0')
@@ -223,11 +226,9 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 
 void	unset_cmd(char *path, t_env *env_list)
 {
-	t_env	*head;
 	t_env	*prev;
 
 	prev = NULL;
-	head = env_list;
 	while (env_list)
 	{
 		if (ft_strcmp(env_list->name, path) == 0)

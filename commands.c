@@ -3,7 +3,7 @@
 void	start_builtins(t_command *command, t_env **env_list)
 {
 	if (!(ft_strcmp(command->args[0], "exit")))
-		exit(0);
+		exit_cmd(ft_atoi(command->args[1]));
 	else if (!(ft_strcmp(command->args[0], "echo")))
 		echo_cmd(command->args);
 	else if (!(ft_strcmp(command->args[0], "cd")))
@@ -40,6 +40,11 @@ int	choose_command(t_command *command, t_env **env_list)
 	return (result);
 }
 
+int	exit_cmd(int args)
+{
+	exit(args);
+}
+
 int	pwd_cmd(void)
 {
 	char	*cwd;
@@ -58,12 +63,14 @@ int	pwd_cmd(void)
 	}
 }
 
-int echo_cmd(char **args)
+void echo_cmd(char **args)
 {
-	int newline = 1;
-	int i = 1;
+	int newline;
+	int i;
 	int	j;
 
+	newline = 1;
+	i = 1;
 	while (args[i] && args[i][0] == '-')
 	{
 		j = 1;
@@ -83,7 +90,7 @@ int echo_cmd(char **args)
 	}
 	if (newline)
 		printf("\n");
-	return (1);
+	exit_cmd(0);
 }
 
 //int echo_cmd(char **args, t_env *data)
