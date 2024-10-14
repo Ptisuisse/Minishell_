@@ -18,10 +18,13 @@
 # define READ_END 0
 # define WRITE_END 1
 
+extern int g_exit_code;
+
 typedef struct s_command
 {
 	char				*command;
 	char				*args[MAX_TOKENS];
+	int					exit_code;
 	char				*input_file;
 	int					input_fd;
 	char				*output_file;
@@ -55,6 +58,8 @@ typedef struct s_data
 	// struct s_data	next;
 }						t_data;
 
+/*erro.c*/
+char	*replace_by_exit_code(char *result, int *result_index);
 
 void	test_pipe(t_command *commands, t_env **env_list);
 t_env	*ftlstlst(t_env *lst);
@@ -79,12 +84,13 @@ char					*ft_strcpy(char *dst, const char *src);
 char					*ft_strcat(char *dst, const char *src);
 int						ft_strcmp(const char *s1, const char *s2);
 /*commands*/
+int						exit_cmd(t_command *command);
 void					start_builtins(t_command *command, t_env **env_list);
 int						choose_command(t_command *command, t_env **env_list);
 void					env_cmd(t_env *env);
-int						echo_cmd(char **args);
-int						cd_cmd(const char *path, t_env *env_list);
-int						pwd_cmd(void);
+void						echo_cmd(char **args);
+void						cd_cmd(t_command *command, t_env *env_list);
+void						pwd_cmd(void);
 t_env					*export_cmd(t_env *env, t_command *command);
 t_env					*export_args(char *arg, t_env *env_list);
 void					unset_cmd(char *path, t_env *env);

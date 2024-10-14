@@ -10,6 +10,7 @@ SRCS =	parsing.c \
 		dollar.c \
 		redirections.c \
 		variable_management.c \
+		error.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc
@@ -20,7 +21,7 @@ NAME = $(EXEC)
 
 $(NAME): $(OBJS)
 	$(MAKE) -j -C libft/ -s
-	$(CC) $(CFLAGS) -o $(EXEC) $(OBJS) -Llibft -lft -I./libft -lreadline 
+	$(CC) $(CFLAGS) -o $(EXEC) $(OBJS) -Llibft -lft -I./libft -lreadline
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

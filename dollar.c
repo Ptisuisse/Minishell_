@@ -81,7 +81,7 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 
 	(*i)++;
 	if (input[*i] == '?')
-		return (0);
+		result = replace_by_exit_code(result, result_index);
 	env_value = get_env_value(input, i);
 	if (env_value)
 	{
@@ -115,7 +115,7 @@ char	*search_dollar(const char *input)
 			i++;
 			continue;
 		}
-		if (input[i] == '$' && ft_isalpha(input[i + 1]))
+		if (input[i] == '$' && ft_isascii(input[i + 1]))
 			handle_dollar(input, &i, result, &result_index);
 		else
 			result[result_index++] = input[i++];
