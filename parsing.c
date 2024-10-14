@@ -48,7 +48,7 @@ void	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_
 		(*input)++;
 }
 
-int parse_arguments(const char **input, t_command *cmd, int *arg_index) 
+int parse_arguments(const char **input, t_command *cmd, int *arg_index)
 {
     char buffer[1024];
     int buf_index = 0;
@@ -59,7 +59,7 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index)
     return buf_index;
 }
 
-int parse_command(const char **input, t_command *cmd) 
+int parse_command(const char **input, t_command *cmd)
 {
     int arg_index = 0;
 
@@ -87,7 +87,7 @@ int	parse_command_line(const char *input, t_command **command_list)
 
 	if (open_quote((char *)input))
 		return (1);
-	while (*input) 
+	while (*input)
 	{
 		new_node = init_command();
 		if (!new_node)
