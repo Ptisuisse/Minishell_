@@ -226,9 +226,11 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 
 void	unset_cmd(char *path, t_env *env_list)
 {
+	//t_env	*head;
 	t_env	*prev;
 
 	prev = NULL;
+//	head = env_list;
 	while (env_list)
 	{
 		if (ft_strcmp(env_list->name, path) == 0)
