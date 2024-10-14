@@ -1,15 +1,20 @@
 #include "minishell.h"
 
-int check_builtins(t_command *command, t_env **env_list)
+int	check_builtins(t_command *command, t_env **env_list)
 {
-    int status = 0;
+    int    status;
 
+    status = 0;
     if (ft_strcmp(command->args[0], "$") == 0)
         status = 1;
     else if (ft_strcmp(command->args[0], "exit") == 0)
         status = 1;
-    else if (ft_strcmp(command->args[0], "echo") == 0 && ft_strlen(command->args[0]) == 4)
+    //else if (ft_strcmp(command->args[0], "echo") == 0 && ft_strlen(command->args[0]) == 4)
+    //    status = 1;
+	else if (ft_strncmp(command->args[0], "echo", 5) == 0)
         status = 1;
+	//else if (ft_strncmp(command->args[0], "cd", 3) == 0)
+    //    status = 1;
     else if (ft_strcmp(command->args[0], "cd") == 0 && ft_strlen(command->args[0]) == 2)
         status = 1;
     else if (ft_strcmp(command->args[0], "export") == 0 && ft_strlen(command->args[0]) == 6)
@@ -21,19 +26,18 @@ int check_builtins(t_command *command, t_env **env_list)
     else if (ft_strcmp(command->args[0], "pwd") == 0 && ft_strlen(command->args[0]) == 3)
         status = 1;
     else if (ft_strcmp(command->args[0], "clear") == 0 && ft_strlen(command->args[0]) == 5)
-        clear_cmd();
-    if (status == 1)
+		clear_cmd();
+	if (status == 1)
         start_builtins(command, env_list);
-    return status;
+    return (status);
 }
 
-
-void	process_dollar(const char **input, char *buffer, int *buf_index, char quote_type)
+void	process_dollar(const char **input, char *buffer, int *buf_index)
 {
 	char	*dollar;
 	int		temp_index;
 
-	dollar = search_dollar(*input, quote_type);
+	dollar = search_dollar(*input);
 	temp_index = 0;
 	if (dollar)
 	{
@@ -41,7 +45,7 @@ void	process_dollar(const char **input, char *buffer, int *buf_index, char quote
 			buffer[(*buf_index)++] = dollar[temp_index++];
 		free(dollar);
 	}
-	else if (**input == '$' && !ft_wholeisalpha((*input)[1]))
+	else if (**input == '$' && !ft_isalpha((*input)[1]))
 		buffer[(*buf_index)++] = *(*input)++;
 	else
 		buffer[*buf_index] = '\0';
@@ -56,7 +60,6 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 	quote_type = '\0';
 	if (*(*input + 1) == '\'' || *(*input + 1) == '"')
 	{
-		//printf("string %s\n", *input);
 		quote_type = *(*input + 1);
 		(*input)++;
 	}
@@ -69,7 +72,7 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 			(*input)++;
 	}
 	else
-		process_dollar(input, buffer, buf_index, quote_type);
+		process_dollar(input, buffer, buf_index);
 }
 
 int	handle_dollar(const char *input, int *i, char *result, int *result_index)
@@ -80,16 +83,14 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 	if (input[*i] == '?')
 		return (0);
 	env_value = get_env_value(input, i);
-	//printf("dd %s\n", env_value);
 	if (env_value)
 	{
 		while (*env_value)
 			result[(*result_index)++] = *env_value++;
 		return (1);
 	}
-	else if (!env_value && (input[*i] == '"' || input[*i] == '\'') && !ft_wholeisalpha(input[*i + 1]))
+	else if (!env_value && (input[*i] == '"' || input[*i] == '\'') && !ft_isalpha(input[*i + 1]))
 	{
-		//printf("dd %s\n", env_value);
 		(*i)++;
 		return (0);
 	}
@@ -99,16 +100,14 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 		return (0);
 	}
 }
-char	*search_dollar(const char *input, char quote_type)
+char	*search_dollar(const char *input)
 {
 	char	result[1024];
 	int		result_index;
 	int		i;
-	(void)quote_type;
 
 	result_index = 0;
 	i = 0;
-	//printf("string %s\n", input);
 	while (ft_isprint(input[i]))
 	{
 		if (input[i] == '"' || input[i] == '\'')
@@ -116,12 +115,10 @@ char	*search_dollar(const char *input, char quote_type)
 			i++;
 			continue;
 		}
-		if (input[i] == '$' && ft_wholeisalpha(input[i + 1]))
+		if (input[i] == '$' && ft_isalpha(input[i + 1]))
 			handle_dollar(input, &i, result, &result_index);
-		else //if (quote_type == '"')
+		else
 			result[result_index++] = input[i++];
-		//else 
-		//	break;
 	}
 	result[result_index] = '\0';
 	return (ft_strdup(result));

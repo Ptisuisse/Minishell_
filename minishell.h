@@ -27,6 +27,7 @@ typedef struct s_command
 	char				*output_file;
 	int					output_fd;
 	char				*append_file;
+	int					append_fd;
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;
@@ -81,8 +82,8 @@ int						ft_strcmp(const char *s1, const char *s2);
 void					start_builtins(t_command *command, t_env **env_list);
 int						choose_command(t_command *command, t_env **env_list);
 void					env_cmd(t_env *env);
-int						echo_cmd(char **args, t_env *env);
-int						cd_cmd(const char *path);
+int						echo_cmd(char **args);
+int						cd_cmd(const char *path, t_env *env_list);
 int						pwd_cmd(void);
 t_env					*export_cmd(t_env *env, t_command *command);
 t_env					*export_args(char *arg, t_env *env_list);
@@ -107,7 +108,7 @@ void					handle_dollar_sign(const char **input, char *buffer,
 
 int handle_double_quotes(const char **input, char *buffer, int *buf_index);
 int	handle_single_quotes(const char **input, char *buffer, int *buf_index);
-char					*search_dollar(const char *input, char quote_type);
+char					*search_dollar(const char *input);
 // void					print_commands(t_command *command_list);
 int						parse_command_line(const char *input,
 							t_command **command_list);

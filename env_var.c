@@ -13,11 +13,10 @@ char	*get_env_value(const char *input, int *i)
 	char	*env_value;
 
 	temp_index = 0;
-	while (input[*i] && (ft_wholeisalpha(input[*i]) || input[*i] == '_'))
+	while (input[*i] && (ft_isalpha(input[*i]) || input[*i] == '_'))
 		temp[temp_index++] = input[(*i)++];
 	temp[temp_index] = '\0';
 	env_value = getenv(temp);
-	//printf("aaa %s\n", env_value);
 	return (env_value);
 }
 int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
@@ -25,7 +24,7 @@ int	handle_double_quotes(const char **input, char *buffer, int *buf_index)
 	(*input)++;
 	while (**input && **input != '"')
 	{
-		if (**input == '$' && ft_wholeisalpha((*input)[1]))
+		if (**input == '$' && ft_isalpha((*input)[1]))
 			handle_dollar_sign(input, buffer, buf_index);
 		else
 			buffer[(*buf_index)++] = *(*input)++;
