@@ -96,7 +96,7 @@ void						cd_cmd(t_command *command, t_env *env_list);
 void						pwd_cmd(void);
 t_env					*export_cmd(t_env *env, t_command *command);
 t_env					*export_args(char *arg, t_env *env_list);
-void					unset_cmd(char *path, t_env *env);
+void					unset_cmd(t_command *command, t_env *env);
 /*pipe_management*/
 void					commands_manager(t_command *commands, t_env **env_list);
 int						exec_command(char *pathname, char **args);

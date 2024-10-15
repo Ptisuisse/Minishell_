@@ -1,3 +1,16 @@
+
+
+
+echo $USER $USER
+echo
+"$USER $USER"
+lvan- lvan-
+"$USER"
+lvan
+
+
+
+
 https://www.geeksforgeeks.org/how-to-use-exit-code-to-read-from-terminal-from-script-and-with-logical-operators/
 
 //void	command_manager(t_command *command_list, t_data data)

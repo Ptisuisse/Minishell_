@@ -14,7 +14,7 @@
 
 int	print_char(int c)
 {
-	return (write(1, &c, 1));
+	return (write(2, &c, 1));
 }
 
 int	print_str(char *str)
@@ -24,7 +24,7 @@ int	print_str(char *str)
 	i = 0;
 	if (str == NULL)
 	{
-		write (1, "(null)", 6);
+		write (2, "(null)", 6);
 		return (i + 6);
 	}
 	while (*str != '\0')
@@ -74,7 +74,7 @@ int	ft_printf(const char *format, ...)
 		if (*format == '%')
 			i += print_type(*(++format), ap);
 		else
-			i += write(1, format, 1);
+			i += write(2, format, 1);
 		format++;
 	}
 	va_end(ap);

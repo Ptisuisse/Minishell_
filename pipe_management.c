@@ -135,7 +135,7 @@ int	exec_command(char *pathname, char **args)
 		if (execve(path, args, NULL) == -1)
 		{
 			g_exit_code = 127;
-			printf("%s: command not found\n", pathname);
+			ft_printf("%s: command not found\n", pathname);
 			return (0);
 		}
 	}

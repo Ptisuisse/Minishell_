@@ -15,7 +15,7 @@ void	start_builtins(t_command *command, t_env **env_list)
 	else if (!(ft_strcmp(command->args[0], "export")))
 		*env_list = export_cmd(*env_list, command);
 	else if (!(ft_strcmp(command->args[0], "unset")))
-		unset_cmd(command->args[1], *env_list);
+		unset_cmd(command, *env_list);
 	else if (!(ft_strcmp(command->args[0], "clear")))
 		clear_cmd();
 }
@@ -44,10 +44,24 @@ int	exit_cmd(t_command *command)
 {
 	if (ft_strcmp(command->args[0], "exit") == 0 && command->args[2])
 	{
-		printf("Minishell: exit: too many arguments\n");
+		ft_printf(" too many arguments\n");
 		g_exit_code = 1;
 	}
-	return (0);
+	else if (ft_strcmp(command->args[0], "exit") == 0 && command->args[1])
+	{
+		if (ft_isdigit(command->args[1][0]))
+			g_exit_code = ft_atoi(command->args[1]);
+		else if (command->args[1][0] == '-')
+			g_exit_code = 156;
+		else if (ft_isalpha(command->args[1][0]))
+		{
+			ft_printf(" numeric argument required\n");
+			g_exit_code = 2;
+		}
+		else
+			g_exit_code = 255;
+	}
+	exit(g_exit_code);
 }
 
 void	pwd_cmd(void)
@@ -63,7 +77,7 @@ void	pwd_cmd(void)
 	}
 	else
 	{
-		printf("Error : pwd\n");
+		ft_printf("Error : pwd\n");
 		g_exit_code = 1;
 	}
 }
@@ -159,12 +173,12 @@ void	cd_cmd(t_command *command, t_env *env_list)
 		command->args[1] = ft_strdup(getenv("HOME"));
 	if (command->args[2])
 	{
-				printf("Minishell: cd: %s too many arguments\n", command->args[1]);
+		ft_printf("Minishell: cd: too many arguments\n");
 		g_exit_code = 1;
 	}
 	else if (chdir(command->args[1]) < 0)
 	{
-		printf("Minishell: cd: %s: No such file or directory\n", command->args[1]);
+		ft_printf("Minishell: cd: %s: No such file or directory\n", command->args[1]);
 		g_exit_code = 1;
 	}
 	else
