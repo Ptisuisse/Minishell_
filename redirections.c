@@ -8,7 +8,6 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 
 	buf_index = 0;
 	(*input)++;
-	cmd->input_fd = 1;
 	if (**input == '<')
 	{
 		cmd->append_infd = 1;
@@ -20,6 +19,7 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 	}
 	else
 	{
+		cmd->input_fd = 1;
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index);
@@ -34,7 +34,6 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 
 	buf_index = 0;
 	(*input)++;
-	cmd->output_fd = 1;
 	if (**input == '>')
 	{
 		cmd->append_outfd = 1;
@@ -46,6 +45,7 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 	}
 	else
 	{
+		cmd->output_fd = 1;
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index);
