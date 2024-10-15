@@ -9,10 +9,22 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 	buf_index = 0;
 	(*input)++;
 	cmd->input_fd = 1;
-	while (**input == ' ')
+	if (**input == '<')
+	{
+		cmd->append_infd = 1;
 		(*input)++;
-	parse_argument(input, buffer, &buf_index);
-	cmd->input_file = strdup(buffer);
+		while (**input == ' ')
+			(*input)++;
+		parse_argument(input, buffer, &buf_index);
+		cmd->append_infile = strdup(buffer);
+	}
+	else
+	{
+		while (**input == ' ')
+			(*input)++;
+		parse_argument(input, buffer, &buf_index);
+		cmd->input_file = strdup(buffer);
+	}
 }
 
 void	handle_output_redirection(const char **input, t_command *cmd)
@@ -25,11 +37,12 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 	cmd->output_fd = 1;
 	if (**input == '>')
 	{
+		cmd->append_outfd = 1;
 		(*input)++;
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index);
-		cmd->append_file = strdup(buffer);
+		cmd->append_outfile = strdup(buffer);
 	}
 	else
 	{
