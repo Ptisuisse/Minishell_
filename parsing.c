@@ -9,32 +9,16 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 	{
 		if (**input == '"' || **input == '\'')
 		{
-		//printf("CCCCCC %c\n %s\n %c\n", **input, buffer, quote_type);
 			quote_type = **input;
 			handle_quotes(input, buffer, buf_index, quote_type);
-			//printf("DDDDDDD %c\n %s\n %c\n", **input, buffer, quote_type);
 		}
 		else if (**input == '$')
-			{
 				handle_dollar_sign(input, buffer, buf_index);
-				// while (**input != '\0')
-				// 	input++;
-				}
 		else if ((**input == ' ') || (**input == '|'))
 			{
-			//	printf("BBBBB %c\n %s\n %c\n", **input, buffer, quote_type);
 			break ;}
-		// else if (**input == '=')
-		// 	{
-		// 	while (**input != '\0')
-		// 		input++;
-		// 		//printf("BBBBB %c\n %s\n %c\n", **input, buffer, quote_type);
-		// 	//break ;
-		// 	}
 		else
-			{
-			//printf("AAAAAA %c\n %s\n %c\n", **input, buffer, quote_type); export $USER="s"
-			buffer[(*buf_index)++] = *(*input)++;}
+			buffer[(*buf_index)++] = *(*input)++;
 	}
 	buffer[*buf_index] = '\0';
 }

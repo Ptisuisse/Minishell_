@@ -77,8 +77,10 @@ void	print_commands(t_command *command_list)
 			printf("  Input Redirection: %s\n", command_list->input_file);
 		if (command_list->output_file)
 			printf("  Output Redirection: %s\n", command_list->output_file);
-		if (command_list->append_file)
-			printf("  Append Redirection: %s\n", command_list->append_file);
+		if (command_list->append_infile)
+			printf("  Append Input Redirection: %s\n", command_list->append_infile);
+		if (command_list->append_outfile)
+			printf("  Append Output Redirection: %s\n", command_list->append_outfile);
 		command_list = command_list->next;
 		i++;
 	}

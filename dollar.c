@@ -119,8 +119,6 @@ char	*search_dollar(const char *input)
 		}
 		if (input[i] == '$' && ft_isalnum(input[i + 1]))
 			handle_dollar(input, &i, result, &result_index);
-		// if (input[i] == '=')
-		// 	break;
 		else
 			result[result_index++] = input[i++];
 	}
