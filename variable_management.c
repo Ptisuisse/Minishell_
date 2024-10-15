@@ -150,9 +150,10 @@ int	ft_is_valid(char **arg)
 {
 	int i;
 	int j;
+	int equal;
 
 	i = 1;
-
+	equal = 0;
 	while (arg[i])
 	{
 		j = 0;
@@ -169,6 +170,7 @@ int	ft_is_valid(char **arg)
 			}
 			else if (arg[i][j] == '=')
 			{
+				equal = 1;
 				if (!ft_isalnum(arg[i][j - 1]))
 				{
 					g_exit_code = 1;
@@ -178,8 +180,13 @@ int	ft_is_valid(char **arg)
 			}
 			else if ((!ft_isalnum(arg[i][j]) || ft_isdigit(arg[i][0])) || arg[i][j] == '_')
 			{
-				g_exit_code = 0;
-				ft_printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
+				if (equal == 1)
+					g_exit_code = 0;
+				else
+				{
+					g_exit_code = 1;
+					ft_printf("Minishell: export: not a valid identifier\n");
+				}
 				return (0);
 			}
 			j++;

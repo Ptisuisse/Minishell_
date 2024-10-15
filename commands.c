@@ -173,7 +173,7 @@ void	cd_cmd(t_command *command, t_env *env_list)
 		command->args[1] = ft_strdup(getenv("HOME"));
 	if (command->args[2])
 	{
-				ft_printf("Minishell: cd: %s too many arguments\n", command->args[1]);
+		ft_printf("Minishell: cd: too many arguments\n");
 		g_exit_code = 1;
 	}
 	else if (chdir(command->args[1]) < 0)
