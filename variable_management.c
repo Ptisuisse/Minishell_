@@ -162,7 +162,8 @@ int	ft_is_valid(char **arg)
 			{
 				if (arg[i][1] == '\0')
 				{
-					printf("1Minishell: export: `%s': not a valid identifier\n", arg[i]);
+					g_exit_code = 1;
+					ft_printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
 					return (0);
 				}
 			}
@@ -170,13 +171,15 @@ int	ft_is_valid(char **arg)
 			{
 				if (!ft_isalnum(arg[i][j - 1]))
 				{
-					printf("2Minishell: export: `%s': not a valid identifier\n", arg[i]);
+					g_exit_code = 1;
+					ft_printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
 					return (0);
 				}
 			}
 			else if ((!ft_isalnum(arg[i][j]) || ft_isdigit(arg[i][0])) || arg[i][j] == '_')
 			{
-				printf("3Minishell: export: `%s': not a valid identifier\n", arg[i]);
+				g_exit_code = 0;
+				ft_printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
 				return (0);
 			}
 			j++;
@@ -224,14 +227,19 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 	return (head);
 }
 
-void	unset_cmd(char *path, t_env *env_list)
+void	unset_cmd(t_command *command, t_env *env_list)
 {
 	t_env	*prev;
 
 	prev = NULL;
+	if (command->args[1] == NULL)
+	{
+		g_exit_code = 0;
+		return ;
+	}
 	while (env_list)
 	{
-		if (ft_strcmp(env_list->name, path) == 0)
+		if (ft_strcmp(env_list->name, command->args[1]) == 0)
 		{
 			if (prev == NULL)
 				env_list = env_list->next;

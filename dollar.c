@@ -49,7 +49,7 @@ void	process_dollar(const char **input, char *buffer, int *buf_index)
 		buffer[(*buf_index)++] = *(*input)++;
 	else
 		buffer[*buf_index] = '\0';
-	while (**input && **input != ' ' && **input != '"' && **input != '\'')
+	while (**input && **input != ' ' && **input != '"' && **input != '\'' && **input != '=')
 		(*input)++;
 }
 
@@ -108,15 +108,15 @@ char	*search_dollar(const char *input)
 
 	result_index = 0;
 	i = 0;
-	while (ft_isprint(input[i]))
+	while (ft_isprint(input[i]) && input[i] != ' ' && input[i] != '=')
 	{
 		if (input[i] == '"' || input[i] == '\'')
 		{
 			i++;
 			continue;
 		}
-		if (input[i] == '$' && ft_isascii(input[i + 1]))
-			handle_dollar(input, &i, result, &result_index);
+		if (input[i] == '$' && ft_isalnum(input[i + 1]))
+            handle_dollar(input, &i, result, &result_index);
 		else
 			result[result_index++] = input[i++];
 	}

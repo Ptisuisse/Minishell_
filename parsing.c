@@ -26,7 +26,7 @@ void	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_
 	(*input)++;
 	while (**input && **input != quote_type)
 	{
-		if (quote_type == '"' && **input == '$' && ft_isalpha((*input)[1]))
+		if (quote_type == '"' && **input == '$' && ft_isalnum((*input)[1]))
 			handle_dollar_sign(input, buffer, buf_index);
 		else
 			buffer[(*buf_index)++] = *(*input)++;
