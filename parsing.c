@@ -14,9 +14,13 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 		}
 		else if (**input == '$')
 				handle_dollar_sign(input, buffer, buf_index);
-		else if ((**input == ' ') || (**input == '|'))
+		else if ((**input == '\\'))
 			{
-			break ;}
+				(*input)++;
+				buffer[(*buf_index)++] = *(*input)++;
+				}
+		else if ((**input == ' ') || (**input == '|'))
+			break ;
 		else
 			buffer[(*buf_index)++] = *(*input)++;
 	}
