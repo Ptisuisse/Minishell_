@@ -30,9 +30,10 @@ typedef struct s_command
 	char				*output_file;
 	int					output_fd;
 	char				*append_file;
-	//char				*append_outfile;
-	//int					append_infd;
-	//int					append_outfd;
+	char				*append_infile;
+	char				*append_outfile;
+	int					append_infd;
+	int					append_outfd;
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;

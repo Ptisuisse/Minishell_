@@ -183,6 +183,7 @@ void	cd_cmd(t_command *command, t_env *env_list)
 	}
 	else
 		g_exit_code = 0;
+
 	newpwd = getcwd(NULL, 0);
 	update_env(env_list, "PWD", newpwd);
 	update_env(env_list, "OLDPWD", oldpwd);

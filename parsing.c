@@ -13,9 +13,10 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 			handle_quotes(input, buffer, buf_index, quote_type);
 		}
 		else if (**input == '$')
-			handle_dollar_sign(input, buffer, buf_index);
+				handle_dollar_sign(input, buffer, buf_index);
 		else if ((**input == ' ') || (**input == '|'))
-			break ;
+			{
+			break ;}
 		else
 			buffer[(*buf_index)++] = *(*input)++;
 	}

@@ -236,6 +236,7 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 
 void	unset_cmd(t_command *command, t_env *env_list)
 {
+	//t_env	*head;
 	t_env	*prev;
 
 	prev = NULL;
