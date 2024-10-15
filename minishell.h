@@ -24,12 +24,10 @@ typedef struct s_command
 {
 	char				*command;
 	char				*args[MAX_TOKENS];
-	int					exit_code;
 	char				*input_file;
 	int					input_fd;
 	char				*output_file;
 	int					output_fd;
-	char				*append_file;
 	char				*append_infile;
 	char				*append_outfile;
 	int					append_infd;

@@ -9,10 +9,8 @@ t_command	*init_command(void)
 		return (NULL);
 	element->input_file = NULL;
 	element->output_file = NULL;
-	element->append_file = NULL;
 	element->append_outfile = NULL;
 	element->append_infile = NULL;
-	element->exit_code = 0;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;

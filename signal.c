@@ -5,6 +5,7 @@ void	handle_signal(int sig)
 	if (sig == SIGINT) //<<------- Autre soluce [ctrl +c ] sig 2 ?
 	{
 		g_exit_code = 130;
+		rl_clear_history();
 		write(1, "\nMiniBash > ", 13);
 	}
 	else if (sig == SIGSEGV)

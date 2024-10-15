@@ -100,7 +100,6 @@ void	free_commands(t_command *command_list)
 			free(temp->args[j++]);
 		free(temp->input_file);
 		free(temp->output_file);
-		free(temp->append_file);
 		free(temp);
 	}
 }

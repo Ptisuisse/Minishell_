@@ -49,8 +49,9 @@ void	commands_manager(t_command *commands, t_env **env_list)
 			}
 	}
 	commands = cmd;
-	while (wait(&status) > 0)
-		;
+	//while (wait(&status) > 0)
+	//	;
+	waitpid(commands->pid, &status, 0);
 }
 
 int	check_path(char *pathname)
@@ -79,6 +80,8 @@ int	exec_command(char *pathname, char **args)
 			return (0);
 		}
 	}
+	else
+		g_exit_code = 0;
 	free(path);
 	waitpid(pid, NULL, 0);
 	return (1);
