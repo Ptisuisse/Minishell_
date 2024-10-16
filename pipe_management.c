@@ -8,12 +8,72 @@ void	test_pipe(t_command *commands, t_env **env_list)
 		choose_command(commands, env_list);
 }
 
+void	wait_output(t_command *command)
+{
+	char	*input;
+	char	*end_of_input;
+	
+	input = NULL;
+	if (command->append_outfd == 1)
+		end_of_input = command->append_outfile;
+	else
+	{
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
+	while (1)
+	{
+		input = readline("> ");
+		if (strcmp(input, end_of_input) == 0) 
+			break;
+		if (input && *input)
+			add_history(input);
+		free(input);
+	}
+	dup2(command->append_outfd, STDIN_FILENO);
+	close(command->append_outfd);
+	free(input); 
+}
+
+void	wait_input(t_command *command)
+{
+	char	*input;
+	char	*end_of_input;
+//	int		fd;
+
+//	fd = 
+	input = NULL;
+	if (command->append_infd == 1)
+		end_of_input = command->append_infile;
+	else
+	{
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
+	while (1)
+	{
+		input = readline("> ");
+		if (strcmp(input, end_of_input) == 0) 
+			break;
+		if (input && *input)
+			add_history(input);
+		free(input);
+	}
+	dup2(command->append_infd, STDIN_FILENO);
+	close(command->append_infd);
+	free(input); 
+}
+
 void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
 	int			status;
 
 	cmd = commands;
+	if (commands->append_infd == 1)
+		wait_input(commands);
+	if (commands->append_outfd == 1)
+		wait_output(commands);
 	if (commands->input_fd == 1)
 		redirect_input(commands);
 	if (commands->output_fd == 1)
