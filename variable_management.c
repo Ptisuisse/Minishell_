@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 void	create_env_list(char **envp, t_env **env_list)
 {
 	int		i;

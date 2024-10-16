@@ -12,7 +12,7 @@ void	wait_output(t_command *command)
 {
 	char	*input;
 	char	*end_of_input;
-	
+
 	input = NULL;
 	if (command->append_outfd == 1)
 		end_of_input = command->append_outfile;
@@ -24,7 +24,7 @@ void	wait_output(t_command *command)
 	while (1)
 	{
 		input = readline("> ");
-		if (strcmp(input, end_of_input) == 0) 
+		if (strcmp(input, end_of_input) == 0)
 			break;
 		if (input && *input)
 			add_history(input);
@@ -32,7 +32,7 @@ void	wait_output(t_command *command)
 	}
 	dup2(command->append_outfd, STDIN_FILENO);
 	close(command->append_outfd);
-	free(input); 
+	free(input);
 }
 
 void	wait_input(t_command *command)
@@ -41,7 +41,7 @@ void	wait_input(t_command *command)
 	char	*end_of_input;
 //	int		fd;
 
-//	fd = 
+//	fd =
 	input = NULL;
 	if (command->append_infd == 1)
 		end_of_input = command->append_infile;
@@ -53,7 +53,7 @@ void	wait_input(t_command *command)
 	while (1)
 	{
 		input = readline("> ");
-		if (strcmp(input, end_of_input) == 0) 
+		if (strcmp(input, end_of_input) == 0)
 			break;
 		if (input && *input)
 			add_history(input);
@@ -61,13 +61,27 @@ void	wait_input(t_command *command)
 	}
 	dup2(command->append_infd, STDIN_FILENO);
 	close(command->append_infd);
-	free(input); 
+	free(input);
+}
+
+void	ft_process_wait(t_command *commands)
+{
+	int status = 0;
+	t_command *cmd;
+
+	cmd = commands;
+	while (commands)
+	{
+		waitpid(commands->pid, &status, 0);
+		commands = commands->next;
+	}
+	commands = cmd;
 }
 
 void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
-	int			status;
+	//int			status;
 
 	cmd = commands;
 	if (commands->append_infd == 1)
@@ -109,9 +123,10 @@ void	commands_manager(t_command *commands, t_env **env_list)
 			}
 	}
 	commands = cmd;
+	ft_process_wait(commands);
 	//while (wait(&status) > 0)
 	//	;
-	waitpid(commands->pid, &status, 0);
+	////waitpid(commands->pid, &status, 0);
 }
 
 int	check_path(char *pathname)
@@ -125,7 +140,9 @@ int	exec_command(char *pathname, char **args)
 {
 	int pid;
 	char *path;
+	int status;
 
+	status = 0;
 	if (!check_path(pathname))
 		path = ft_strjoin("/bin/", pathname);
 	else
@@ -140,8 +157,6 @@ int	exec_command(char *pathname, char **args)
 			return (0);
 		}
 	}
-	else
-		g_exit_code = 0;
 	free(path);
 	waitpid(pid, NULL, 0);
 	return (1);
