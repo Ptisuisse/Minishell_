@@ -94,10 +94,12 @@ void	free_commands(t_command *command_list)
 	while (command_list)
 	{
 		temp = command_list;
+		temp->append_infd = 0;
+		command_list->append_infd = 0;
 		command_list = command_list->next;
 		j = 0;
-		while (temp->args[j])
-			free(temp->args[j++]);
+		// while (temp->args[j])
+		// 	free(temp->args[j++]);
 		free(temp->input_file);
 		free(temp->output_file);
 		free(temp);

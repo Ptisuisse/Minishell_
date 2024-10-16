@@ -30,6 +30,8 @@ int	choose_command(t_command *command, t_env **env_list)
 	int	result;
 
 	result = -1;
+	if (command->append_infd == 1)
+		wait_input(command, env_list);
 	if (check_builtins(command, env_list))
 		result = 0;
 	else

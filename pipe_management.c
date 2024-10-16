@@ -2,16 +2,23 @@
 
 void	test_pipe(t_command *commands, t_env **env_list)
 {
-	if (commands->next != NULL)
-		commands_manager(commands, env_list);
-	else
-		choose_command(commands, env_list);
+	//else if (commands->append_outfd == 1)
+	//	wait_output(commands, env_list);
+	//else if (commands->input_fd == 1)
+	//	redirect_input(commands);
+	//else if (commands->output_fd == 1)
+	//	redirect_output(commands);
+	// if (commands->next != NULL)
+	commands_manager(commands, env_list);
+	// else
+		// choose_command(commands, env_list);
 }
 
-void	wait_output(t_command *command)
+void	wait_output(t_command *command, t_env **env_list)
 {
 	char	*input;
 	char	*end_of_input;
+	int	fd[2];
 
 	input = NULL;
 	if (command->append_outfd == 1)
@@ -26,43 +33,112 @@ void	wait_output(t_command *command)
 		input = readline("> ");
 		if (strcmp(input, end_of_input) == 0)
 			break;
-		if (input && *input)
-			add_history(input);
+		write(fd[1], input, strlen(input));
+		write(fd[1], "\n", 1);
 		free(input);
 	}
-	dup2(command->append_outfd, STDIN_FILENO);
-	close(command->append_outfd);
-	free(input);
+	close(fd[WRITE_END]);
+	dup2(fd[READ_END], STDIN_FILENO);
+	close(fd[READ_END]);
+	//free(input);
+	choose_command(command, env_list);
 }
 
-void	wait_input(t_command *command)
+void	wait_input(t_command *command, t_env **env_list)
 {
 	char	*input;
 	char	*end_of_input;
-//	int		fd;
+	int		heredoc_fd;
+	int stdin_backup;
 
-//	fd =
+	(void)env_list;
 	input = NULL;
+	end_of_input = NULL;
+	stdin_backup = dup(STDIN_FILENO);
 	if (command->append_infd == 1)
 		end_of_input = command->append_infile;
-	else
+	heredoc_fd = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (heredoc_fd == -1)
 	{
-		perror("open");
-		exit(EXIT_FAILURE);
+		perror("Failed to open .heredoc");
 	}
 	while (1)
 	{
 		input = readline("> ");
+		if (!input)
+		{
+			perror("readline error");
+			close(heredoc_fd);
+			exit(EXIT_FAILURE);
+		}
 		if (strcmp(input, end_of_input) == 0)
+		{
+			free(input);
 			break;
-		if (input && *input)
-			add_history(input);
+		}
+		if (write(heredoc_fd, input, strlen(input)) == -1)
+		{
+			perror("write error");
+			free(input);
+			close(heredoc_fd);
+		}
+		if (write(heredoc_fd, "\n", 1) == -1)
+		{
+			perror("write error");
+			free(input);
+			close(heredoc_fd);
+		}
 		free(input);
 	}
-	dup2(command->append_infd, STDIN_FILENO);
-	close(command->append_infd);
-	free(input);
+	close(heredoc_fd);
+	heredoc_fd = open(".heredoc", O_RDONLY);
+	if (heredoc_fd == -1)
+		perror("Failed to reopen .heredoc");
+	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+	{
+		perror("dup2 error");
+		close(heredoc_fd);
+	}
+	close(heredoc_fd);
+	dup2(stdin_backup, STDIN_FILENO);
+	close(stdin_backup);
+	command->args[1] = ".heredoc";
+	// choose_command(command, env_list);
+	return ;
 }
+
+
+//void	wait_input(t_command *command, t_env **env_list)
+//{
+//	char	*input;
+//	char	*end_of_input;
+//	int		fd;
+
+//	input = NULL;
+//	if (command->append_infd == 1)
+//		end_of_input = command->append_infile;
+//	fd = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+
+//	while (1)
+//	{
+//		input = readline("> ");
+//		if (strcmp(input, end_of_input) == 0)
+//			break;
+//		else
+//		{
+//			write(fd, input, strlen(input));
+//			write(fd, "\n", 1);
+//		}
+//		free(input);
+//	}
+//	close(fd);
+//	fd = open(".heredoc", O_RDONLY);
+//	dup2(fd, STDIN_FILENO);
+//	close(fd);
+//	command->args[1] = ".heredoc";
+//	//free(input);
+//	choose_command(command, env_list);
+//}
 
 void	ft_process_wait(t_command *commands)
 {
@@ -84,49 +160,51 @@ void	commands_manager(t_command *commands, t_env **env_list)
 	//int			status;
 
 	cmd = commands;
-	if (commands->append_infd == 1)
-		wait_input(commands);
-	if (commands->append_outfd == 1)
-		wait_output(commands);
-	if (commands->input_fd == 1)
-		redirect_input(commands);
-	if (commands->output_fd == 1)
-		redirect_output(commands);
+	if (commands->next == NULL)
+	{
+		choose_command(commands, env_list);
+		return ;
+	}
 	while (commands)
 	{
+		if (commands->append_infd == 1)
+			wait_input(commands, env_list);
+		else if (commands->append_outfd == 1)
+			wait_output(commands, env_list);
+		else if (commands->input_fd == 1)
+			redirect_input(commands);
+		else if (commands->output_fd == 1)
+			redirect_output(commands);
+		if (commands->next)
+			pipe(commands->pipe);
+		commands->pid = fork();
+		if (commands->pid == 0)
+		{
+			if (commands->prev)
+			{
+				dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
+				close(commands->prev->pipe[READ_END]);
+			}
 			if (commands->next)
-				pipe(commands->pipe);
-			commands->pid = fork();
-			if (commands->pid == 0)
 			{
-				if (commands->prev)
-				{
-					dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
-					close(commands->prev->pipe[READ_END]);
-				}
-				if (commands->next)
-				{
-					close(commands->pipe[READ_END]);
-					dup2(commands->pipe[WRITE_END], STDOUT_FILENO);
-					close(commands->pipe[WRITE_END]);
-				}
-				choose_command(commands, env_list);
-				exit(EXIT_SUCCESS);
+				close(commands->pipe[READ_END]);
+				dup2(commands->pipe[WRITE_END], STDOUT_FILENO);
+				close(commands->pipe[WRITE_END]);
 			}
-			else
-			{
-				if (commands->next)
-					close(commands->pipe[WRITE_END]);
-				if (commands->prev)
-					close(commands->prev->pipe[READ_END]);
-				commands = commands->next;
-			}
+			choose_command(commands, env_list);
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			if (commands->next)
+				close(commands->pipe[WRITE_END]);
+			if (commands->prev)
+				close(commands->prev->pipe[READ_END]);
+			commands = commands->next;
+		}
 	}
 	commands = cmd;
 	ft_process_wait(commands);
-	//while (wait(&status) > 0)
-	//	;
-	////waitpid(commands->pid, &status, 0);
 }
 
 int	check_path(char *pathname)

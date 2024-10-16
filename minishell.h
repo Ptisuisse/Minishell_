@@ -60,15 +60,15 @@ typedef struct s_data
 }						t_data;
 
 /*erro.c*/
-char	*replace_by_exit_code(char *result, int *result_index);
+char					*replace_by_exit_code(char *result, int *result_index);
 
-void	test_pipe(t_command *commands, t_env **env_list);
-t_env	*ftlstlst(t_env *lst);
+void					test_pipe(t_command *commands, t_env **env_list);
+t_env					*ftlstlst(t_env *lst);
 /*dollar.c*/
 int						check_builtins(t_command *command, t_env **env_list);
 
 ///void					create_env_list(t_data *data);
-void	create_env_list(char **envp, t_env **env_list);
+void					create_env_list(char **envp, t_env **env_list);
 void					printf_list(t_env *env_list);
 void					clear_cmd(void);
 void					free_env(t_env *command_list);
@@ -89,13 +89,15 @@ int						exit_cmd(t_command *command);
 void					start_builtins(t_command *command, t_env **env_list);
 int						choose_command(t_command *command, t_env **env_list);
 void					env_cmd(t_env *env);
-void						echo_cmd(char **args);
-void						cd_cmd(t_command *command, t_env *env_list);
-void						pwd_cmd(void);
+void					echo_cmd(char **args);
+void					cd_cmd(t_command *command, t_env *env_list);
+void					pwd_cmd(void);
 t_env					*export_cmd(t_env *env, t_command *command);
 t_env					*export_args(char *arg, t_env *env_list);
 void					unset_cmd(t_command *command, t_env *env);
 /*pipe_management*/
+void					wait_output(t_command *command, t_env **env_list);
+void					wait_input(t_command *command, t_env **env_list);
 void					commands_manager(t_command *commands, t_env **env_list);
 int						exec_command(char *pathname, char **args);
 /*parsing*/
@@ -113,8 +115,8 @@ void					skip_spaces(const char **input);
 void					handle_dollar_sign(const char **input, char *buffer,
 							int *buf_index);
 
-int handle_double_quotes(const char **input, char *buffer, int *buf_index);
-int	handle_single_quotes(const char **input, char *buffer, int *buf_index);
+int						clhandle_double_quotes(const char **input, char *buffer, int *buf_index);
+int						handle_single_quotes(const char **input, char *buffer, int *buf_index);
 char					*search_dollar(const char *input);
 // void					print_commands(t_command *command_list);
 int						parse_command_line(const char *input,
