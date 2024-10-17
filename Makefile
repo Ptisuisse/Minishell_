@@ -1,16 +1,22 @@
-SRCS =	parsing.c \
-		commands.c \
-		main.c \
+SRCS =	main.c \
+		builtins_cd_pwd.c \
+		builtins_clear_exit.c \
+		builtins_echo.c \
+		builtins_env.c \
+		builtins_export_utils.c \
+		builtins_export.c \
+		command_management.c \
+		dollar.c \
+		env_var.c \
+		error.c \
+		execution.c \
+		heredoc_management.c \
+		parsing.c \
+		parsingutils.c \
+		redirect_management.c \
+		redirections.c \
 		signal.c \
 		utils.c \
-		parsingutils.c \
-		pipe_management.c \
-		redirect_management.c \
-		env_var.c \
-		dollar.c \
-		redirections.c \
-		variable_management.c \
-		error.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc

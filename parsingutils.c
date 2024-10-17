@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsingutils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:05:43 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:43 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_command	*init_command(void)
@@ -9,10 +21,8 @@ t_command	*init_command(void)
 		return (NULL);
 	element->input_file = NULL;
 	element->output_file = NULL;
-	element->append_file = NULL;
 	element->append_outfile = NULL;
 	element->append_infile = NULL;
-	element->exit_code = 0;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;
