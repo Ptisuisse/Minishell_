@@ -150,6 +150,7 @@ void	wait_output(t_command *command, t_env **env_list);
 
 void	wait_input(t_command *command, t_env **env_list);
 
+int	heredoc(t_command *command, t_env **env_list);
 
 /*BUILTINS_CD_PWD_C*/
 

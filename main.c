@@ -18,7 +18,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
 	t_command	*command_list;
-	t_env	*env_list;
+	t_env		*env_list;
 
 	(void)argc;
 	(void)argv;
