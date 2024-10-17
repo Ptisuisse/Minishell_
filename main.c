@@ -27,7 +27,7 @@ int	main(int argc, char **argv, char **envp)
 			return (1);
 		}
 		if (ft_isprint(*input))
-			test_pipe(command_list, &env_list);
+			commands_manager(command_list, &env_list);
 		//print_commands(command_list);
 		free(input);
 		free_commands(command_list);
