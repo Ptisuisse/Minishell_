@@ -12,35 +12,35 @@
 
 #include "minishell.h"
 
-void	wait_output(t_command *command, t_env **env_list)
-{
-	char	*input;
-	char	*end_of_input;
-	int	fd[2];
+// void	wait_output(t_command *command, t_env **env_list)
+// {
+// 	char	*input;
+// 	char	*end_of_input;
+// 	int	fd[2];
 
-	input = NULL;
-	if (command->append_outfd == 1)
-		end_of_input = command->append_outfile;
-	else
-	{
-		perror("open");
-		exit(EXIT_FAILURE);
-	}
-	while (1)
-	{
-		input = readline("> ");
-		if (strcmp(input, end_of_input) == 0)
-			break;
-		write(fd[1], input, strlen(input));
-		write(fd[1], "\n", 1);
-		free(input);
-	}
-	close(fd[WRITE_END]);
-	dup2(fd[READ_END], STDIN_FILENO);
-	close(fd[READ_END]);
-	//free(input);
-	choose_command(command, env_list);
-}
+// 	input = NULL;
+// 	if (command->append_outfd == 1)
+// 		end_of_input = command->append_outfile;
+// 	else
+// 	{
+// 		perror("open");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	while (1)
+// 	{
+// 		input = readline("> ");
+// 		if (strcmp(input, end_of_input) == 0)
+// 			break;
+// 		write(fd[1], input, strlen(input));
+// 		write(fd[1], "\n", 1);
+// 		free(input);
+// 	}
+// 	close(fd[WRITE_END]);
+// 	dup2(fd[READ_END], STDIN_FILENO);
+// 	close(fd[READ_END]);
+// 	//free(input);
+// 	choose_command(command, env_list);
+// }
 
 void	wait_input(t_command *command, t_env **env_list)
 {
