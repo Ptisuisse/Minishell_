@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:05:26 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:27 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+int	g_exit_code = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -6,10 +20,9 @@ int	main(int argc, char **argv, char **envp)
 	t_command	*command_list;
 	t_env	*env_list;
 
-	env_list = malloc(sizeof(t_env));
-
 	(void)argc;
 	(void)argv;
+	env_list = malloc(sizeof(t_env));
 	command_list = NULL;
 	create_env_list(envp, &env_list);
 	while (1)
@@ -20,12 +33,13 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 		if (parse_command_line(input, &command_list))
 		{
-			printf("Error parsing command line.\n");
+			ft_printf("Error parsing command line.\n");
 			free(input);
 			return (1);
 		}
 		if (ft_isprint(*input))
-			test_pipe(command_list, &env_list);
+			commands_manager(command_list, &env_list);
+		//print_commands(command_list);
 		free(input);
 		free_commands(command_list);
 		command_list = NULL;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsingutils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:05:43 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:43 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_command	*init_command(void)
@@ -9,11 +21,11 @@ t_command	*init_command(void)
 		return (NULL);
 	element->input_file = NULL;
 	element->output_file = NULL;
-	element->append_file = NULL;
+	element->append_outfile = NULL;
+	element->append_infile = NULL;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;
-	// element->content = content;
 	return (element);
 }
 
@@ -42,20 +54,6 @@ void	append_command_node(t_command **lst, t_command *new)
 	}
 	return ;
 }
-// void	append_command_node(t_command **head, t_command *new_node)
-//{
-//	t_command	*temp;
-
-//	if (!*head)
-//	{
-//		*head = new_node;
-//		return ;
-//	}
-//	temp = *head;
-//	while (temp->next)
-//		temp = temp->next;
-//	temp->next = new_node;
-//}
 
 void	quoting_choice(bool *double_q, bool *sing_q, int *index, char c)
 {

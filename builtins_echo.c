@@ -1,40 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   builtins_echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/17 13:05:55 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:05:56 by lvan-slu         ###   ########.fr       */
+/*   Created: 2024/10/17 13:04:15 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:04:18 by lvan-slu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_signal(int sig)
+void	echo_cmd(char **args)
 {
-	if (sig == SIGINT)
+	int	newline;
+	int	i;
+	int	j;
+
+	newline = 1;
+	i = 1;
+	j = 0;
+	while (args[i] && args[i][0] == '-')
 	{
-		g_exit_code = 130;
-		rl_clear_history();
-		write(1, "\nMiniBash > ", 13);
+		j = 1;
+		while (args[i][j] == 'n')
+			j++;
+		if (args[i][j] == '\0')
+			newline = 0;
+		else
+			break ;
+		i++;
 	}
-	else if (sig == SIGSEGV)
-		exit(1);
-	return ;
+	echo_print(args, i);
+	if (newline)
+		printf("\n");
+	g_exit_code = 0;
 }
 
-int	signal_handle(void)
+int	echo_print(char **args, int i)
 {
-	struct sigaction	sa;
-
-	sa.sa_handler = handle_signal;
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGSEGV, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
-	return (0);
+	while (args[i])
+	{
+		printf("%s", args[i++]);
+		if (args[i])
+			printf(" ");
+	}
+	return (i);
 }

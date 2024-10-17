@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/10 22:14:18 by lvan-slu          #+#    #+#             */
-/*   Updated: 2023/11/13 20:53:59 by lvan-slu         ###   ########.fr       */
+/*   Created: 2024/10/17 13:05:12 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:14 by lvan-slu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_isalpha(int c)
+char	*replace_by_exit_code(char *result, int *result_index)
 {
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	else
-		return (0);
+	char	*exit_code;
+	int		i;
+
+	i = 0;
+	exit_code = ft_itoa(g_exit_code);
+	while (exit_code[i])
+		result[(*result_index)++] = exit_code[i++];
+	free(exit_code);
+	return (result);
 }

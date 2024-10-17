@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:06:00 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:06:01 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
  void	printf_list(t_env *env_list)
@@ -77,8 +89,10 @@ void	print_commands(t_command *command_list)
 			printf("  Input Redirection: %s\n", command_list->input_file);
 		if (command_list->output_file)
 			printf("  Output Redirection: %s\n", command_list->output_file);
-		if (command_list->append_file)
-			printf("  Append Redirection: %s\n", command_list->append_file);
+		if (command_list->append_infile)
+			printf("  Append Input Redirection: %s\n", command_list->append_infile);
+		if (command_list->append_outfile)
+			printf("  Append Output Redirection: %s\n", command_list->append_outfile);
 		command_list = command_list->next;
 		i++;
 	}
@@ -92,13 +106,14 @@ void	free_commands(t_command *command_list)
 	while (command_list)
 	{
 		temp = command_list;
+		temp->append_infd = 0;
+		command_list->append_infd = 0;
 		command_list = command_list->next;
 		j = 0;
-		while (temp->args[j])
-			free(temp->args[j++]);
+		// while (temp->args[j])
+		// 	free(temp->args[j++]);
 		free(temp->input_file);
 		free(temp->output_file);
-		free(temp->append_file);
 		free(temp);
 	}
 }
