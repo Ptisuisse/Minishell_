@@ -23,9 +23,7 @@ int	exec_command(char *pathname, char **args)
 {
 	int		pid;
 	char	*path;
-	int		status;
 
-	status = 0;
 	if (!check_path(pathname))
 		path = ft_strjoin("/bin/", pathname);
 	else
@@ -37,7 +35,7 @@ int	exec_command(char *pathname, char **args)
 		{
 			g_exit_code = 127;
 			ft_printf("%s: command not found\n", pathname);
-			return (0);
+			return (g_exit_code);
 		}
 	}
 	free(path);

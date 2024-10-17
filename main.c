@@ -33,9 +33,9 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 		if (parse_command_line(input, &command_list))
 		{
-			ft_printf("Error parsing command line.\n");
+		//	error_message(input, &command_list);
 			free(input);
-			return (1);
+			return (2);
 		}
 		if (ft_isprint(*input))
 			commands_manager(command_list, &env_list);
