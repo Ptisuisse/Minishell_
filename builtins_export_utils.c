@@ -1,50 +1,66 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_export_utils.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:04:49 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:04:51 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+int	print_error(char *arg)
+{
+	g_exit_code = 1;
+	if (arg)
+		ft_printf("Minishell: export: `%s': not a valid identifier\n", arg);
+	else
+		ft_printf("Minishell: export: not a valid identifier\n");
+	return (0);
+}
+
+int	check_each_argument(char *arg, int *equal)
+{
+	int	j;
+
+	j = 0;
+	while (arg[j])
+	{
+		if (arg[0] == '_')
+		{
+			if (arg[1] == '\0')
+				return (print_error(arg));
+		}
+		else if (arg[j] == '=')
+		{
+			*equal = 1;
+			if (!ft_isalnum(arg[j - 1]))
+				return (print_error(arg));
+		}
+		else if ((!ft_isalnum(arg[j]) || ft_isdigit(arg[0])) || arg[j] == '_')
+		{
+			if (*equal != 1)
+				return (print_error(NULL));
+		}
+		j++;
+	}
+	return (1);
+}
 
 int	ft_is_valid(char **arg)
 {
-	int i;
-	int j;
-	int equal;
+	int	i;
+	int	equal;
 
 	i = 1;
-	equal = 0;
 	while (arg[i])
 	{
-		j = 0;
-		while (arg[i][j])
-		{
-			if(arg[i][0] == '_')
-			{
-				if (arg[i][1] == '\0')
-				{
-					g_exit_code = 1;
-					ft_printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
-					return (0);
-				}
-			}
-			else if (arg[i][j] == '=')
-			{
-				equal = 1;
-				if (!ft_isalnum(arg[i][j - 1]))
-				{
-					g_exit_code = 1;
-					ft_printf("Minishell: export: `%s': not a valid identifier\n", arg[i]);
-					return (0);
-				}
-			}
-			else if ((!ft_isalnum(arg[i][j]) || ft_isdigit(arg[i][0])) || arg[i][j] == '_')
-			{
-				if (equal == 1)
-					g_exit_code = 0;
-				else
-				{
-					g_exit_code = 1;
-					ft_printf("Minishell: export: not a valid identifier\n");
-				}
-				return (0);
-			}
-			j++;
-		}
+		equal = 0;
+		if (!check_each_argument(arg[i], &equal))
+			return (0);
 		i++;
 	}
 	return (1);
@@ -62,7 +78,8 @@ void	sorted_insert(t_env **head_ref, t_env *new_node)
 	else
 	{
 		current = *head_ref;
-		while (current->next != NULL && ft_strcmp(current->next->name, new_node->name) <= 0)
+		while (current->next != NULL
+			&& ft_strcmp(current->next->name, new_node->name) <= 0)
 		{
 			current = current->next;
 		}

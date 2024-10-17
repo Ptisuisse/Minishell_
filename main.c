@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:05:26 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:27 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int g_exit_code = 0;
+int	g_exit_code = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -8,10 +20,9 @@ int	main(int argc, char **argv, char **envp)
 	t_command	*command_list;
 	t_env	*env_list;
 
-	env_list = malloc(sizeof(t_env));
-
 	(void)argc;
 	(void)argv;
+	env_list = malloc(sizeof(t_env));
 	command_list = NULL;
 	create_env_list(envp, &env_list);
 	while (1)

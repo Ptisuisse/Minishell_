@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_cd_pwd.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:03:48 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:03:52 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	update_env(t_env *env_list, char *name, char *value)
@@ -33,12 +45,12 @@ void	cd_cmd(t_command *command, t_env *env_list)
 	}
 	else if (chdir(command->args[1]) < 0)
 	{
-		ft_printf("Minishell: cd: %s: No such file or directory\n", command->args[1]);
+		ft_printf("Minishell: cd: %s: No such file or directory\n",
+			command->args[1]);
 		g_exit_code = 1;
 	}
 	else
 		g_exit_code = 0;
-
 	newpwd = getcwd(NULL, 0);
 	update_env(env_list, "PWD", newpwd);
 	update_env(env_list, "OLDPWD", oldpwd);

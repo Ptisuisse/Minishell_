@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:05:18 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:19 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	check_path(char *pathname)
@@ -9,9 +21,9 @@ int	check_path(char *pathname)
 
 int	exec_command(char *pathname, char **args)
 {
-	int pid;
-	char *path;
-	int status;
+	int		pid;
+	char	*path;
+	int		status;
 
 	status = 0;
 	if (!check_path(pathname))
@@ -31,4 +43,36 @@ int	exec_command(char *pathname, char **args)
 	free(path);
 	waitpid(pid, NULL, 0);
 	return (1);
+}
+
+int	choose_command(t_command *command, t_env **env_list)
+{
+	int	result;
+
+	result = -1;
+	if (command->append_infd == 1)
+		wait_input(command, env_list);
+	if (check_builtins(command, env_list))
+		result = 0;
+	else
+	{
+		exec_command(command->args[0], command->args);
+		result = 0;
+	}
+	return (result);
+}
+
+void	ft_process_wait(t_command *commands)
+{
+	int			status;
+	t_command	*cmd;
+
+	status = 0;
+	cmd = commands;
+	while (commands)
+	{
+		waitpid(commands->pid, &status, 0);
+		commands = commands->next;
+	}
+	commands = cmd;
 }

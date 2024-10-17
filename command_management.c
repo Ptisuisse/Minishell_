@@ -1,4 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command_management.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:04:55 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:04:56 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+void	handle_parent_process(t_command *commands)
+{
+	if (commands->next)
+		close(commands->pipe[WRITE_END]);
+	if (commands->prev)
+		close(commands->prev->pipe[READ_END]);
+}
+
+void	handle_child_process(t_command *commands)
+{
+	if (commands->prev)
+	{
+		dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
+		close(commands->prev->pipe[READ_END]);
+	}
+	if (commands->next)
+	{
+		close(commands->pipe[READ_END]);
+		dup2(commands->pipe[WRITE_END], STDOUT_FILENO);
+		close(commands->pipe[WRITE_END]);
+	}
+}
+
+void	setup_pipes(t_command *commands)
+{
+	if (commands->next)
+		pipe(commands->pipe);
+	commands->pid = fork();
+}
 
 void	commands_manager(t_command *commands, t_env **env_list)
 {
@@ -12,53 +54,21 @@ void	commands_manager(t_command *commands, t_env **env_list)
 	}
 	while (commands)
 	{
-		if (commands->next)
-			pipe(commands->pipe);
-		commands->pid = fork();
+		setup_pipes(commands);
 		if (commands->pid == 0)
 		{
-			if (commands->prev)
-			{
-				dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
-				close(commands->prev->pipe[READ_END]);
-			}
-			if (commands->next)
-			{
-				close(commands->pipe[READ_END]);
-				dup2(commands->pipe[WRITE_END], STDOUT_FILENO);
-				close(commands->pipe[WRITE_END]);
-			}
+			handle_child_process(commands);
 			choose_command(commands, env_list);
 			exit(EXIT_SUCCESS);
 		}
 		else
 		{
-			if (commands->next)
-				close(commands->pipe[WRITE_END]);
-			if (commands->prev)
-				close(commands->prev->pipe[READ_END]);
+			handle_parent_process(commands);
 			commands = commands->next;
 		}
 	}
 	commands = cmd;
 	ft_process_wait(commands);
-}
-
-int	choose_command(t_command *command, t_env **env_list)
-{
-	int	result;
-
-	result = -1;
-	if (command->append_infd == 1)
-		wait_input(command, env_list);
-	if (check_builtins(command, env_list))
-		result = 0;
-	else
-	{
-		exec_command(command->args[0], command->args);
-		result = 0;
-	}
-	return (result);
 }
 
 void	start_builtins(t_command *command, t_env **env_list)

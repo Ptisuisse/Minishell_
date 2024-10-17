@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_management.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:05:22 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:22 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	wait_output(t_command *command, t_env **env_list)
@@ -126,16 +138,3 @@ void	wait_input(t_command *command, t_env **env_list)
 //	choose_command(command, env_list);
 //}
 
-void	ft_process_wait(t_command *commands)
-{
-	int status = 0;
-	t_command *cmd;
-
-	cmd = commands;
-	while (commands)
-	{
-		waitpid(commands->pid, &status, 0);
-		commands = commands->next;
-	}
-	commands = cmd;
-}

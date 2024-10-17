@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:05:34 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:05:35 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft/libft.h"
@@ -112,9 +124,13 @@ void	redirect_management(t_command *command);
 
 /*COMMAND_MANAGEMENT_C*/
 
-void	commands_manager(t_command *commands, t_env **env_list);
+void	handle_parent_process(t_command *commands);
 
-int	choose_command(t_command *command, t_env **env_list);
+void	handle_child_process(t_command *commands);
+
+void	setup_pipes(t_command *commands);
+
+void	commands_manager(t_command *commands, t_env **env_list);
 
 void	start_builtins(t_command *command, t_env **env_list);
 
@@ -124,13 +140,15 @@ int	check_path(char *pathname);
 
 int	exec_command(char *pathname, char **args);
 
+int	choose_command(t_command *command, t_env **env_list);
+
+void	ft_process_wait(t_command *commands);
+
 /*HEREDOC_MANAGEMENT_C*/
 
 void	wait_output(t_command *command, t_env **env_list);
 
 void	wait_input(t_command *command, t_env **env_list);
-
-void	ft_process_wait(t_command *commands);
 
 
 /*BUILTINS_CD_PWD_C*/
@@ -151,6 +169,8 @@ int	exit_cmd(t_command *command);
 
 void echo_cmd(char **args);
 
+int echo_print(char **args, int i);
+
 /*BUILTINS_ENV_C*/
 
 void	create_env_list(char **envp, t_env **env_list);
@@ -166,6 +186,10 @@ t_env	*export_args(char *arg, t_env *env_list);
 t_env	*export_cmd(t_env *env_list, t_command *command);
 
 /*BUILTINS_EXPORT_UTILS_C*/
+
+int	print_error(char *arg);
+
+int	check_each_argument(char *arg, int *equal);
 
 int	ft_is_valid(char **arg);
 

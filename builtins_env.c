@@ -1,31 +1,53 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_env.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/17 13:04:36 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/10/17 13:04:38 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+t_env	*create_env_node(char *env_entry)
+{
+	t_env	*new;
+	char	*equal_sign;
+
+	new = malloc(sizeof(t_env));
+	if (!new)
+		return (NULL);
+	new->next = NULL;
+	equal_sign = ft_strchr(env_entry, '=');
+	if (equal_sign)
+	{
+		new->name = ft_substr(env_entry, 0, equal_sign - env_entry);
+		equal_sign++;
+		new->value = ft_strdup(equal_sign);
+	}
+	else
+	{
+		new->name = ft_strdup(env_entry);
+		new->value = NULL;
+	}
+	return (new);
+}
 
 void	create_env_list(char **envp, t_env **env_list)
 {
 	int		i;
 	t_env	*new;
 	t_env	*tmp;
-	char	*equal_sign;
 
 	i = 0;
 	while (envp[i])
 	{
-		new = malloc(sizeof(t_env));
+		new = create_env_node(envp[i]);
 		if (!new)
 			return ;
-		new->next = NULL;
-		equal_sign = ft_strchr(envp[i], '=');
-		if (equal_sign)
-		{
-			new->name = ft_substr(envp[i], 0, equal_sign - envp[i]);
-			equal_sign++;
-			new->value = ft_strdup(equal_sign);
-		}
-		else
-		{
-			new->name = ft_strdup(envp[i]);
-			new->value = NULL;
-		}
 		if (i == 0)
 			*env_list = new;
 		else
