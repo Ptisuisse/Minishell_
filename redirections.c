@@ -35,7 +35,7 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index);
 		if (ft_strchr(buffer, '<'))
-			error_message("<<");
+			error_message("<<", cmd);
 		cmd->input_file = strdup(buffer);
 	}
 }
@@ -63,7 +63,7 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index);
 		if (ft_strchr(buffer, '>'))
-			error_message(">>");
+			error_message(">>", cmd);
 		cmd->output_file = strdup(buffer);
 	}
 }

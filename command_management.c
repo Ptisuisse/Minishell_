@@ -76,11 +76,11 @@ void	start_builtins(t_command *command, t_env **env_list)
 	if (!(ft_strcmp(command->args[0], "exit")))
 		exit_cmd(command);
 	else if (!(ft_strcmp(command->args[0], "echo")))
-		echo_cmd(command->args);
+		echo_cmd(command);
 	else if (!(ft_strcmp(command->args[0], "cd")))
 		cd_cmd(command, *env_list);
 	else if (!(ft_strcmp(command->args[0], "pwd")))
-		pwd_cmd();
+		pwd_cmd(command);
 	else if (!(ft_strcmp(command->args[0], "env")))
 		env_cmd(*env_list);
 	else if (!(ft_strcmp(command->args[0], "export")))
