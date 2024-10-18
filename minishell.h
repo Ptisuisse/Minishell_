@@ -138,7 +138,7 @@ void	start_builtins(t_command *command, t_env **env_list);
 
 int	check_path(char *pathname);
 
-int	exec_command(char *pathname, char **args);
+int	exec_command(t_command *command);
 
 int	choose_command(t_command *command, t_env **env_list);
 

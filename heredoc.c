@@ -62,13 +62,6 @@ static int	parent_heredoc(t_command *command, int *heredoc)
             return (-1);
         }
         close(heredoc[0]);
-
-        // Exécuter `cat`
-        char *args[] = {"cat", NULL};
-        execvp(args[0], args);
-
-        // Si execvp échoue
-        perror("execvp");
         return (-1);
     }
 	return (0);
