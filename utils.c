@@ -98,20 +98,46 @@ void	print_commands(t_command *command_list)
 	}
 }
 
-void	free_commands(t_command *command_list)
+void free_command_list(t_command *command_list)
 {
-	t_command	*temp;
+    t_command *temp;
 
-	while (command_list)
-	{
-		temp = command_list;
-		temp->append_infd = 0;
-		command_list->append_infd = 0;
-		command_list = command_list->next;
-		// while (temp->args[j])
-		// 	free(temp->args[j++]);
-		free(temp->input_file);
-		free(temp->output_file);
-		free(temp);
-	}
+    while (command_list)
+    {
+        temp = command_list;
+        command_list = command_list->next;
+
+        // Free dynamically allocated strings
+        if (temp->command)
+        {
+            free(temp->command);
+            temp->command = NULL;
+        }
+
+        if (temp->output_file)
+        {
+            free(temp->output_file);
+            temp->output_file = NULL;
+        }
+
+        if (temp->input_file)
+        {
+            free(temp->input_file);
+            temp->input_file = NULL;
+        }
+
+        if (temp->append_infile)
+        {
+            free(temp->append_infile);
+            temp->append_infile = NULL;
+        }
+
+        if (temp->append_outfile)
+        {
+            free(temp->append_outfile);
+            temp->append_outfile = NULL;
+        }
+        // Free the command structure itself
+        free(temp);
+    }
 }

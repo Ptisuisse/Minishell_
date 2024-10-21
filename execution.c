@@ -40,6 +40,7 @@ int	exec_command(t_command *command)
 	else
 		ft_process_wait(command);
 	free(path);
+	g_exit_code = 0;
 	return (1);
 }
 
@@ -48,8 +49,6 @@ int	choose_command(t_command *command, t_env **env_list)
 	int	result;
 
 	result = -1;
-	if (command->append_infd == 1)
-		heredoc(command, env_list);
 	if (check_builtins(command, env_list))
 		result = 0;
 	else

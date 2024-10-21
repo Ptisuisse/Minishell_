@@ -12,74 +12,110 @@
 
 #include "minishell.h"
 
-static void	go_heredoc(t_command *command, t_env *env_lst, int fd_doc)
+void	write_to_heredoc(int pipe_fd_read)
+{
+	int		heredoc_fd;
+	char	buffer[1024];
+	size_t	bytes_read;
+
+	heredoc_fd = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (heredoc_fd == -1)
+	{
+		perror("Failed to open .heredoc");
+		close(pipe_fd_read);
+		return;
+	}
+	while ((bytes_read = read(pipe_fd_read, buffer, sizeof(buffer))) > 0)
+		write(heredoc_fd, buffer, bytes_read);
+	close(heredoc_fd);
+}
+
+void	heredoc_parent(t_command *command, int *pipe_fd, int stdin_backup)
+{
+	close(pipe_fd[WRITE_END]);
+	write_to_heredoc(pipe_fd[READ_END]);
+	close(pipe_fd[READ_END]);
+	int heredoc_fd = open(".heredoc", O_RDONLY);
+	if (heredoc_fd == -1)
+	{
+		perror("Failed to reopen .heredoc");
+		return;
+	}
+	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+		perror("dup2 error");
+	close(heredoc_fd);
+	dup2(stdin_backup, STDIN_FILENO);
+	close(stdin_backup);
+	command->args[WRITE_END] = ".heredoc";
+}
+
+void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 {
 	char	*input;
-	char *oper_value;
-	char	*end_of_input;
 
-	input = NULL;
-	if (command->append_outfd == 1)
-		end_of_input = command->append_outfile;
 	while (1)
 	{
 		input = readline("> ");
+		if (!input)
+		{
+			perror("readline error");
+			close(pipe_fd_write);
+			exit(EXIT_FAILURE);
+		}
 		if (strcmp(input, end_of_input) == 0)
+		{
+			free(input);
 			break;
-		ft_putstr_fd(input, fd_doc);
-		ft_putstr_fd("\n", fd_doc);
+		}
+		write(pipe_fd_write, input, strlen(input));
+		write(pipe_fd_write, "\n", 1);
 		free(input);
 	}
-	if (input != 0)
-		free(input);
 }
 
-static void	child_heredoc(t_command *command, t_env **env_list, int *heredoc)
+void	heredoc_child(t_command *command, int *pipe_fd)
 {
-	signal(SIGINT, handle_signal);
-	close(heredoc[0]);
-	go_heredoc(command, *env_list, heredoc[1]);
-	close(heredoc[1]);
-	exit(0);
+	close(pipe_fd[READ_END]);
+	read_heredoc(pipe_fd[WRITE_END], command->append_infile);
+	close(pipe_fd[WRITE_END]);
+	exit(EXIT_SUCCESS);
 }
 
-static int	parent_heredoc(t_command *command, int *heredoc)
+void	heredoc(t_command *command)
 {
-    int exit_status;
-    int std_in;
+	int		pipe_fd[2];
+	int		pid;
+	int		stdin_backup;
 
-    // Attendre la fin du processus enfant
-    wait(&exit_status);
-
-    exit_status = WEXITSTATUS(exit_status);
-    if (exit_status == 1)
-        return (-3);
-    else {
-        // Rediriger le descripteur de fichier du pipe vers stdin
-        std_in = dup2(heredoc[0], STDIN_FILENO);
-        if (std_in == -1) {
-            perror("dup2");
-            return (-1);
-        }
-        close(heredoc[0]);
-        return (-1);
-    }
-	return (0);
-}
-
-int	heredoc(t_command *command, t_env **env_list)
-{
-	int	pid;
-	int	heredoc[2];
-	int	i;
-
-	i = pipe(heredoc);
-	if (i == -1)
-		exit(1);
+	stdin_backup = dup(STDIN_FILENO);
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("pipe error");
+		return;
+	}
 	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork error");
+		return;
+	}
 	if (pid == 0)
-		child_heredoc(command, env_list, heredoc);
+		heredoc_child(command, pipe_fd);
 	else
-		return (parent_heredoc(command, heredoc));
-	return (0);
+		heredoc_parent(command, pipe_fd, stdin_backup);
+	return ;
+}
+
+void	check_heredoc(t_command *command)
+{
+	t_command *head;
+
+	head = command;
+	while (command)
+	{
+		if (command->append_infd == 1)
+			heredoc(command);
+		command = command->next;
+	}
+	command = head;
 }

@@ -64,6 +64,18 @@ typedef struct s_data
 	t_env				*env_list;
 }						t_data;
 
+void free_command_list(t_command *command_list);
+/*APPEND_FILE_C*/
+void	append_file(t_command *command);
+
+/*HEREDOC_C*/
+void	check_heredoc(t_command *command);
+void	write_to_heredoc(int pipe_fd_read);
+void	heredoc_parent(t_command *command, int *pipe_fd, int stdin_backup);
+void	read_heredoc(int pipe_fd_write, const char *end_of_input);
+void	heredoc_child(t_command *command, int *pipe_fd);
+void	heredoc(t_command *command);
+
 /*PARSING_C*/
 
 void	parse_argument(const char **input, char *buffer, int *buf_index);
@@ -144,13 +156,9 @@ int	choose_command(t_command *command, t_env **env_list);
 
 void	ft_process_wait(t_command *commands);
 
-/*HEREDOC_MANAGEMENT_C*/
+/*HEREDOC_C*/
 
-void	wait_output(t_command *command, t_env **env_list);
-
-void	wait_input(t_command *command, t_env **env_list);
-
-int	heredoc(t_command *command, t_env **env_list);
+void	check_heredoc(t_command *command);
 
 /*BUILTINS_CD_PWD_C*/
 

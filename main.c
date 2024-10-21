@@ -37,11 +37,12 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			return (1);
 		}
+		check_heredoc(command_list);
 		if (ft_isprint(*input))
 			commands_manager(command_list, &env_list);
 		//print_commands(command_list);
 		free(input);
-		free_commands(command_list);
+		free_command_list(command_list);
 		command_list = NULL;
 	}
 	return (0);
