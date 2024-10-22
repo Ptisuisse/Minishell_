@@ -19,27 +19,33 @@ int	check_path(char *pathname)
 	return (0);
 }
 
-int	exec_command(char *pathname, char **args)
+int	exec_command(t_command *command)
 {
-	int		pid;
 	char	*path;
 
 	if (!check_path(pathname))
 		path = ft_strjoin("/bin/", pathname);
+
+	if (!check_path(command->args[0]))
+		path = ft_strjoin("/bin/", command->args[0]);
 	else
-		path = ft_strdup(pathname);
-	pid = fork();
-	if (pid == 0)
+		path = ft_strdup(command->args[0]);
+	command->pid = fork();
+	if (command->pid == 0)
 	{
-		if (execve(path, args, NULL) == -1)
+		if (execve(path, command->args, NULL) == -1)
 		{
 			g_exit_code = 127;
 			ft_printf("%s: command not found\n", pathname);
 			return (g_exit_code);
+			ft_printf("%s: command not found\n", command->args[0]);
+			return (0);
 		}
 	}
+	else
+		ft_process_wait(command);
 	free(path);
-	waitpid(pid, NULL, 0);
+	g_exit_code = 0;
 	return (1);
 }
 
@@ -48,13 +54,11 @@ int	choose_command(t_command *command, t_env **env_list)
 	int	result;
 
 	result = -1;
-	if (command->append_infd == 1)
-		wait_input(command, env_list);
 	if (check_builtins(command, env_list))
 		result = 0;
 	else
 	{
-		exec_command(command->args[0], command->args);
+		exec_command(command);
 		result = 0;
 	}
 	return (result);
@@ -72,5 +76,5 @@ void	ft_process_wait(t_command *commands)
 		waitpid(commands->pid, &status, 0);
 		commands = commands->next;
 	}
-	commands = cmd;
+	//commands = cmd;
 }
