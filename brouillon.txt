@@ -1,4 +1,154 @@
 
+//void	heredoc(t_command *command, t_env **env_list)
+//{
+//	char	*input;
+//	char	*end_of_input;
+//	int		heredoc_fd;
+//	int stdin_backup;
+
+//	(void)env_list;
+//	input = NULL;
+//	end_of_input = NULL;
+//	stdin_backup = dup(STDIN_FILENO);
+//	if (command->append_infd == 1)
+//		end_of_input = command->append_infile;
+//	heredoc_fd = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+//	if (heredoc_fd == -1)
+//	{
+//		perror("Failed to open .heredoc");
+//	}
+//	while (1)
+//	{
+//		input = readline("> ");
+//		if (!input)
+//		{
+//			perror("readline error");
+//			close(heredoc_fd);
+//			exit(EXIT_FAILURE);
+//		}
+//		if (strcmp(input, end_of_input) == 0)
+//		{
+//			free(input);
+//			break;
+//		}
+//		if (write(heredoc_fd, input, strlen(input)) == -1)
+//		{
+//			perror("write error");
+//			free(input);
+//			close(heredoc_fd);
+//		}
+//		if (write(heredoc_fd, "\n", 1) == -1)
+//		{
+//			perror("write error");
+//			free(input);
+//			close(heredoc_fd);
+//		}
+//		free(input);
+//	}
+//	close(heredoc_fd);
+//	heredoc_fd = open(".heredoc", O_RDONLY);
+//	if (heredoc_fd == -1)
+//		perror("Failed to reopen .heredoc");
+//	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+//	{
+//		perror("dup2 error");
+//		close(heredoc_fd);
+//	}
+//	close(heredoc_fd);
+//	dup2(stdin_backup, STDIN_FILENO);
+//	close(stdin_backup);
+//	command->args[1] = ".heredoc";
+//	return ;
+//}
+
+
+////void	check_redirection(t_command *command, t_env **env_list)
+////{
+////	t_command *head;
+////	int fd = 0;
+
+////	(void)env_list;
+////	head = command;
+////	while (command)
+////	{
+////		if (command->append_outfd == 1 || command->append_infd == 1)
+////		{
+////			fd = open(".heredoc.txt", O_CREAT | O_RDWR | O_TRUNC, 0644);
+////			heredoc(command, env_list);
+////			command->args[1] = ".heredoc.txt";
+////		}
+////		command = command->next;
+////	}
+////	command = head;
+////}
+
+//static void	go_heredoc(t_command *command, t_env *env_lst, int fd_doc)
+//{
+//	char	*input;
+//	//char *oper_value;
+//	char	*end_of_input;
+
+//	(void)env_lst;
+//	input = NULL;
+//	if (command->append_outfd == 1)
+//		end_of_input = command->append_outfile;
+//	fd_doc = open(".heredoc.txt", O_CREAT | O_RDWR | O_TRUNC, 0644);
+//	while (1)
+//	{
+//		input = readline("> ");
+//		if (strcmp(input, end_of_input) == 0)
+//			break;
+//		ft_putstr_fd(input, fd_doc);
+//		ft_putstr_fd("\n", fd_doc);
+//		free(input);
+//	}
+//	close(fd_doc);
+//	if (input != 0)
+//		free(input);
+//}
+
+//static void	child_heredoc(t_command *command, t_env **env_list, int heredoc)
+//{
+//	(void)env_list;
+//	signal(SIGINT, handle_signal);
+//	go_heredoc(command, *env_list, heredoc);
+//	exit(0);
+//}
+
+//static int	parent_heredoc(t_command *command, int heredoc)
+//{
+//    int exit_status;
+//    int std_in;
+
+//	(void)command;
+//    wait(&exit_status);
+//    exit_status = WEXITSTATUS(exit_status);
+//    if (exit_status == 1)
+//        return (-3);
+//    else
+//	{
+//        std_in = dup2(heredoc, STDIN_FILENO);
+//        return (1);
+//    }
+//	return (0);
+//}
+
+//int	heredoc(t_command *command, t_env **env_list)
+//{
+//	int	pid;
+//	int	heredoc = 0;
+////	int	i;
+
+//	//i = pipe(heredoc);
+//	pid = fork();
+//	if (pid == 0)
+//		child_heredoc(command, env_list, heredoc);
+//	else
+//		parent_heredoc(command, heredoc);
+//	command->args[1] = ".heredoc.txt";
+//	return (0);
+//}
+
 
 
 echo $USER $USER
@@ -338,3 +488,5 @@ int select_commands(t_command *commands, t_data data)
 // 	}
 // 	waitpid(command->pid, &status, WNOHANG);
 // }
+le test du heredoc
+hello
