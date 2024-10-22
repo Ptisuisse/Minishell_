@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	echo_cmd(char **args)
+void	echo_cmd(t_command *command)
 {
 	int	newline;
 	int	i;
@@ -21,21 +21,21 @@ void	echo_cmd(char **args)
 	newline = 1;
 	i = 1;
 	j = 0;
-	while (args[i] && args[i][0] == '-')
+	while (command->args[i] && command->args[i][0] == '-')
 	{
 		j = 1;
-		while (args[i][j] == 'n')
+		while (command->args[i][j] == 'n')
 			j++;
-		if (args[i][j] == '\0')
+		if (command->args[i][j] == '\0')
 			newline = 0;
 		else
 			break ;
 		i++;
 	}
-	echo_print(args, i);
+	echo_print(command->args, i);
 	if (newline)
 		printf("\n");
-	g_exit_code = 0;
+	command->exit_code = 0;
 }
 
 int	echo_print(char **args, int i)

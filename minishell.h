@@ -34,6 +34,7 @@ extern int g_exit_code;
 
 typedef struct s_command
 {
+	int					exit_code;
 	char				*command;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
@@ -166,7 +167,7 @@ void	update_env(t_env *env_list, char *name, char *value);
 
 void	cd_cmd(t_command *command, t_env *env_list);
 
-void	pwd_cmd(void);
+void	pwd_cmd(t_command *command);
 
 /*BUILTINS_CLEAR_EXIT_C*/
 
@@ -176,7 +177,7 @@ int	exit_cmd(t_command *command);
 
 /*BUILTINS_ECHO_C*/
 
-void echo_cmd(char **args);
+void	echo_cmd(t_command *command);
 
 int echo_print(char **args, int i);
 
@@ -195,12 +196,11 @@ t_env	*export_args(char *arg, t_env *env_list);
 t_env	*export_cmd(t_env *env_list, t_command *command);
 
 /*BUILTINS_EXPORT_UTILS_C*/
+int	print_error(t_command *command);
 
-int	print_error(char *arg);
+int	check_each_argument(t_command *command, int *equal);
 
-int	check_each_argument(char *arg, int *equal);
-
-int	ft_is_valid(char **arg);
+int	ft_is_valid(t_command *command);
 
 void	sorted_insert(t_env **head_ref, t_env *new_node);
 
@@ -227,7 +227,7 @@ void	handle_signal(int sig);
 int	signal_handle(void);
 
 /*ERROR_C*/
-void error_message(const char *token);
+void error_message(const char *token, t_command *cmd);
 char	*replace_by_exit_code(char *result, int *result_index);
 
 #endif

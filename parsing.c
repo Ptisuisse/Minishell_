@@ -77,19 +77,19 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
                 token = ">";
             else
                 token = "newline";
-            error_message(token);
+            error_message(token, cmd);
             return (1);
         }
         else if (*(*input + 1) && *(*input + 1) != ' ' && !ft_isalpha(*(*input + 1)))
         {
             token = "|";
-            error_message(token);
+            error_message(token, cmd);
             return (1);
         }
         else if (*(*input + 1) == '\0' || *(*input + 1) == '|')
         {
             token = "newline";
-            error_message(token);
+            error_message(token, cmd);
             return (1);
         }
         parse_redirection(input, cmd);
@@ -121,64 +121,12 @@ int parse_command(const char **input, t_command *cmd)
         (*input)++;
         if (**input != ' ' && !ft_isalpha(**input))
         {
-            error_message("|");
+            error_message("|", cmd);
             return (1);
         }
     }
     return (0);
 }
-
-
-// int parse_command(const char **input, t_command *cmd)
-// {
-//     int arg_index = 0;
-//     char *token = NULL;
-
-//     while (**input && **input != '|') {
-//         if (**input == ' ')
-//             (*input)++;
-//         else if ((**input == '<' || **input == '>'))
-// 		{
-// 			if (*(*input+1) == '>' || *(*input+1) == '<')
-// 				{
-// 				if (*(*input+2) == '<')
-// 					token = "<";
-// 				else if (*(*input+2) == '>') 
-// 					token = ">";
-//                 else
-// 					token = "newline";
-//                 error_message(token);
-//                 return 1;
-//             	}
-// 			else if (*(*input+1) && *(*input+1) != ' ' && !ft_isalpha(*(*input+1))) 
-// 				{
-// 				token = "|";
-//                 error_message(token);
-//                 return 1;
-// 				}
-// 			else if (*(*input + 1) == '\0' || *(*input + 1) == '|') {
-//                 token = "newline";
-//                 error_message(token);
-//                 return 1;
-//             }
-//             parse_redirection(input, cmd);
-//             arg_index++;
-//         }
-//         else {
-//             parse_arguments(input, cmd, &arg_index);
-//         }
-//     }
-//     cmd->args[arg_index] = NULL;
-//     if (**input == '|') {
-//         (*input)++;
-//         if (**input != ' ' && !ft_isalpha(**input)) {
-//             token = "|";
-//             error_message(token);
-//             return 1;
-//         }
-//     }
-//     return 0;
-// }
 
 int	parse_command_line(const char *input, t_command **command_list)
 {
@@ -188,7 +136,7 @@ int	parse_command_line(const char *input, t_command **command_list)
 		return (1);
 	if (*input == '|')
 		{
-			error_message("|");
+			error_message("|", *command_list);
             return 1;
 		}
 	while (*input)

@@ -12,35 +12,35 @@
 
 #include "minishell.h"
 
-int	print_error(char *arg)
+int	print_error(t_command *command)
 {
-	g_exit_code = 1;
-	if (arg)
-		ft_printf("Minishell: export: `%s': not a valid identifier\n", arg);
+	command->exit_code = 1;
+	if (command->args[0])
+		ft_printf("Minishell: export: `%s': not a valid identifier\n", command->args[0]);
 	else
 		ft_printf("Minishell: export: not a valid identifier\n");
 	return (0);
 }
 
-int	check_each_argument(char *arg, int *equal)
+int	check_each_argument(t_command *command, int *equal)
 {
 	int	j;
 
 	j = 0;
-	while (arg[j])
+	while (command->args[0][j])
 	{
-		if (arg[0] == '_')
+		if (command->args[0][0] == '_')
 		{
-			if (arg[1] == '\0')
-				return (print_error(arg));
+			if (command->args[0][1] == '\0')
+				return (print_error(command));
 		}
-		else if (arg[j] == '=')
+		else if (command->args[0][j] == '=')
 		{
 			*equal = 1;
-			if (!ft_isalnum(arg[j - 1]))
-				return (print_error(arg));
+			if (!ft_isalnum(command->args[0][j - 1]))
+				return (print_error(command));
 		}
-		else if ((!ft_isalnum(arg[j]) || ft_isdigit(arg[0])) || arg[j] == '_')
+		else if ((!ft_isalnum(command->args[0][j]) || ft_isdigit(command->args[0][0])) || command->args[0][j] == '_')
 		{
 			if (*equal != 1)
 				return (print_error(NULL));
@@ -50,16 +50,16 @@ int	check_each_argument(char *arg, int *equal)
 	return (1);
 }
 
-int	ft_is_valid(char **arg)
+int	ft_is_valid(t_command *command)
 {
 	int	i;
 	int	equal;
 
 	i = 1;
-	while (arg[i])
+	while (command->args[i])
 	{
 		equal = 0;
-		if (!check_each_argument(arg[i], &equal))
+		if (!check_each_argument(command, &equal))
 			return (0);
 		i++;
 	}
