@@ -23,6 +23,9 @@ int	exec_command(t_command *command)
 {
 	char	*path;
 
+	if (!check_path(pathname))
+		path = ft_strjoin("/bin/", pathname);
+
 	if (!check_path(command->args[0]))
 		path = ft_strjoin("/bin/", command->args[0]);
 	else
@@ -33,6 +36,8 @@ int	exec_command(t_command *command)
 		if (execve(path, command->args, NULL) == -1)
 		{
 			g_exit_code = 127;
+			ft_printf("%s: command not found\n", pathname);
+			return (g_exit_code);
 			ft_printf("%s: command not found\n", command->args[0]);
 			return (0);
 		}

@@ -227,7 +227,7 @@ void	handle_signal(int sig);
 int	signal_handle(void);
 
 /*ERROR_C*/
-
+void error_message(const char *token);
 char	*replace_by_exit_code(char *result, int *result_index);
 
 #endif
