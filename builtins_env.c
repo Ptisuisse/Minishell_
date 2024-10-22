@@ -86,7 +86,7 @@ void	unset_cmd(t_command *command, t_env *env_list)
 	prev = NULL;
 	if (command->args[1] == NULL)
 	{
-		g_exit_code = 0;
+		command->exit_code = 0;
 		return ;
 	}
 	while (env_list)

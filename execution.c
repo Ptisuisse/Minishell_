@@ -19,29 +19,28 @@ int	check_path(char *pathname)
 	return (0);
 }
 
-int	exec_command(t_command *command)
+int    exec_command(t_command *command)
 {
-	char	*path;
+    char    *path;
 
-	if (!check_path(command->args[0]))
-		path = ft_strjoin("/bin/", command->args[0]);
-	else
-		path = ft_strdup(command->args[0]);
-	command->pid = fork();
-	if (command->pid == 0)
-	{
-		if (execve(path, command->args, NULL) == -1)
-		{
-			g_exit_code = 127;
-			ft_printf("%s: command not found\n", command->args[0]);
-			return (0);
-		}
-	}
-	else
-		ft_process_wait(command);
-	free(path);
-	g_exit_code = 0;
-	return (1);
+    if (!check_path(command->args[0]))
+        path = ft_strjoin("/bin/", command->args[0]);
+    else
+        path = ft_strdup(command->args[0]);
+    command->pid = fork();
+    if (command->pid == 0)
+    {
+        if (execve(path, command->args, NULL) == -1)
+        {
+            command->exit_code = 127;
+            ft_printf("%s: command not found\n", command->args[0]);
+            return (0);
+        }
+    }
+    else
+        ft_process_wait(command);
+    free(path);
+    return (1);
 }
 
 int	choose_command(t_command *command, t_env **env_list)

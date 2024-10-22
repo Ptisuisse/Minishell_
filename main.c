@@ -24,6 +24,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
 	command_list = NULL;
+	command_list = malloc(sizeof(t_command));
 	create_env_list(envp, &env_list);
 	while (1)
 	{
@@ -33,9 +34,9 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 		if (parse_command_line(input, &command_list))
 		{
-			ft_printf("Error parsing command line.\n");
+			//error_message(input, command_list);
 			free(input);
-			return (1);
+			return (2);
 		}
 		check_heredoc(command_list);
 		if (ft_isprint(*input))
