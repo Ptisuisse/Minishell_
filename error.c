@@ -24,3 +24,10 @@ char	*replace_by_exit_code(char *result, int *result_index)
 	free(exit_code);
 	return (result);
 }
+
+void error_message(const char *token)
+{
+	g_exit_code = 2;
+    if (token)
+        ft_printf(" syntax error near unexpected token `%s'\n", token);
+}

@@ -100,7 +100,7 @@ void	print_commands(t_command *command_list)
 
 void	free_commands(t_command *command_list)
 {
-	int			j;
+	//int			j;
 	t_command	*temp;
 
 	while (command_list)
@@ -109,7 +109,7 @@ void	free_commands(t_command *command_list)
 		temp->append_infd = 0;
 		command_list->append_infd = 0;
 		command_list = command_list->next;
-		j = 0;
+	//	j = 0;
 		// while (temp->args[j])
 		// 	free(temp->args[j++]);
 		free(temp->input_file);
