@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	g_exit_code = 0;
+//int	g_exit_code = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -25,6 +25,7 @@ int	main(int argc, char **argv, char **envp)
 	env_list = malloc(sizeof(t_env));
 	command_list = NULL;
 	command_list = malloc(sizeof(t_command));
+	//command_list->exit_code = 0;
 	create_env_list(envp, &env_list);
 	while (1)
 	{
