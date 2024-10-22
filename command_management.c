@@ -26,6 +26,7 @@ void	handle_child_process(t_command *commands)
 	{
 		dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
 		close(commands->prev->pipe[READ_END]);
+		close(commands->prev->pipe[WRITE_END]);
 	}
 	if (commands->next)
 	{
@@ -45,20 +46,20 @@ void	setup_pipes(t_command *commands)
 void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
-	int		stdin_backup = 0;
-	int		stdout_backup = 0;
 
 	cmd = commands;
 	if (commands->next != NULL)
 	{
 		while (commands)
 		{
-			redirect_management(commands);
 			setup_pipes(commands);
 			if (commands->pid == 0)
 			{
 				handle_child_process(commands);
-				choose_command(commands, env_list);
+				if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
+					redirect_management(commands, env_list);
+				else
+					choose_command(commands, env_list);
 				exit(EXIT_SUCCESS);
 			}
 			else
@@ -67,20 +68,12 @@ void	commands_manager(t_command *commands, t_env **env_list)
 				commands = commands->next;
 			}
 		}
+		//ft_process_wait(commands);
 	}
 	else
 	{
 		if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
-		{
-			stdout_backup = dup(STDOUT_FILENO);
-			stdin_backup = dup(STDIN_FILENO);
-			redirect_management(commands);
-			choose_command(commands, env_list);
-			dup2(stdin_backup, STDOUT_FILENO);
-			dup2(stdin_backup, STDIN_FILENO);
-			close(stdin_backup);
-			close(stdout_backup);
-		}
+			redirect_management(commands, env_list);
 		else
 			choose_command(commands, env_list);
 	}

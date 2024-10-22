@@ -23,6 +23,10 @@ t_command	*init_command(void)
 	element->output_file = NULL;
 	element->append_outfile = NULL;
 	element->append_infile = NULL;
+	element->input_fd = 0;
+	element->output_fd = 0;
+	element->append_infd = 0;
+	element->append_outfd = 0;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;

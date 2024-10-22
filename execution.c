@@ -71,5 +71,5 @@ void	ft_process_wait(t_command *commands)
 		waitpid(commands->pid, &status, 0);
 		commands = commands->next;
 	}
-	commands = cmd;
+	//commands = cmd;
 }

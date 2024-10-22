@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 			commands_manager(command_list, &env_list);
 		//print_commands(command_list);
 		free(input);
-		free_command_list(command_list);
+		//free_command_list(command_list);
 		command_list = NULL;
 	}
 	return (0);

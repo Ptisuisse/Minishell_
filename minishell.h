@@ -66,7 +66,7 @@ typedef struct s_data
 
 void free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
-void	append_file(t_command *command);
+void	append_file(t_command *command, t_env **env_list);
 
 /*HEREDOC_C*/
 void	check_heredoc(t_command *command);
@@ -128,11 +128,11 @@ void	parse_redirection(const char **input, t_command *cmd);
 
 /*REDIRECTIONS_MANAGEMENT_C*/
 
-void	redirect_input(t_command *command);
+void	redirect_input(t_command *command, t_env **env_list);
 
-void	redirect_output(t_command *command);
+void	redirect_output(t_command *command, t_env **env_list);
 
-void	redirect_management(t_command *command);
+void	redirect_management(t_command *command, t_env **env_list);
 
 /*COMMAND_MANAGEMENT_C*/
 
