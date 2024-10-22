@@ -102,7 +102,6 @@ void free_command_list(t_command *command_list)
 {
     t_command *temp;
 	//int			j;
-	t_command	*temp;
 
     while (command_list)
     {
