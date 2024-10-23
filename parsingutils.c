@@ -28,7 +28,9 @@ t_command	*init_command(int exit_code)
 	element->output_fd = 0;
 	element->append_infd = 0;
 	element->append_outfd = 0;
-	element->exit_code = exit_code;
+	element->exit_code = 0;
+	if (exit_code != 0)
+		element->exit_code = exit_code;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;
@@ -48,7 +50,7 @@ void	append_command_node(t_command **lst, t_command *new)
 {
 	t_command	*tmp;
 
-	if (!new || !lst)
+	if (!new)
 		return ;
 	if (*lst == NULL)
 		*lst = new;

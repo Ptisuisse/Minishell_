@@ -38,7 +38,7 @@ void	parse_argument(const char **input, char *buffer, int *buf_index, t_command 
 void	handle_quotes(const char **input, char *buffer, int *buf_index, t_command *command_list)
 {
     char    quote_type;
-    
+
     quote_type = **input;
 	(*input)++;
 	while (**input && **input != quote_type)
@@ -138,10 +138,10 @@ int	parse_command_line(const char *input, t_command **command_list, int exit_cod
 	if (open_quote((char *)input))
 		return (1);
 	if (*input == '|')
-		{
-			error_message("|", *command_list);
-            return 1;
-		}
+	{
+		error_message("|", *command_list);
+        return 1;
+	}
 	while (*input)
 	{
 		new_node = init_command(exit_code);

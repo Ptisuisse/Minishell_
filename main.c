@@ -50,7 +50,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			//error_message(input, command_list);
 			//free(input);
-			command_list->exit_code = 2;
+			command_list->exit_code = 1;
 		}
 		else
 		{
@@ -61,7 +61,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		save_exit_code = last_exitcode(command_list);
 		free(input);
-		//free_command_list(command_list);
+		free_command_list(command_list);
 		command_list = NULL;
 		input = NULL;
 	}

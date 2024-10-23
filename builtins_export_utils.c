@@ -27,23 +27,23 @@ int	check_each_argument(t_command *command, int *equal)
 	int	j;
 
 	j = 0;
-	while (command->args[0][j])
+	while (command->args[1][j])
 	{
-		if (command->args[0][0] == '_')
+		if (command->args[1][0] == '_')
 		{
-			if (command->args[0][1] == '\0')
+			if (command->args[1][1] == '\0')
 				return (print_error(command));
 		}
-		else if (command->args[0][j] == '=')
+		else if (command->args[1][j] == '=')
 		{
 			*equal = 1;
-			if (!ft_isalnum(command->args[0][j - 1]))
+			if (!ft_isalnum(command->args[1][j - 1]))
 				return (print_error(command));
 		}
-		else if ((!ft_isalnum(command->args[0][j]) || ft_isdigit(command->args[0][0])) || command->args[0][j] == '_')
+		else if (command->args[1][j] == '-' || (!ft_isalnum(command->args[1][j]) || ft_isdigit(command->args[1][0])) || command->args[1][j] == '_')
 		{
 			if (*equal != 1)
-				return (print_error(NULL));
+				return (print_error(command));
 		}
 		j++;
 	}
