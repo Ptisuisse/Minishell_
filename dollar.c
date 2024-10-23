@@ -131,7 +131,7 @@ char	*search_dollar(const char *input, t_command *command_list)
 			continue;
 		}
 		if (input[i] == '$' && (input[i + 1] == '?'))
-			{
+		{
             replace_by_exit_code(result, &result_index, command_list);
             i += 2;
             continue;

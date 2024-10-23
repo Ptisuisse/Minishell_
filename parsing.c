@@ -14,7 +14,6 @@
 
 void	parse_argument(const char **input, char *buffer, int *buf_index, t_command *cmd)
 {
-
 	skip_spaces(input);
 	while (**input)
 	{
@@ -66,7 +65,7 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index)
 
 int handle_redirection_and_arguments(const char **input, t_command *cmd, int *arg_index)
 {
-    char *token;
+    char *token = NULL;
 
     if (**input == '<' || **input == '>')
     {
@@ -76,10 +75,12 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
                 token = "<";
             else if (*(*input + 2) == '>')
                 token = ">";
-            else
+            if (token)
+            {
                 token = "newline";
-            error_message(token, cmd);
-            return (1);
+                error_message(token, cmd);
+                return (1);
+            }
         }
         else if (*(*input + 1) && *(*input + 1) != ' ' && !ft_isascii(*(*input + 1)))
         {
@@ -106,7 +107,7 @@ int parse_command(const char **input, t_command *cmd)
     int arg_index;
 
     arg_index = 0;
-    cmd->exit_code = 0;
+    // cmd->exit_code = 0;
     while (**input && **input != '|')
     {
         if (**input == ' ')
@@ -130,7 +131,7 @@ int parse_command(const char **input, t_command *cmd)
     return (0);
 }
 
-int	parse_command_line(const char *input, t_command **command_list)
+int	parse_command_line(const char *input, t_command **command_list, int exit_code)
 {
 	t_command	*new_node;
 
@@ -143,7 +144,7 @@ int	parse_command_line(const char *input, t_command **command_list)
 		}
 	while (*input)
 	{
-		new_node = init_command();
+		new_node = init_command(exit_code);
 		if (!new_node)
 			return (1);
 		if (!parse_command(&input, new_node))
