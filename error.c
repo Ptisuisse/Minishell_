@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "minishell.h"
 
 char	*replace_by_exit_code(char *result, int *result_index)
 {

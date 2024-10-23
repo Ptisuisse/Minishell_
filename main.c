@@ -23,8 +23,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
-	command_list = NULL;
 	command_list = malloc(sizeof(t_command));
+	command_list = NULL;
 	create_env_list(envp, &env_list);
 	while (1)
 	{
