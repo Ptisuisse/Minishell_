@@ -81,7 +81,7 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
             error_message(token, cmd);
             return (1);
         }
-        else if (*(*input + 1) && *(*input + 1) != ' ' && !ft_isalpha(*(*input + 1)))
+        else if (*(*input + 1) && *(*input + 1) != ' ' && !ft_isascii(*(*input + 1)))
         {
             token = "|";
             error_message(token, cmd);
@@ -94,7 +94,7 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
             return (1);
         }
         parse_redirection(input, cmd);
-        (*arg_index)++;
+        //(*arg_index)++;
     }
     else
         parse_arguments(input, cmd, arg_index);

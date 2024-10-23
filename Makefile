@@ -10,13 +10,14 @@ SRCS =	main.c \
 		env_var.c \
 		error.c \
 		execution.c \
-		heredoc_management.c \
 		parsing.c \
 		parsingutils.c \
 		redirect_management.c \
 		redirections.c \
 		signal.c \
 		utils.c \
+		heredoc.c \
+		append_file.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc

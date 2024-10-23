@@ -18,14 +18,13 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
 	t_command	*command_list;
-	t_env	*env_list;
+	t_env		*env_list;
 
 	(void)argc;
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
-	command_list = NULL;
 	command_list = malloc(sizeof(t_command));
-	//command_list->exit_code = 0;
+	command_list = NULL;
 	create_env_list(envp, &env_list);
 	while (1)
 	{
@@ -39,11 +38,12 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			return (2);
 		}
+		check_heredoc(command_list);
 		if (ft_isprint(*input))
 			commands_manager(command_list, &env_list);
 		//print_commands(command_list);
 		free(input);
-		free_commands(command_list);
+		//free_command_list(command_list);
 		command_list = NULL;
 	}
 	return (0);

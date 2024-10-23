@@ -17,13 +17,17 @@ void	handle_parent_process(t_command *commands)
 	if (commands->next)
 		close(commands->pipe[WRITE_END]);
 	if (commands->prev)
+	{
+		close(commands->prev->pipe[WRITE_END]);
 		close(commands->prev->pipe[READ_END]);
+	}
 }
 
 void	handle_child_process(t_command *commands)
 {
 	if (commands->prev)
 	{
+		close(commands->prev->pipe[WRITE_END]);
 		dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
 		close(commands->prev->pipe[READ_END]);
 	}
@@ -47,28 +51,38 @@ void	commands_manager(t_command *commands, t_env **env_list)
 	t_command	*cmd;
 
 	cmd = commands;
-	if (commands->next == NULL)
+	if (commands->next != NULL)
 	{
-		choose_command(commands, env_list);
-		return ;
-	}
-	while (commands)
-	{
-		setup_pipes(commands);
-		if (commands->pid == 0)
+		while (commands)
 		{
-			handle_child_process(commands);
-			choose_command(commands, env_list);
-			exit(EXIT_SUCCESS);
+			setup_pipes(commands);
+			if (commands->pid == 0)
+			{
+				handle_child_process(commands);
+				if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
+					redirect_management(commands, env_list);
+				else
+					choose_command(commands, env_list);
+				exit(EXIT_SUCCESS);
+			}
+			else
+			{
+				handle_parent_process(commands);
+				if (commands->next == NULL)
+					ft_process_wait(commands);
+				commands = commands->next;
+			}
 		}
+	}
+	else
+	{
+		if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
+			redirect_management(commands, env_list);
 		else
-		{
-			handle_parent_process(commands);
-			commands = commands->next;
-		}
+			choose_command(commands, env_list);
 	}
-	commands = cmd;
 	ft_process_wait(commands);
+	commands = cmd;
 }
 
 void	start_builtins(t_command *command, t_env **env_list)
@@ -87,6 +101,4 @@ void	start_builtins(t_command *command, t_env **env_list)
 		*env_list = export_cmd(*env_list, command);
 	else if (!(ft_strcmp(command->args[0], "unset")))
 		unset_cmd(command, *env_list);
-	else if (!(ft_strcmp(command->args[0], "clear")))
-		clear_cmd();
 }

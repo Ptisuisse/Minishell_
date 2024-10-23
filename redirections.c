@@ -37,6 +37,7 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 		if (ft_strchr(buffer, '<'))
 			error_message("<<", cmd);
 		cmd->input_file = strdup(buffer);
+		cmd->input_file = ft_strdup(buffer);
 	}
 }
 
