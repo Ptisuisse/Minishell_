@@ -30,7 +30,7 @@
 # define READ_END 0
 # define WRITE_END 1
 
-extern int g_exit_code;
+//extern int g_exit_code;
 
 typedef struct s_command
 {
@@ -79,9 +79,9 @@ void	heredoc(t_command *command);
 
 /*PARSING_C*/
 
-void	parse_argument(const char **input, char *buffer, int *buf_index);
+void	parse_argument(const char **input, char *buffer, int *buf_index, t_command *cmd);
 
-void	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type);
+void	handle_quotes(const char **input, char *buffer, int *buf_index, t_command *command_list);
 
 int parse_arguments(const char **input, t_command *cmd, int *arg_index);
 
@@ -105,13 +105,13 @@ int	open_quote(const char *line);
 
 int	check_builtins(t_command *command, t_env **env_list);
 
-void	process_dollar(const char **input, char *buffer, int *buf_index);
+void	process_dollar(const char **input, char *buffer, int *buf_index, t_command *command_list);
 
-void	handle_dollar_sign(const char **input, char *buffer, int *buf_index);
+void	handle_dollar_sign(const char **input, char *buffer, int *buf_index, t_command *command_list);
 
 int	handle_dollar(const char *input, int *i, char *result, int *result_index);
 
-char	*search_dollar(const char *input);
+char	*search_dollar(const char *input, t_command *command_list);
 
 /*ENV_VAR_C*/
 
@@ -228,6 +228,6 @@ int	signal_handle(void);
 
 /*ERROR_C*/
 void error_message(const char *token, t_command *cmd);
-char	*replace_by_exit_code(char *result, int *result_index);
+char	*replace_by_exit_code(char *result, int *result_index, t_command *command);
 
 #endif

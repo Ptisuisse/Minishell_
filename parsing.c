@@ -12,20 +12,18 @@
 
 #include "minishell.h"
 
-void	parse_argument(const char **input, char *buffer, int *buf_index)
+void	parse_argument(const char **input, char *buffer, int *buf_index, t_command *cmd)
 {
-	char	quote_type;
 
 	skip_spaces(input);
 	while (**input)
 	{
 		if (**input == '"' || **input == '\'')
 		{
-			quote_type = **input;
-			handle_quotes(input, buffer, buf_index, quote_type);
+			handle_quotes(input, buffer, buf_index, cmd);
 		}
 		else if (**input == '$')
-				handle_dollar_sign(input, buffer, buf_index);
+				handle_dollar_sign(input, buffer, buf_index, cmd);
 		else if ((**input == '\\'))
 			{
 				(*input)++;
@@ -38,13 +36,16 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 	}
 	buffer[*buf_index] = '\0';
 }
-void	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type)
+void	handle_quotes(const char **input, char *buffer, int *buf_index, t_command *command_list)
 {
+    char    quote_type;
+    
+    quote_type = **input;
 	(*input)++;
 	while (**input && **input != quote_type)
 	{
 		if (quote_type == '"' && **input == '$' && ft_isalnum((*input)[1]))
-			handle_dollar_sign(input, buffer, buf_index);
+			handle_dollar_sign(input, buffer, buf_index, command_list);
 		else
 			buffer[(*buf_index)++] = *(*input)++;
 	}
@@ -58,8 +59,8 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index)
     int buf_index = 0;
 
     buf_index = 0;
-    parse_argument(input, buffer, &buf_index);
-    cmd->args[(*arg_index)++] = ft_strdup(buffer);
+    parse_argument(input, buffer, &buf_index, cmd);
+    cmd->args[(*arg_index)++] = strdup(buffer);
     return buf_index;
 }
 
@@ -105,6 +106,7 @@ int parse_command(const char **input, t_command *cmd)
     int arg_index;
 
     arg_index = 0;
+    cmd->exit_code = 0;
     while (**input && **input != '|')
     {
         if (**input == ' ')
