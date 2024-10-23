@@ -12,13 +12,14 @@
 
 #include "minishell.h"
 
-t_command	*init_command(void)
+t_command	*init_command(int exit_code)
 {
 	t_command	*element;
 
 	element = malloc(sizeof(t_command));
 	if (element == NULL)
 		return (NULL);
+	//element->args = malloc(sizeof(char *) * MAX_TOKENS);
 	element->input_file = NULL;
 	element->output_file = NULL;
 	element->append_outfile = NULL;
@@ -27,6 +28,7 @@ t_command	*init_command(void)
 	element->output_fd = 0;
 	element->append_infd = 0;
 	element->append_outfd = 0;
+	element->exit_code = exit_code;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;

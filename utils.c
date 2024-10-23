@@ -103,10 +103,9 @@ void free_command_list(t_command *command_list)
     t_command *temp;
 	//int			j;
 
-    while (command_list)
+    while (command_list->next)
     {
         temp = command_list;
-        command_list = command_list->next;
 
         // Free dynamically allocated strings
         if (temp->command)
@@ -139,6 +138,8 @@ void free_command_list(t_command *command_list)
             temp->append_outfile = NULL;
         }
         // Free the command structure itself
+		free(temp->args);
+        command_list = command_list->next;
         free(temp);
     }
 }

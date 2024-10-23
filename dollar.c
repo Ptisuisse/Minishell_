@@ -44,12 +44,12 @@ int	check_builtins(t_command *command, t_env **env_list)
     return (status);
 }
 
-void	process_dollar(const char **input, char *buffer, int *buf_index)
+void	process_dollar(const char **input, char *buffer, int *buf_index, t_command *command_list)
 {
 	char	*dollar;
 	int		temp_index;
 
-	dollar = search_dollar(*input);
+	dollar = search_dollar(*input, command_list);
 	temp_index = 0;
 	if (dollar)
 	{
@@ -65,7 +65,7 @@ void	process_dollar(const char **input, char *buffer, int *buf_index)
 		(*input)++;
 }
 
-void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
+void	handle_dollar_sign(const char **input, char *buffer, int *buf_index, t_command *command_list)
 {
 	char	quote_type;
 
@@ -84,7 +84,7 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 			(*input)++;
 	}
 	else
-		process_dollar(input, buffer, buf_index);
+		process_dollar(input, buffer, buf_index, command_list);
 	while (**input)
 			input++;
 }
@@ -94,8 +94,8 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 	char	*env_value;
 
 	(*i)++;
-	if (input[*i] == '?')
-		result = replace_by_exit_code(result, result_index);
+	// if (input[*i] == '?')
+	// 	result = replace_by_exit_code(result, result_index);
 	env_value = get_env_value(input, i);
 	if (env_value)
 	{
@@ -114,11 +114,12 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 		return (0);
 	}
 }
-char	*search_dollar(const char *input)
+char	*search_dollar(const char *input, t_command *command_list)
 {
 	char	result[1024];
 	int		result_index;
 	int		i;
+//	char *exit_code;
 
 	result_index = 0;
 	i = 0;
@@ -129,6 +130,12 @@ char	*search_dollar(const char *input)
 			i++;
 			continue;
 		}
+		if (input[i] == '$' && (input[i + 1] == '?'))
+		{
+            replace_by_exit_code(result, &result_index, command_list);
+            i += 2;
+            continue;
+        }
 		if (input[i] == '$' && ft_isalnum(input[i + 1]))
 			handle_dollar(input, &i, result, &result_index);
 		else

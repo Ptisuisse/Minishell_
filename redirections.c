@@ -25,15 +25,15 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 		(*input)++;
 		while (**input == ' ')
 			(*input)++;
-		parse_argument(input, buffer, &buf_index);
-		cmd->append_infile = ft_strdup(buffer);
+		parse_argument(input, buffer, &buf_index, cmd);
+		cmd->append_infile = strdup(buffer);
 	}
 	else
 	{
 		cmd->input_fd = 1;
 		while (**input == ' ')
 			(*input)++;
-		parse_argument(input, buffer, &buf_index);
+		parse_argument(input, buffer, &buf_index, cmd);
 		if (ft_strchr(buffer, '<'))
 			error_message("<<", cmd);
 		cmd->input_file = strdup(buffer);
@@ -54,7 +54,7 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 		(*input)++;
 		while (**input == ' ')
 			(*input)++;
-		parse_argument(input, buffer, &buf_index);
+		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_outfile = strdup(buffer);
 	}
 	else
@@ -62,7 +62,7 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 		cmd->output_fd = 1;
 		while (**input == ' ')
 			(*input)++;
-		parse_argument(input, buffer, &buf_index);
+		parse_argument(input, buffer, &buf_index, cmd);
 		if (ft_strchr(buffer, '>'))
 			error_message(">>", cmd);
 		cmd->output_file = strdup(buffer);

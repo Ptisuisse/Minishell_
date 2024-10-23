@@ -12,20 +12,17 @@
 
 #include "minishell.h"
 
-void	parse_argument(const char **input, char *buffer, int *buf_index)
+void	parse_argument(const char **input, char *buffer, int *buf_index, t_command *cmd)
 {
-	char	quote_type;
-
 	skip_spaces(input);
 	while (**input)
 	{
 		if (**input == '"' || **input == '\'')
 		{
-			quote_type = **input;
-			handle_quotes(input, buffer, buf_index, quote_type);
+			handle_quotes(input, buffer, buf_index, cmd);
 		}
 		else if (**input == '$')
-				handle_dollar_sign(input, buffer, buf_index);
+				handle_dollar_sign(input, buffer, buf_index, cmd);
 		else if ((**input == '\\'))
 			{
 				(*input)++;
@@ -38,13 +35,16 @@ void	parse_argument(const char **input, char *buffer, int *buf_index)
 	}
 	buffer[*buf_index] = '\0';
 }
-void	handle_quotes(const char **input, char *buffer, int *buf_index, char quote_type)
+void	handle_quotes(const char **input, char *buffer, int *buf_index, t_command *command_list)
 {
+    char    quote_type;
+    
+    quote_type = **input;
 	(*input)++;
 	while (**input && **input != quote_type)
 	{
 		if (quote_type == '"' && **input == '$' && ft_isalnum((*input)[1]))
-			handle_dollar_sign(input, buffer, buf_index);
+			handle_dollar_sign(input, buffer, buf_index, command_list);
 		else
 			buffer[(*buf_index)++] = *(*input)++;
 	}
@@ -58,14 +58,14 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index)
     int buf_index = 0;
 
     buf_index = 0;
-    parse_argument(input, buffer, &buf_index);
-    cmd->args[(*arg_index)++] = ft_strdup(buffer);
+    parse_argument(input, buffer, &buf_index, cmd);
+    cmd->args[(*arg_index)++] = strdup(buffer);
     return buf_index;
 }
 
 int handle_redirection_and_arguments(const char **input, t_command *cmd, int *arg_index)
 {
-    char *token;
+    char *token = NULL;
 
     if (**input == '<' || **input == '>')
     {
@@ -75,10 +75,12 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
                 token = "<";
             else if (*(*input + 2) == '>')
                 token = ">";
-            else
+            if (token)
+            {
                 token = "newline";
-            error_message(token, cmd);
-            return (1);
+                error_message(token, cmd);
+                return (1);
+            }
         }
         else if (*(*input + 1) && *(*input + 1) != ' ' && !ft_isascii(*(*input + 1)))
         {
@@ -105,6 +107,7 @@ int parse_command(const char **input, t_command *cmd)
     int arg_index;
 
     arg_index = 0;
+    // cmd->exit_code = 0;
     while (**input && **input != '|')
     {
         if (**input == ' ')
@@ -128,7 +131,7 @@ int parse_command(const char **input, t_command *cmd)
     return (0);
 }
 
-int	parse_command_line(const char *input, t_command **command_list)
+int	parse_command_line(const char *input, t_command **command_list, int exit_code)
 {
 	t_command	*new_node;
 
@@ -141,7 +144,7 @@ int	parse_command_line(const char *input, t_command **command_list)
 		}
 	while (*input)
 	{
-		new_node = init_command();
+		new_node = init_command(exit_code);
 		if (!new_node)
 			return (1);
 		if (!parse_command(&input, new_node))
