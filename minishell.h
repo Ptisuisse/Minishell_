@@ -30,7 +30,7 @@
 # define READ_END 0
 # define WRITE_END 1
 
-//extern int g_exit_code;
+extern int g_received_signal; 
 
 typedef struct s_command
 {

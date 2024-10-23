@@ -12,14 +12,16 @@
 
 #include "minishell.h"
 
-int g_received_signal; // Global variable to store the received signal number
+int g_received_signal = 0;
 
 void	handle_signal(int sig)
 {
 	g_received_signal = sig; // Store the signal number in the global variable
 
-	if (sig == SIGINT)
+	if (sig == SIGINT || sig == SIGQUIT) && sig != 0)
 	{
+		signal_handle(sig, )
+		command_list->exit_code = 130; 
 		rl_clear_history();
 		write(1, "\nMiniBash > ", 13);
 	}
@@ -29,17 +31,10 @@ void	handle_signal(int sig)
 
 int	signal_handle()
 {
-	struct sigaction	sa;
-
-	sa.sa_handler = handle_signal; // Set the signal handler function
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
-
-	sigaction(SIGINT, &sa, NULL);  // Handle SIGINT (Ctrl+C)
-	sigaction(SIGSEGV, &sa, NULL); // Handle SIGSEGV (segmentation fault)
-
-	sa.sa_handler = SIG_IGN;       // Ignore SIGQUIT
-	sigaction(SIGQUIT, &sa, NULL);
+	// Use the signal function to handle signals
+	signal(SIGINT, handle_signal);  // Handle SIGINT (Ctrl+C)
+	signal(SIGSEGV, handle_signal); // Handle SIGSEGV (segmentation fault)
+	signal(SIGQUIT, SIG_IGN);       // Ignore SIGQUIT
 
 	return (0);
 }
@@ -50,7 +45,7 @@ void	handle_signals_in_command(t_command *command_list)
 	{
 		command_list->exit_code = 130; // Handle SIGINT in the context of the command
 	}
-	// You can handle other signals if needed here
+	// Handle other signals if needed
 }
 
 // void	handle_signal(int sig, t_command *command_list)
