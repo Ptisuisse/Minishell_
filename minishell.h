@@ -25,12 +25,13 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <curses.h>
 
 # define MAX_TOKENS 100
 # define READ_END 0
 # define WRITE_END 1
 
-//extern int g_exit_code;
+extern int g_received_signal;
 
 typedef struct s_command
 {
@@ -66,6 +67,7 @@ typedef struct s_data
 	t_env				*env_list;
 }						t_data;
 
+void	setup_signal_handling();
 void free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
 void	append_file(t_command *command, t_env **env_list);

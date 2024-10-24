@@ -18,13 +18,11 @@ int	last_exitcode(t_command *command)
 {
 	t_command	*cmd;
 	int	exit_code;
-	
+
 	cmd = command;
 	exit_code = 0;
 	while (command->next)
-	{
 		command = command->next;
-	}
 	exit_code = command->exit_code;
 	command = cmd;
 	return (exit_code);
@@ -45,8 +43,10 @@ int	main(int argc, char **argv, char **envp)
 	create_env_list(envp, &env_list);
 	while (1)
 	{
-		signal_handle();
+		setup_signal_handling();
 		input = readline("Minishell > ");
+		if (g_received_signal == SIGINT)
+			save_exit_code = 130;
 		if (input && *input)
 			add_history(input);
 		if (parse_command_line(input, &command_list, save_exit_code))
@@ -55,7 +55,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 		{
-			check_heredoc(command_list);
+		//	check_heredoc(command_list);
 			if (ft_isprint(*input))
 				commands_manager(command_list, &env_list);
 		}
