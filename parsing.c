@@ -142,6 +142,14 @@ int	parse_command_line(const char *input, t_command **command_list, int exit_cod
 		error_message("|", *command_list);
         return 1;
 	}
+    if (!(*input))
+    {
+        new_node = init_command(exit_code);
+        if (!new_node)
+			return (1);
+        append_command_node(command_list, new_node);
+        return (0);    
+    }
 	while (*input)
 	{
 		new_node = init_command(exit_code);

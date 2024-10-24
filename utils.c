@@ -103,7 +103,7 @@ void free_command_list(t_command *command_list)
     t_command *temp;
 	//int			j;
 
-    while (command_list->next)
+    while (command_list)
     {
         temp = command_list;
 
@@ -138,7 +138,7 @@ void free_command_list(t_command *command_list)
             temp->append_outfile = NULL;
         }
         // Free the command structure itself
-		free(temp->args);
+		//free(temp->args);
         command_list = command_list->next;
         free(temp);
     }

@@ -20,7 +20,8 @@ t_command	*init_command(int exit_code)
 	if (element == NULL)
 		return (NULL);
 	//element->args = malloc(sizeof(char *) * MAX_TOKENS);
-	element->input_file = NULL;
+	//element->input_file = NULL;
+	element->status = 0;
 	element->output_file = NULL;
 	element->append_outfile = NULL;
 	element->append_infile = NULL;

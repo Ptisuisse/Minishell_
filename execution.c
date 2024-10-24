@@ -40,6 +40,7 @@ int    exec_command(t_command *command)
     }
     else
        ft_process_wait(command);
+	command->exit_code = WEXITSTATUS(command->status);
     free(path);
     return (1);
 }
@@ -61,14 +62,14 @@ int	choose_command(t_command *command, t_env **env_list)
 
 void	ft_process_wait(t_command *commands)
 {
-	int			status;
+	//int			status;
 	t_command	*cmd;
 
-	status = 0;
+	//status = 0;
 	cmd = commands;
 	while (commands)
 	{
-		waitpid(commands->pid, &status, 0);
+		waitpid(commands->pid, &commands->status, 0);
 		commands = commands->next;
 	}
 	commands = cmd;

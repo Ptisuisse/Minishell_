@@ -34,6 +34,7 @@
 
 typedef struct s_command
 {
+	int					status;
 	int					exit_code;
 	char				*command;
 	char				*args[MAX_TOKENS];
