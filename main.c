@@ -50,7 +50,7 @@ int	main(int argc, char **argv, char **envp)
 		if (g_received_signal == SIGINT)
 		{
 			printf("globale %d\n", g_received_signal);
-			command_list->exit_code = 130;
+			save_exit_code = 130;
 			g_received_signal = 0;
 		}
 		if (input && *input)
