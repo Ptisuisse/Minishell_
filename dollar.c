@@ -85,8 +85,8 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index, t_comm
 	}
 	else
 		process_dollar(input, buffer, buf_index, command_list);
-	while (**input)
-			input++;
+	// while (**input)
+	// 	input++;
 }
 
 int	handle_dollar(const char *input, int *i, char *result, int *result_index)

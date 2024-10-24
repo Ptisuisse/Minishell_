@@ -27,19 +27,20 @@ int    exec_command(t_command *command)
         path = ft_strjoin("/bin/", command->args[0]);
     else
         path = ft_strdup(command->args[0]);
-    //command->pid = fork();
-    //if (command->pid == 0)
-    //{
-    command->exit_code = execve(path, command->args, NULL);
-    if (command->exit_code == -1)
+    command->pid = fork();
+    if (command->pid == 0)
     {
-		command->exit_code = 127;
-        ft_printf("%s: command not found\n", command->args[0]);
-        return (0);
+    	command->exit_code = execve(path, command->args, NULL);
+    	if (command->exit_code == -1)
+    	{
+			command->exit_code = 127;
+    	    ft_printf("%s: command not found\n", command->args[0]);
+    	    return (0);
+    	}
     }
-    //}
-    //else
-    //    ft_process_wait(command);
+    else
+       ft_process_wait(command);
+	command->exit_code = WEXITSTATUS(command->status);
     free(path);
     return (1);
 }
@@ -61,14 +62,14 @@ int	choose_command(t_command *command, t_env **env_list)
 
 void	ft_process_wait(t_command *commands)
 {
-	int			status;
+	//int			status;
 	t_command	*cmd;
 
-	status = 0;
+	//status = 0;
 	cmd = commands;
 	while (commands)
 	{
-		waitpid(commands->pid, &status, 0);
+		waitpid(commands->pid, &commands->status, 0);
 		commands = commands->next;
 	}
 	commands = cmd;

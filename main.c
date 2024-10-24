@@ -17,14 +17,17 @@
 int	last_exitcode(t_command *command)
 {
 	t_command	*cmd;
-
+	int	exit_code;
+	
 	cmd = command;
-	while (command)
+	exit_code = 0;
+	while (command->next)
 	{
 		command = command->next;
 	}
+	exit_code = command->exit_code;
 	command = cmd;
-	return (command->exit_code);
+	return (exit_code);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -37,7 +40,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
-	command_list = malloc(sizeof(t_command));
+	//command_list = malloc(sizeof(t_command));
 	command_list = NULL;
 	create_env_list(envp, &env_list);
 	while (1)
@@ -48,20 +51,17 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 		if (parse_command_line(input, &command_list, save_exit_code))
 		{
-			//error_message(input, command_list);
-			//free(input);
-			command_list->exit_code = 2;
+			command_list->exit_code = 1;
 		}
 		else
 		{
 			check_heredoc(command_list);
 			if (ft_isprint(*input))
 				commands_manager(command_list, &env_list);
-			//print_commands(command_list);
 		}
 		save_exit_code = last_exitcode(command_list);
 		free(input);
-		//free_command_list(command_list);
+		free_command_list(command_list);
 		command_list = NULL;
 		input = NULL;
 	}
