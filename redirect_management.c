@@ -24,6 +24,7 @@ void	redirect_input(t_command *commands, t_env **env_list)
 	if (fd < 0)
 	{
 		ft_printf("bash: %s: No such file or directory\n", commands->input_file);
+		commands->exit_code = 1;
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 		return ;
@@ -50,6 +51,7 @@ void	redirect_output(t_command *commands, t_env **env_list)
 	if (fd < 0)
 	{
 		ft_printf("%s: No such file or directory", commands->output_file);
+		commands->exit_code = 1;
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		return ;

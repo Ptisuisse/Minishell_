@@ -14,16 +14,33 @@
 
 //int	g_exit_code = 0;
 
+int	last_exitcode(t_command *command)
+{
+	t_command	*cmd;
+	int	exit_code;
+	
+	cmd = command;
+	exit_code = 0;
+	while (command->next)
+	{
+		command = command->next;
+	}
+	exit_code = command->exit_code;
+	command = cmd;
+	return (exit_code);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
+	int save_exit_code = 0;
 	t_command	*command_list;
 	t_env		*env_list;
 
 	(void)argc;
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
-	command_list = malloc(sizeof(t_command));
+	//command_list = malloc(sizeof(t_command));
 	command_list = NULL;
 	create_env_list(envp, &env_list);
 	while (1)
@@ -32,19 +49,21 @@ int	main(int argc, char **argv, char **envp)
 		input = readline("Minishell > ");
 		if (input && *input)
 			add_history(input);
-		if (parse_command_line(input, &command_list))
+		if (parse_command_line(input, &command_list, save_exit_code))
 		{
-			//error_message(input, command_list);
-			free(input);
-			return (2);
+			command_list->exit_code = 1;
 		}
-		check_heredoc(command_list);
-		if (ft_isprint(*input))
-			commands_manager(command_list, &env_list);
-		//print_commands(command_list);
+		else
+		{
+			check_heredoc(command_list);
+			if (ft_isprint(*input))
+				commands_manager(command_list, &env_list);
+		}
+		save_exit_code = last_exitcode(command_list);
 		free(input);
-		//free_command_list(command_list);
+		free_command_list(command_list);
 		command_list = NULL;
+		input = NULL;
 	}
 	return (0);
 }

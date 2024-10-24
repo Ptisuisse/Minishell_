@@ -34,6 +34,7 @@ extern int g_received_signal;
 
 typedef struct s_command
 {
+	int					status;
 	int					exit_code;
 	char				*command;
 	char				*args[MAX_TOKENS];
@@ -87,11 +88,11 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index);
 
 int parse_command(const char **input, t_command *cmd);
 
-int	parse_command_line(const char *input, t_command **command_list);
+int	parse_command_line(const char *input, t_command **command_list, int exit_code);
 
 /*PARSING_UTILS_C*/
 
-t_command	*init_command(void);
+t_command	*init_command(int exit_code);
 
 t_command	*ft_lstlst(t_command *lst);
 
