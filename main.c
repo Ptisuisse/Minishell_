@@ -45,8 +45,14 @@ int	main(int argc, char **argv, char **envp)
 	create_env_list(envp, &env_list);
 	while (1)
 	{
-		signal_handle();
+		setup_signal_handling();
 		input = readline("Minishell > ");
+		if (g_received_signal == SIGINT)
+		{
+			printf("globale %d\n", g_received_signal);
+			command_list->exit_code = 130;
+			g_received_signal = 0;
+		}
 		if (input && *input)
 			add_history(input);
 		if (parse_command_line(input, &command_list, save_exit_code))

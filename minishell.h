@@ -227,6 +227,8 @@ void	handle_signal(int sig);
 
 int	signal_handle(void);
 
+void setup_signal_handling();
+
 /*ERROR_C*/
 void error_message(const char *token, t_command *cmd);
 char	*replace_by_exit_code(char *result, int *result_index, t_command *command);

@@ -18,10 +18,9 @@ void	handle_signal(int sig)
 {
 	g_received_signal = sig; // Store the signal number in the global variable
 
-	if (sig == SIGINT || sig == SIGQUIT) && sig != 0)
+	if (sig == SIGINT || sig == SIGQUIT)
 	{
-		signal_handle(sig, )
-		command_list->exit_code = 130; 
+		//signal_handle();
 		rl_clear_history();
 		write(1, "\nMiniBash > ", 13);
 	}
@@ -29,23 +28,11 @@ void	handle_signal(int sig)
 		exit(1);
 }
 
-int	signal_handle()
+void	setup_signal_handling()
 {
-	// Use the signal function to handle signals
-	signal(SIGINT, handle_signal);  // Handle SIGINT (Ctrl+C)
-	signal(SIGSEGV, handle_signal); // Handle SIGSEGV (segmentation fault)
-	signal(SIGQUIT, SIG_IGN);       // Ignore SIGQUIT
-
-	return (0);
-}
-
-void	handle_signals_in_command(t_command *command_list)
-{
-	if (g_received_signal == SIGINT)
-	{
-		command_list->exit_code = 130; // Handle SIGINT in the context of the command
-	}
-	// Handle other signals if needed
+	g_received_signal = 0;
+	signal(SIGINT, handle_signal); 
+	signal(SIGQUIT, SIG_IGN);
 }
 
 // void	handle_signal(int sig, t_command *command_list)
