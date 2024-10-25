@@ -124,17 +124,17 @@ char	*get_env_value(const char *input, int *i);
 
 /*REDIRECTIONS_C*/
 
-void	handle_input_redirection(const char **input, t_command *cmd);
+int	handle_input_redirection(const char **input, t_command *cmd);
 
-void	handle_output_redirection(const char **input, t_command *cmd);
+int	handle_output_redirection(const char **input, t_command *cmd);
 
-void	parse_redirection(const char **input, t_command *cmd);
+int	parse_redirection(const char **input, t_command *cmd);
 
 /*REDIRECTIONS_MANAGEMENT_C*/
 
-void	redirect_input(t_command *command, t_env **env_list);
+int	redirect_input(t_command *command);
 
-void	redirect_output(t_command *command, t_env **env_list);
+int	redirect_output(t_command *command);
 
 void	redirect_management(t_command *command, t_env **env_list);
 

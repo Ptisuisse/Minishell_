@@ -94,7 +94,8 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
             error_message(token, cmd);
             return (1);
         }
-        parse_redirection(input, cmd);
+        if (!parse_redirection(input, cmd))
+            return (1);
         //(*arg_index)++;
     }
     else
@@ -148,17 +149,27 @@ int	parse_command_line(const char *input, t_command **command_list, int exit_cod
         if (!new_node)
 			return (1);
         append_command_node(command_list, new_node);
-        return (0);    
+        return (0);
     }
 	while (*input)
 	{
 		new_node = init_command(exit_code);
 		if (!new_node)
 			return (1);
-		if (!parse_command(&input, new_node))
-			append_command_node(command_list, new_node);
-		else
-			return (1);
+		parse_command(&input, new_node);
+        fonction pour checker les differents input (args, append, fd etc)
+        // if (new_node->args[0] != NULL)
+		// 	append_command_node(command_list, new_node);
+        // else
+        // {
+        //     while ((*input == '|') || (*input))
+        //         input++;
+        //     if (*input == '|')
+        //         input++;
+        //     parse_command(&input, new_node);
+        //     append_command_node(command_list, new_node);
+		// 	return (1);
+        // }
 	}
 	return (0);
 }

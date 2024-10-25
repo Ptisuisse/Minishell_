@@ -51,17 +51,16 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 		if (parse_command_line(input, &command_list, save_exit_code))
 		{
-			command_list->exit_code = 1;
+			save_exit_code = 1;
 		}
-		else
-		{
-		//	check_heredoc(command_list);
-			if (ft_isprint(*input))
-				commands_manager(command_list, &env_list);
-		}
-		save_exit_code = last_exitcode(command_list);
+		if (ft_isprint(*input) && command_list)
+			commands_manager(command_list, &env_list);
 		free(input);
-		free_command_list(command_list);
+		if (command_list)
+		{
+			save_exit_code = last_exitcode(command_list);
+			free_command_list(command_list);
+		}
 		command_list = NULL;
 		input = NULL;
 	}

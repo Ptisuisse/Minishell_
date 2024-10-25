@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	handle_input_redirection(const char **input, t_command *cmd)
+int	handle_input_redirection(const char **input, t_command *cmd)
 {
 	char	buffer[1024];
 	int		buf_index;
@@ -27,6 +27,12 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_infile = strdup(buffer);
+		if (!redirect_input(cmd))
+		{
+			cmd->append_infd = 0;
+			cmd->append_infile = NULL;
+			return 0;
+		}
 	}
 	else
 	{
@@ -36,14 +42,18 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 		parse_argument(input, buffer, &buf_index, cmd);
 		if (ft_strchr(buffer, '<'))
 			error_message("<<", cmd);
-		//cmd->input_file[cmd->input_fd] = strdup(buffer);
-		//cmd->input_file[cmd->input_fd] = ft_strdup(buffer);
 		cmd->input_file = ft_strdup(buffer);
-		//cmd->input_fd++;
+		if (!redirect_input(cmd))
+		{
+			cmd->input_fd = 0;
+			cmd->input_file = NULL;
+			return 0;
+		}
 	}
+	return 1;
 }
 
-void	handle_output_redirection(const char **input, t_command *cmd)
+int	handle_output_redirection(const char **input, t_command *cmd)
 {
 	char	buffer[1024];
 	int		buf_index;
@@ -58,6 +68,12 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_outfile = strdup(buffer);
+		if (!redirect_output(cmd))
+		{
+			cmd->append_outfd = 0;
+			cmd->append_outfile = NULL;
+			return 0;
+		}
 	}
 	else
 	{
@@ -68,13 +84,25 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 		if (ft_strchr(buffer, '>'))
 			error_message(">>", cmd);
 		cmd->output_file = strdup(buffer);
+		if (!redirect_output(cmd))
+		{
+			cmd->output_fd = 0;
+			cmd->output_file = NULL;
+			return 0;
+		}
 	}
+	return 1;
 }
 
-void	parse_redirection(const char **input, t_command *cmd)
+int	parse_redirection(const char **input, t_command *cmd)
 {
 	if (**input == '<')
-		handle_input_redirection(input, cmd);
+	{
+		if (!handle_input_redirection(input, cmd))
+			return (0);
+	}
 	else if (**input == '>')
-		handle_output_redirection(input, cmd);
+		if (!handle_output_redirection(input, cmd))
+			return (0);
+	return 1;
 }
