@@ -12,63 +12,34 @@
 
 #include "minishell.h"
 
-//int	g_exit_code = 0;
-
-int	last_exitcode(t_command *command)
-{
-	t_command	*cmd;
-	int	exit_code;
-	
-	cmd = command;
-	exit_code = 0;
-	while (command->next)
-	{
-		command = command->next;
-	}
-	exit_code = command->exit_code;
-	command = cmd;
-	return (exit_code);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
-	int save_exit_code = 0;
+	int			save_exit_code;
 	t_command	*command_list;
 	t_env		*env_list;
 
+	save_exit_code = 0;
 	(void)argc;
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
-	//command_list = malloc(sizeof(t_command));
 	command_list = NULL;
 	create_env_list(envp, &env_list);
 	while (1)
 	{
 		setup_signal_handling();
 		input = readline("Minishell > ");
-		if (g_received_signal == SIGINT)
+		if (handle_received_signal(&save_exit_code))
+			printf("globale %d\n", save_exit_code);
+		if (g_received_signal == SIGSEGV)
 		{
-			printf("globale %d\n", g_received_signal);
-			save_exit_code = 130;
-			g_received_signal = 0;
+		ft_printf("exit\n");
+		exit(1);
 		}
 		if (input && *input)
 			add_history(input);
-		if (parse_command_line(input, &command_list, save_exit_code))
-		{
-			command_list->exit_code = 1;
-		}
-		else
-		{
-			check_heredoc(command_list);
-			if (ft_isprint(*input))
-				commands_manager(command_list, &env_list);
-		}
-		save_exit_code = last_exitcode(command_list);
+		process_input(&command_list, &env_list, input, &save_exit_code);
 		free(input);
-		free_command_list(command_list);
-		command_list = NULL;
 		input = NULL;
 	}
 	return (0);

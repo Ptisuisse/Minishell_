@@ -94,7 +94,8 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
             error_message(token, cmd);
             return (1);
         }
-        parse_redirection(input, cmd);
+        if (parse_redirection(input, cmd))
+            return 1;
         //(*arg_index)++;
     }
     else
@@ -158,7 +159,7 @@ int	parse_command_line(const char *input, t_command **command_list, int exit_cod
 		if (!parse_command(&input, new_node))
 			append_command_node(command_list, new_node);
 		else
-			return (1);
+			return (0);
 	}
 	return (0);
 }

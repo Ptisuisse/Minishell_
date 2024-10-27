@@ -76,3 +76,18 @@ void	redirect_management(t_command *command, t_env **env_list)
 		redirect_output(command, env_list);
 	return ;
 }
+void	process_input(t_command **command_list, t_env **env_list, char *input, int *save_exit_code)
+{
+	if (parse_command_line(input, command_list, *save_exit_code))
+		(*command_list)->exit_code = 2;
+	else
+	{
+		check_heredoc(*command_list);
+		//	grave probleme ici
+		if (ft_isprint(*input))
+			commands_manager(*command_list, env_list);
+	}
+	*save_exit_code = last_exitcode(*command_list);
+	free_command_list(*command_list);
+	*command_list = NULL;
+}

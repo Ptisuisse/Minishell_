@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	handle_input_redirection(const char **input, t_command *cmd)
+int	handle_input_redirection(const char **input, t_command *cmd)
 {
 	char	buffer[1024];
 	int		buf_index;
@@ -35,15 +35,19 @@ void	handle_input_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		if (ft_strchr(buffer, '<'))
-			error_message("<<", cmd);
+			{
+				error_message("<<", cmd);
+				return 1;
+			}
 		//cmd->input_file[cmd->input_fd] = strdup(buffer);
 		//cmd->input_file[cmd->input_fd] = ft_strdup(buffer);
 		cmd->input_file = ft_strdup(buffer);
 		//cmd->input_fd++;
 	}
+	return 0;
 }
 
-void	handle_output_redirection(const char **input, t_command *cmd)
+int	handle_output_redirection(const char **input, t_command *cmd)
 {
 	char	buffer[1024];
 	int		buf_index;
@@ -66,15 +70,21 @@ void	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		if (ft_strchr(buffer, '>'))
-			error_message(">>", cmd);
+			{
+				error_message(">>", cmd);
+				return 1;
+			}
 		cmd->output_file = strdup(buffer);
 	}
+	return 0;
 }
 
-void	parse_redirection(const char **input, t_command *cmd)
+int	parse_redirection(const char **input, t_command *cmd)
 {
+	int result;
 	if (**input == '<')
-		handle_input_redirection(input, cmd);
+		result = handle_input_redirection(input, cmd);
 	else if (**input == '>')
-		handle_output_redirection(input, cmd);
+		result = handle_output_redirection(input, cmd);
+	return result;
 }
