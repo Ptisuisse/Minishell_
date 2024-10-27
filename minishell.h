@@ -30,7 +30,7 @@
 # define READ_END 0
 # define WRITE_END 1
 
-//extern int g_exit_code;
+extern int g_received_signal; 
 
 typedef struct s_command
 {
@@ -92,6 +92,8 @@ int	parse_command_line(const char *input, t_command **command_list, int exit_cod
 
 /*PARSING_UTILS_C*/
 
+void	process_input(t_command **command_list, t_env **env_list, char *input, int *save_exit_code);
+
 t_command	*init_command(int exit_code);
 
 t_command	*ft_lstlst(t_command *lst);
@@ -122,11 +124,11 @@ char	*get_env_value(const char *input, int *i);
 
 /*REDIRECTIONS_C*/
 
-void	handle_input_redirection(const char **input, t_command *cmd);
+int	handle_input_redirection(const char **input, t_command *cmd);
 
-void	handle_output_redirection(const char **input, t_command *cmd);
+int	handle_output_redirection(const char **input, t_command *cmd);
 
-void	parse_redirection(const char **input, t_command *cmd);
+int	parse_redirection(const char **input, t_command *cmd);
 
 /*REDIRECTIONS_MANAGEMENT_C*/
 
@@ -223,11 +225,16 @@ void	free_commands(t_command *command_list);
 
 /*SIGNAL_C*/
 
+int	handle_received_signal(int *save_exit_code);
+
 void	handle_signal(int sig);
 
 int	signal_handle(void);
 
+void setup_signal_handling();
+
 /*ERROR_C*/
+int	last_exitcode(t_command *command);
 void error_message(const char *token, t_command *cmd);
 char	*replace_by_exit_code(char *result, int *result_index, t_command *command);
 
