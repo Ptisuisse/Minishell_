@@ -104,7 +104,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 
 int	parse_redirection(const char **input, t_command *cmd)
 {
-	int result;
+	int result = 0;
 	if (**input == '<')
 		result = handle_input_redirection(input, cmd);
 	else if (**input == '>')
