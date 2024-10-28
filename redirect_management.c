@@ -25,14 +25,14 @@ int	redirect_input(t_command *commands)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		ft_printf("bash: %s: No such file or directory\n", commands->input_file);
+		//ft_printf("bash: %s: No such file or directory\n", commands->input_file);
 		commands->exit_code = 1;
 		close(fd);
 		return (0);
 	}
 	if (access(filename, W_OK) == -1)
     {
-        ft_printf("%s: Permission denied\n", filename);
+        //ft_printf("%s: Permission denied\n", filename);
         commands->exit_code = 1;
         return 0;
     }

@@ -12,20 +12,6 @@
 
 #include "minishell.h"
 
-int	last_exitcode(t_command *command)
-{
-	t_command	*cmd;
-	int	exit_code;
-
-	cmd = command;
-	exit_code = 0;
-	while (command->next)
-		command = command->next;
-	exit_code = command->exit_code;
-	command = cmd;
-	return (exit_code);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
@@ -43,12 +29,12 @@ int	main(int argc, char **argv, char **envp)
 	{
 		setup_signal_handling();
 		input = readline("Minishell > ");
-		if (handle_received_signal(&save_exit_code))
-			printf("globale %d\n", save_exit_code);
+		handle_received_signal(&save_exit_code);
+			// printf("globale %d\n", save_exit_code);
 		if (g_received_signal == SIGSEGV)
 		{
-		ft_printf("exit\n");
-		exit(1);
+			ft_printf("exit\n");
+			exit(1);
 		}
 		if (input && *input)
 			add_history(input);
