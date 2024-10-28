@@ -27,6 +27,12 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_infile = strdup(buffer);
+		if (!redirect_input(cmd))
+		{
+			cmd->append_infd = 0;
+			cmd->append_infile = NULL;
+			return 0;
+		}
 	}
 	else
 	{
@@ -42,7 +48,12 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 		//cmd->input_file[cmd->input_fd] = strdup(buffer);
 		//cmd->input_file[cmd->input_fd] = ft_strdup(buffer);
 		cmd->input_file = ft_strdup(buffer);
-		//cmd->input_fd++;
+		if (!redirect_input(cmd))
+		{
+			cmd->input_fd = 0;
+			cmd->input_file = NULL;
+			return 0;
+		}
 	}
 	return 0;
 }
@@ -62,6 +73,12 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_outfile = strdup(buffer);
+		if (!redirect_output(cmd))
+		{
+			cmd->append_outfd = 0;
+			cmd->append_outfile = NULL;
+			return 0;
+		}
 	}
 	else
 	{
@@ -75,6 +92,12 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 				return 1;
 			}
 		cmd->output_file = strdup(buffer);
+		if (!redirect_output(cmd))
+		{
+			cmd->output_fd = 0;
+			cmd->output_file = NULL;
+			return 0;
+		}
 	}
 	return 0;
 }

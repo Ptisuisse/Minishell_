@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+int	last_exitcode(t_command *command)
+{
+	t_command	*cmd;
+	int	exit_code;
+
+	cmd = command;
+	exit_code = 0;
+	while (command->next)
+		command = command->next;
+	exit_code = command->exit_code;
+	command = cmd;
+	return (exit_code);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;

@@ -7,7 +7,7 @@ void	handle_signal(int sig)
 {
 	g_received_signal = sig;
 
-	if (sig == SIGINT)
+	if (sig == SIGINT || sig == SIGQUIT)
 	{
 		rl_replace_line("", 0);
 		rl_on_new_line();
