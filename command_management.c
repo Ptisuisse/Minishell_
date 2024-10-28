@@ -46,46 +46,31 @@ void	setup_pipes(t_command *commands)
 	commands->pid = fork();
 }
 
-void	commands_manager(t_command *commands, t_env **env_list)
+void	gestion_redirection(t_command *commands)
 {
-	t_command	*cmd;
+	char	*filename;
+	int		fd;
 
-	cmd = commands;
-	check_heredoc(commands);
-	if (commands->next != NULL)
-	{
-		while (commands)
-		{
-			setup_pipes(commands);
-			if (commands->pid == 0)
-			{
-				handle_child_process(commands);
-				if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
-					redirect_management(commands, env_list);
-				else
-					choose_command(commands, env_list);
-				exit(0);
-			}
-			else
-			{
-				handle_parent_process(commands);
-				if (commands->next == NULL)
-					ft_process_wait(commands);
-				if (commands->status == 256)
-					commands->exit_code = 1;
-				commands = commands->next;
-			}
-		}
-	}
+	if (commands->input_fd)
+		filename = commands->input_file;
 	else
+		filename = commands->append_infile;
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
 	{
-		if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
-			redirect_management(commands, env_list);
-		else
-			choose_command(commands, env_list);
+		//ft_printf("bash: %s: No such file or directory\n", commands->input_file);
+		commands->exit_code = 1;
+		close(fd);
+		return ;
 	}
-	ft_process_wait(commands);
-	commands = cmd;
+	if (access(filename, W_OK) == -1)
+    {
+        //ft_printf("%s: Permission denied\n", filename);
+        commands->exit_code = 1;
+        return ;
+    }
+	close (fd);
+	return ;
 }
 
 void	start_builtins(t_command *command, t_env **env_list)

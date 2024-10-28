@@ -29,6 +29,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 		cmd->append_infile = strdup(buffer);
 		if (!redirect_input(cmd))
 		{
+			cmd->error_file = 1;
 			cmd->append_infile = NULL;
 			return 0;
 		}

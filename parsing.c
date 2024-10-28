@@ -134,7 +134,7 @@ int parse_command(const char **input, t_command *cmd)
 
 int	parse_command_line(const char *input, t_command **command_list, int exit_code)
 {
-	t_command	*new_node;
+    t_command *new_node;
 
 	if (open_quote((char *)input))
 		return (1);

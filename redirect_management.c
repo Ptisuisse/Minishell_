@@ -40,7 +40,7 @@ int	redirect_input(t_command *commands)
 	return (1);
 }
 
-void	redirect_input2(t_command *commands, t_env **env_list)
+int	redirect_input2(t_command *commands, t_env **env_list)
 {
 	char	*filename;
 	int		save_stdin;
@@ -50,11 +50,16 @@ void	redirect_input2(t_command *commands, t_env **env_list)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
+		if (commands->next)
+		{
+			commands->exit_code = 1;
+			return 2;
+		}
 		ft_printf("bash: %s: No such file or directory\n", commands->input_file);
 		commands->exit_code = 1;
 		dup2(fd, STDIN_FILENO);
 		close(fd);
-		return ;
+		return 1;
 	}
 	save_stdin = dup(STDIN_FILENO);
 	dup2(fd, STDIN_FILENO);
@@ -64,7 +69,7 @@ void	redirect_input2(t_command *commands, t_env **env_list)
 	dup2(save_stdin, STDIN_FILENO);
 	close(save_stdin);
 	//dup2(fd, STDIN_FILENO);
-	return ;
+	return 0;
 }
 
 int	redirect_output(t_command *commands)
@@ -125,27 +130,34 @@ void	redirect_output2(t_command *commands)
 	return ;
 }
 
-void	redirect_management(t_command *command, t_env **env_list)
+int	redirect_management(t_command *command, t_env **env_list)
 {
+	int status;
 
-	if (command->append_outfile)
-		append_file(command, env_list);
-	if (command->input_file)
-		redirect_input2(command, env_list);
-	if (command->output_file)
-		redirect_output2(command);
-	return ;
+	status = 0;
+	if (command->error_file)
+		return status;
+	else
+	{
+		if (command->append_outfile)
+			append_file(command, env_list);
+		if (command->input_file)
+			status = redirect_input2(command, env_list);
+		if (command->output_file)
+			redirect_output2(command);
+	}
+	return status;
 }
 void	process_input(t_command **command_list, t_env **env_list, char *input, int *save_exit_code)
 {
 	if (parse_command_line(input, command_list, *save_exit_code))
-		(*command_list)->exit_code = 2;
+		*save_exit_code = 2;
 	else
 	{
 		check_heredoc(*command_list);
 		//	grave probleme ici
 		if (ft_isprint(*input))
-			commands_manager(*command_list, env_list);
+			select_type(*command_list, env_list);
 	}
 	*save_exit_code = last_exitcode(*command_list);
 	free_command_list(*command_list);
