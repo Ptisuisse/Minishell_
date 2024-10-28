@@ -51,6 +51,7 @@ void	commands_manager(t_command *commands, t_env **env_list)
 	t_command	*cmd;
 
 	cmd = commands;
+	check_heredoc(commands);
 	if (commands->next != NULL)
 	{
 		while (commands)
@@ -63,13 +64,15 @@ void	commands_manager(t_command *commands, t_env **env_list)
 					redirect_management(commands, env_list);
 				else
 					choose_command(commands, env_list);
-				exit(EXIT_SUCCESS);
+				exit(0);
 			}
 			else
 			{
 				handle_parent_process(commands);
 				if (commands->next == NULL)
 					ft_process_wait(commands);
+				if (commands->status == 256)
+					commands->exit_code = 1;
 				commands = commands->next;
 			}
 		}

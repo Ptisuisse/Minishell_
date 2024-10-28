@@ -115,6 +115,8 @@ void	check_heredoc(t_command *command)
 	{
 		if (command->append_infd == 1)
 			heredoc(command);
+		else if (command->output_fd == 1)
+			redirect_management(command, NULL);
 		command = command->next;
 	}
 	command = head;

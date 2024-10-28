@@ -27,7 +27,8 @@ int    exec_command(t_command *command)
         path = ft_strjoin("/bin/", command->args[0]);
     else
         path = ft_strdup(command->args[0]);
-    command->pid = fork();
+    if (command->next == NULL && command->prev == NULL)
+		command->pid = fork();
     if (command->pid == 0)
     {
     	command->exit_code = execve(path, command->args, NULL);
@@ -41,7 +42,7 @@ int    exec_command(t_command *command)
     else
        ft_process_wait(command);
 	command->exit_code = WEXITSTATUS(command->status);
-    free(path);
+	free(path);
     return (1);
 }
 
