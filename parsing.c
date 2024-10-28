@@ -94,8 +94,8 @@ int handle_redirection_and_arguments(const char **input, t_command *cmd, int *ar
             error_message(token, cmd);
             return (1);
         }
-        if (!parse_redirection(input, cmd))
-            return (1);
+        if (parse_redirection(input, cmd))
+            return 1;
         //(*arg_index)++;
     }
     else

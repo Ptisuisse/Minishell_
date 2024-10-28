@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 12:47:53 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/22 12:47:54 by lvan-slu         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -16,24 +5,45 @@ int g_received_signal = 0;
 
 void	handle_signal(int sig)
 {
-	g_received_signal = sig; // Store the signal number in the global variable
+	g_received_signal = sig;
 
 	if (sig == SIGINT || sig == SIGQUIT)
 	{
-		//signal_handle();
-		rl_clear_history();
-		write(1, "\nMiniBash > ", 13);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		write(1, "\n", 1);
+		rl_redisplay();
 	}
-	else if (sig == SIGSEGV || sig == SIGSTOP)
+	if (sig == SIGSEGV)
+		{
+		ft_printf("exit\n");
 		exit(1);
+		}
 }
 
 void	setup_signal_handling()
 {
 	g_received_signal = 0;
-	signal(SIGINT, handle_signal);
-	signal(SIGSTOP, handle_signal);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, handle_signal); 
+	signal(SIGQUIT, SIG_IGN); 
+	signal(SIGSEGV, handle_signal); 
+}
+
+int	handle_received_signal(int *save_exit_code)
+{
+	if (g_received_signal == SIGINT)
+	{
+		*save_exit_code = 130;
+		g_received_signal = 0;
+		return (1);
+	}
+	if (g_received_signal == SIGSEGV)
+	{
+		*save_exit_code = 0;
+		g_received_signal = 0;
+		return (1);
+	}
+	return (0);
 }
 
 // void	handle_signal(int sig, t_command *command_list)

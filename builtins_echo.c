@@ -34,7 +34,7 @@ void	echo_cmd(t_command *command)
 	}
 	echo_print(command->args, i);
 	if (newline)
-		printf("\n");
+		ft_printf("\n");
 	command->exit_code = 0;
 }
 
