@@ -13,7 +13,7 @@ void	put_into_args(t_command *commands)
 	}
 }
 
-int	redirect_input(t_command *commands)
+int	parsing_error_inputfile(t_command *commands)
 {
 	char	*filename;
 	int		fd;
@@ -25,22 +25,19 @@ int	redirect_input(t_command *commands)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		//ft_printf("bash: %s: No such file or directory\n", commands->input_file);
-		commands->exit_code = 1;
 		close(fd);
 		return (0);
 	}
 	if (access(filename, W_OK) == -1)
-    {
-        //ft_printf("%s: Permission denied\n", filename);
-        commands->exit_code = 1;
-        return 0;
+	{
+		close(fd);
+        return (0);
     }
 	close (fd);
 	return (1);
 }
 
-int	redirect_input2(t_command *commands, t_env **env_list)
+int	redirect_input(t_command *commands, t_env **env_list)
 {
 	char	*filename;
 	int		save_stdin;
@@ -50,11 +47,6 @@ int	redirect_input2(t_command *commands, t_env **env_list)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		if (commands->next)
-		{
-			commands->exit_code = 1;
-			return 2;
-		}
 		ft_printf("bash: %s: No such file or directory\n", commands->input_file);
 		commands->exit_code = 1;
 		dup2(fd, STDIN_FILENO);
@@ -72,7 +64,7 @@ int	redirect_input2(t_command *commands, t_env **env_list)
 	return 0;
 }
 
-int	redirect_output(t_command *commands)
+int	parsing_error_outputfile(t_command *commands)
 {
 	char	*filename;
 	int fd;
@@ -80,54 +72,45 @@ int	redirect_output(t_command *commands)
 	if (commands->output_fd)
 		filename = commands->output_file;
 	else
-		filename = commands->append_outfile;
-	if (access(filename, F_OK) == -1)
-    {
-        ft_printf("%s: No such file or directory\n", filename);
-        commands->exit_code = 1;
-        return 0;
-    }
-	if (access(filename, W_OK) == -1)
-    {
-        ft_printf("%s: Permission denied\n", filename);
-        commands->exit_code = 1;
-        return 0;
-    }
+		filename = commands->append_outfile;	
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
-		ft_printf("%s: No such file or directory\n", commands->output_file);
-		commands->exit_code = 1;
 		close(fd);
-		return 0;
+		return (0);
 	}
+	if (access(filename, W_OK) == -1)
+    {
+        close(fd);
+        return (0);
+    }
 	close (fd);
-	return 1;
+	return (1);
 }
 
-void	redirect_output2(t_command *commands)
+int	redirect_output(t_command *command, t_env **env_list)
 {
 	char	*filename;
 	int fd;
 	int		save_stdout;
 
-	filename = commands->output_file;
+	filename = command->output_file;
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
-		ft_printf("%s: No such file or directory\n", commands->output_file);
-		commands->exit_code = 1;
+		ft_printf("%s: No such file or directory\n", command->output_file);
+		command->exit_code = 1;
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
-		return ;
+		return 1;
 	}
 	save_stdout = dup(STDOUT_FILENO);
 	dup2(fd, STDOUT_FILENO);
 	close (fd);
-	choose_command(commands, NULL);
+	choose_command(command, env_list);
 	dup2(save_stdout, STDOUT_FILENO);
 	close(save_stdout);
-	return ;
+	return 0;
 }
 
 int	redirect_management(t_command *command, t_env **env_list)
@@ -135,17 +118,14 @@ int	redirect_management(t_command *command, t_env **env_list)
 	int status;
 
 	status = 0;
-	if (command->error_file)
-		return status;
-	else
-	{
+	// if (command->error_file)
+	// 	return status;
 		if (command->append_outfile)
 			append_file(command, env_list);
 		if (command->input_file)
-			status = redirect_input2(command, env_list);
+			status = redirect_input(command, env_list);
 		if (command->output_file)
-			redirect_output2(command);
-	}
+			redirect_output(command, env_list);
 	return status;
 }
 void	process_input(t_command **command_list, t_env **env_list, char *input, int *save_exit_code)
@@ -155,7 +135,6 @@ void	process_input(t_command **command_list, t_env **env_list, char *input, int 
 	else
 	{
 		check_heredoc(*command_list);
-		//	grave probleme ici
 		if (ft_isprint(*input))
 			select_type(*command_list, env_list);
 	}
