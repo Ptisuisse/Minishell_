@@ -27,17 +27,12 @@ int    exec_command(t_command *command)
         path = ft_strjoin("/bin/", command->args[0]);
     else
         path = ft_strdup(command->args[0]);
-    if (command->next == NULL && command->prev == NULL)
-		command->pid = fork();
-    if (command->pid == 0)
+    command->exit_code = execve(path, command->args, NULL);
+    if (command->exit_code == -1)
     {
-    	command->exit_code = execve(path, command->args, NULL);
-    	if (command->exit_code == -1)
-    	{
-			command->exit_code = 127;
-    	    ft_printf("%s: command not found\n", command->args[0]);
-    	    return (0);
-    	}
+		command->exit_code = 127;
+        ft_printf("%s: command not found\n", command->args[0]);
+        return (0);
     }
     else
        ft_process_wait(command);

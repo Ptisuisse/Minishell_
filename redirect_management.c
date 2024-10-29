@@ -40,9 +40,10 @@ int	parsing_error_inputfile(t_command *commands)
 int	redirect_input(t_command *commands, t_env **env_list)
 {
 	char	*filename;
-	int		save_stdin;
+	int		save_stdin = 0;
 	int		fd;
 
+	(void)env_list;
 	filename = commands->input_file;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -50,6 +51,8 @@ int	redirect_input(t_command *commands, t_env **env_list)
 		ft_printf("bash: %s: No such file or directory\n", commands->input_file);
 		commands->exit_code = 1;
 		dup2(fd, STDIN_FILENO);
+		dup2(save_stdin, STDIN_FILENO);
+		close(save_stdin);		
 		close(fd);
 		return 1;
 	}
@@ -72,7 +75,7 @@ int	parsing_error_outputfile(t_command *commands)
 	if (commands->output_fd)
 		filename = commands->output_file;
 	else
-		filename = commands->append_outfile;	
+		filename = commands->append_outfile;
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -130,6 +133,8 @@ int	redirect_management(t_command *command, t_env **env_list)
 }
 void	process_input(t_command **command_list, t_env **env_list, char *input, int *save_exit_code)
 {
+	if (!input)
+		return ;
 	if (parse_command_line(input, command_list, *save_exit_code))
 		*save_exit_code = 2;
 	else

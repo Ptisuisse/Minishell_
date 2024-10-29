@@ -32,10 +32,36 @@ void	check_error_file(t_command *cmd)
 	cmd = head;
 }
 
+void	ft_close_fd(t_command *commands)
+{
+    t_command	*cmd;
+
+    cmd = commands;
+    while (commands)
+    {
+        if (commands->pipe[0] >= 0)
+            close(commands->pipe[0]);
+        if (commands->pipe[1] >= 0)
+            close(commands->pipe[1]);
+        if (commands->input_fd >= 0)
+            close(commands->input_fd);
+        if (commands->output_fd >= 0)
+            close(commands->output_fd);
+        if (commands->append_infd >= 0)
+            close(commands->append_infd);
+        if (commands->append_outfd >= 0)
+            close(commands->append_outfd);
+        commands = commands->next;
+    }
+    commands = cmd;
+}
+
 void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
 	int count = 0;
+	int save_in = dup(STDIN_FILENO);
+	int save_out = dup(STDOUT_FILENO);
 
 	cmd = commands;
 	while (commands)
@@ -50,20 +76,25 @@ void	commands_manager(t_command *commands, t_env **env_list)
 		{
 			handle_child_process(commands);
 			choose_command(commands, env_list);
+			if (commands->next != NULL)
+				close(commands->pipe[1]);
 			exit(0);
 		}
 		else
 		{
-			handle_parent_process(commands);
-			if (commands->next == NULL)
-				ft_process_wait(commands);
+			//handle_parent_process(commands);
+			// if (commands->next == NULL)
+			// 	ft_process_wait(commands);
 			if (commands->status == 256)
 				commands->exit_code = 1;
 			commands = commands->next;
 		}
 	}
+	ft_close_fd(commands);
 	ft_process_wait(commands);
 	commands = cmd;
 	if (count > 0)
 		check_error_file(commands);
+	dup2(save_in, STDIN_FILENO);
+	dup2(save_out, STDOUT_FILENO);
 }

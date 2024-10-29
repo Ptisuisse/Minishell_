@@ -12,30 +12,45 @@
 
 #include "minishell.h"
 
-void	handle_parent_process(t_command *commands)
-{
-	if (commands->next)
-		close(commands->pipe[WRITE_END]);
-	if (commands->prev)
-	{
-		close(commands->prev->pipe[WRITE_END]);
-		close(commands->prev->pipe[READ_END]);
-	}
-}
+// void	handle_parent_process(t_command *commands)
+// {
+// 	if (commands->prev == NULL && commands->next)
+// 	{
+// 		close(commands->pipe[1]);
+// 		dup2(commands->pipe[0], 0);
+// 		close(commands->pipe[0]);
+// 	}
+// 	else if (commands->next)
+// 	{
+// 		close(commands->prev->pipe[0]);
+// 		dup2(commands->prev->pipe[1], STDOUT_FILENO);
+// 		close(commands->prev->pipe[1]);
+// 		//close(commands->pipe[1]);
+// 		//dup2(commands->pipe[0], 0);
+// 		//close(commands->pipe[0]);
+// 	}
+//}
 
 void	handle_child_process(t_command *commands)
 {
-	if (commands->prev)
+	if (commands->prev == NULL && commands->next)
 	{
-		close(commands->prev->pipe[WRITE_END]);
-		dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
-		close(commands->prev->pipe[READ_END]);
+		close(commands->pipe[0]);
+		dup2(commands->pipe[1], STDOUT_FILENO);
+		//close(commands->pipe[1]);
 	}
-	if (commands->next)
+	else if (commands->next && commands->prev)
 	{
-		close(commands->pipe[READ_END]);
-		dup2(commands->pipe[WRITE_END], STDOUT_FILENO);
-		close(commands->pipe[WRITE_END]);
+		//close(commands->prev->pipe[1]);
+		dup2(commands->prev->pipe[0], STDIN_FILENO);
+		close(commands->pipe[0]);
+		dup2(commands->pipe[1], STDOUT_FILENO);
+		close(commands->prev->pipe[0]);	
+	}
+	else if (commands->prev && commands->next == NULL)
+	{
+		dup2(commands->prev->pipe[0], STDIN_FILENO);
+		close(commands->prev->pipe[1]);
 	}
 }
 
@@ -44,33 +59,6 @@ void	setup_pipes(t_command *commands)
 	if (commands->next)
 		pipe(commands->pipe);
 	commands->pid = fork();
-}
-
-void	gestion_redirection(t_command *commands)
-{
-	char	*filename;
-	int		fd;
-
-	if (commands->input_fd)
-		filename = commands->input_file;
-	else
-		filename = commands->append_infile;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		//ft_printf("bash: %s: No such file or directory\n", commands->input_file);
-		commands->exit_code = 1;
-		close(fd);
-		return ;
-	}
-	if (access(filename, W_OK) == -1)
-    {
-        //ft_printf("%s: Permission denied\n", filename);
-        commands->exit_code = 1;
-        return ;
-    }
-	close (fd);
-	return ;
 }
 
 void	start_builtins(t_command *command, t_env **env_list)
