@@ -30,12 +30,6 @@ int	main(int argc, char **argv, char **envp)
 		setup_signal_handling();
 		input = readline("Minishell > ");
 		handle_received_signal(&save_exit_code);
-			// printf("globale %d\n", save_exit_code);
-		if (g_received_signal == SIGSEGV)
-		{
-			ft_printf("exit\n");
-			exit(1);
-		}
 		if (input && *input)
 			add_history(input);
 		process_input(&command_list, &env_list, input, &save_exit_code);

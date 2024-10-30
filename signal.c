@@ -16,7 +16,7 @@ void	handle_signal(int sig)
 	}
 	if (sig == SIGSEGV)
 	{
-		//ft_printf("exit\n");
+		printf("exit\n");
 		exit(1);
 	}
 }
