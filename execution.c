@@ -68,7 +68,8 @@ void	ft_process_wait(t_command *commands)
 	cmd = commands;
 	while (commands)
 	{
-		waitpid(commands->pid, &commands->status, 0);
+		if (commands->pid > 0)
+			waitpid(commands->pid, &commands->status, 0);
 		commands = commands->next;
 	}
 	commands = cmd;

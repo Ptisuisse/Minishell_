@@ -21,16 +21,14 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 	(*input)++;
 	if (**input == '<')
 	{
-		cmd->append_infd = 1;
 		(*input)++;
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
-		cmd->append_infile = strdup(buffer);
+		cmd->heredoc_file = strdup(buffer);
 	}
 	else
 	{
-		cmd->input_fd = 1;
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
@@ -64,22 +62,19 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 	(*input)++;
 	if (**input == '>')
 	{
-		cmd->append_outfd = 1;
 		(*input)++;
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
-		cmd->append_outfile = strdup(buffer);
+		cmd->append_file = strdup(buffer);
 		if (!parsing_error_outputfile(cmd))
 		{
-			cmd->append_outfd = 0;
-			cmd->append_outfile = NULL;
+			cmd->error_file = 1;
 			return 0;
 		}
 	}
 	else
 	{
-		cmd->output_fd = 1;
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
