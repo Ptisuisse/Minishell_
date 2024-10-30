@@ -25,7 +25,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
-		cmd->append_file = strdup(buffer);
+		cmd->heredoc_file = strdup(buffer);
 	}
 	else
 	{
@@ -66,7 +66,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 		while (**input == ' ')
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
-		cmd->heredoc_file = strdup(buffer);
+		cmd->append_file = strdup(buffer);
 		if (!parsing_error_outputfile(cmd))
 		{
 			cmd->error_file = 1;

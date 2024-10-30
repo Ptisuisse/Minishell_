@@ -1,7 +1,7 @@
 
 #include "minishell.h"
 
-int g_received_signal = 0;
+//int g_received_signal = 0;
 
 void	handle_signal(int sig)
 {

@@ -6,14 +6,14 @@ void    select_type(t_command *command, t_env **list)
 	int save_out = dup(STDOUT_FILENO);
 
 	check_heredoc(command);
-	if (command->next == NULL)
-    	choose_command(command, list);
+	if (command->next)
+		commands_manager(command, list);
 	else
 	{
-		//if (command->input_file || command->output_file || command->append_file || command->append_outfile)
-		//	redirect_management(command, list);
-		//else
-		commands_manager(command, list);
+		if (command->input_file || command->output_file || command->append_file || command->append_file)
+			redirect_management(command, list);
+		else
+    		choose_command(command, list);
 	}
 
 	dup2(save_out, STDOUT_FILENO);
@@ -66,8 +66,6 @@ void	commands_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
 	int count = 0;
-	int save_in = dup(STDIN_FILENO);
-	int save_out = dup(STDOUT_FILENO);
 
 	cmd = commands;
 	while (commands)
@@ -96,6 +94,4 @@ void	commands_manager(t_command *commands, t_env **env_list)
 	commands = cmd;
 	// if (count > 0)
 	// 	check_error_file(commands);
-	dup2(save_out, STDOUT_FILENO);
-	dup2(save_in, STDIN_FILENO);
 }

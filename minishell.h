@@ -76,7 +76,7 @@ void	append_file(t_command *command);
 /*HEREDOC_C*/
 void	check_heredoc(t_command *command);
 void	write_to_heredoc(int pipe_fd_read);
-void	heredoc_parent(t_command *command, int *pipe_fd, int stdin_backup);
+void	heredoc_parent(t_command *command, int *pipe_fd);
 void	read_heredoc(int pipe_fd_write, const char *end_of_input);
 void	heredoc_child(t_command *command, int *pipe_fd);
 void	heredoc(t_command *command);

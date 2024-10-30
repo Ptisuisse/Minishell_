@@ -30,7 +30,7 @@ void	write_to_heredoc(int pipe_fd_read)
 	close(heredoc_fd);
 }
 
-void	heredoc_parent(t_command *command, int *pipe_fd, int stdin_backup)
+void	heredoc_parent(t_command *command, int *pipe_fd)
 {
 	close(pipe_fd[WRITE_END]);
 	write_to_heredoc(pipe_fd[READ_END]);
@@ -45,7 +45,6 @@ void	heredoc_parent(t_command *command, int *pipe_fd, int stdin_backup)
 	//	perror("dup2 error");
 	close(heredoc_fd);
 	//dup2(stdin_backup, STDIN_FILENO);
-	close(stdin_backup);
 	command->args[WRITE_END] = ".heredoc";
 }
 
@@ -85,9 +84,7 @@ void	heredoc(t_command *command)
 {
 	int		pipe_fd[2];
 	int		pid;
-	int		stdin_backup;
 
-	stdin_backup = dup(STDIN_FILENO);
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe error");
@@ -102,7 +99,7 @@ void	heredoc(t_command *command)
 	if (pid == 0)
 		heredoc_child(command, pipe_fd);
 	else
-		heredoc_parent(command, pipe_fd, stdin_backup);
+		heredoc_parent(command, pipe_fd);
 	return ;
 }
 

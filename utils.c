@@ -106,11 +106,10 @@ void free_command_list(t_command *command_list)
     {
         temp = command_list;
 
-        // Free dynamically allocated strings
         //if (temp->command)
         //{
-        //    free(temp->command);
-        //    temp->command = NULL;
+        //free(temp->command);
+        //temp->command = NULL;
         //}
 
         if (temp->output_file)
@@ -125,24 +124,17 @@ void free_command_list(t_command *command_list)
             temp->input_file = NULL;
         }
 
-        //if (temp->append_file)
-        //{
-        //    free(temp->append_file);
-        //    temp->append_file = NULL;
-        //}
+        if (temp->append_file)
+        {
+            free(temp->append_file);
+            temp->append_file = NULL;
+        }
 
-        //if (temp->append_outfile)
-        //{
-        //    free(temp->append_outfile);
-        //    temp->append_outfile = NULL;
-        //}
-
-        // Free the command structure itself
-        //if (temp->args)
-        //{
-        //    free(temp->args);
-        //    temp->args = NULL;
-        //}
+        if (temp->append_file)
+        {
+            free(temp->append_file);
+            temp->append_file = NULL;
+        }
 
         command_list = command_list->next;
         free(temp);

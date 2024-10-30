@@ -23,11 +23,11 @@ t_command	*init_command(int exit_code)
 	//element->input_file = NULL;
 	element->status = 0;
 	element->error_file = 0;
+	element->exit_code = 0;
 	element->output_file = NULL;
 	element->input_file = NULL;
 	element->append_file = NULL;
 	element->heredoc_file= NULL;
-	element->exit_code = 0;
 	if (exit_code != 0)
 		element->exit_code = exit_code;
 	memset(element->args, 0, sizeof(element->args));

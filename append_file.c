@@ -53,9 +53,7 @@ void	append_file(t_command *command)
 {
 	int		pipe_fd[2];
 	int		pid;
-	int		stdout_backup;
 
-	stdout_backup = dup(STDOUT_FILENO);
 	if (pipe(pipe_fd) < 0)
 	{
 		perror("pipe error");
@@ -71,6 +69,5 @@ void	append_file(t_command *command)
 		append_child(command);
 	else
 		waitpid(pid, NULL, 0);
-	dup2(stdout_backup, STDOUT_FILENO);
 	return ;
 }

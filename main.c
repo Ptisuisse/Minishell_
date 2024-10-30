@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int g_received_signal = 0;
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
@@ -33,6 +35,11 @@ int	main(int argc, char **argv, char **envp)
 		if (input && *input)
 			add_history(input);
 		process_input(&command_list, &env_list, input, &save_exit_code);
+		if (ft_isprint(*input))
+			select_type(command_list, &env_list);
+		save_exit_code = last_exitcode(command_list);
+		free_command_list(command_list);
+		command_list = NULL;
 		free(input);
 		input = NULL;
 	}
