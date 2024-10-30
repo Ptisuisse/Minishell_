@@ -147,7 +147,7 @@ int parse_command(const char **input, t_command *cmd)
 
 int	check_initial_conditions(const char *input, t_command **command_list, int exit_code)
 {
-	t_command	*new_node;
+    t_command *new_node;
 
 	if (open_quote((char *)input))
 		return (1);
@@ -193,7 +193,7 @@ int	check_and_init_command(const char *input, t_command **command_list, int exit
 int	process_input_commands(const char *input, t_command **command_list, int exit_code)
 {
 	t_command	*new_node;
-
+  
 	while (*input)
 	{
 		new_node = init_command(exit_code);
