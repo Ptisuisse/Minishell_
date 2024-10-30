@@ -37,15 +37,16 @@ void	handle_child_process(t_command *commands)
 	{
 		close(commands->pipe[0]);
 		dup2(commands->pipe[1], STDOUT_FILENO);
-		//close(commands->pipe[1]);
+		close(commands->pipe[1]);
 	}
 	else if (commands->next && commands->prev)
 	{
-		//close(commands->prev->pipe[1]);
+		close(commands->prev->pipe[1]);
 		dup2(commands->prev->pipe[0], STDIN_FILENO);
+		close(commands->prev->pipe[0]);
 		close(commands->pipe[0]);
 		dup2(commands->pipe[1], STDOUT_FILENO);
-		close(commands->prev->pipe[0]);	
+		close(commands->pipe[1]);
 	}
 	else if (commands->prev && commands->next == NULL)
 	{

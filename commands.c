@@ -76,15 +76,15 @@ void	commands_manager(t_command *commands, t_env **env_list)
 		{
 			handle_child_process(commands);
 			choose_command(commands, env_list);
-			if (commands->next != NULL)
-				close(commands->pipe[1]);
+			//if (commands->next != NULL)
+			//	close(commands->pipe[1]);
 			exit(0);
 		}
 		else
 		{
 			//handle_parent_process(commands);
 			// if (commands->next == NULL)
-			// 	ft_process_wait(commands);
+			ft_process_wait(commands);
 			if (commands->status == 256)
 				commands->exit_code = 1;
 			commands = commands->next;
