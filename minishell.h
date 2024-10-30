@@ -36,19 +36,15 @@ extern int g_received_signal;
 
 typedef struct s_command
 {
-	int				error_file;
+	int					error_file;
 	int					status;
 	int					exit_code;
 	char				*command;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
-	int					input_fd;
 	char				*output_file;
-	int					output_fd;
-	char				*append_infile;
-	char				*append_outfile;
-	int					append_infd;
-	int					append_outfd;
+	char				*append_file;
+	char				*heredoc_file;
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;
@@ -75,12 +71,12 @@ void    select_type(t_command *command, t_env **list);
 void	setup_signal_handling();
 void free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
-void	append_file(t_command *command, t_env **env_list);
+void	append_file(t_command *command);
 
 /*HEREDOC_C*/
 void	check_heredoc(t_command *command);
 void	write_to_heredoc(int pipe_fd_read);
-void	heredoc_parent(t_command *command, int *pipe_fd, int stdin_backup);
+void	heredoc_parent(t_command *command, int *pipe_fd);
 void	read_heredoc(int pipe_fd_write, const char *end_of_input);
 void	heredoc_child(t_command *command, int *pipe_fd);
 void	heredoc(t_command *command);
