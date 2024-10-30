@@ -71,7 +71,7 @@ int	redirect_management(t_command *command, t_env **env_list)
 	int status;
 
 	status = 0;
-	if (command->append_outfile)
+	if (command->append_file)
 		append_file(command);
 	if (command->input_file)
 		status = redirect_input(command, env_list);

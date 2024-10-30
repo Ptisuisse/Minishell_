@@ -70,33 +70,33 @@ int    ft_strcmp(const char *s1, const char *s2)
     return (0);
 }
 
-void	print_commands(t_command *command_list)
-{
-	int	i;
-	int	j;
+//void	print_commands(t_command *command_list)
+//{
+//	int	i;
+//	int	j;
 
-	i = 0;
-	while (command_list)
-	{
-		printf("Command[%d]:\n", i);
-		j = 0;
-		while (command_list->args[j])
-		{
-			printf("  Arg[%d]: %s\n", j, command_list->args[j]);
-			j++;
-		}
-		if (command_list->input_file)
-			printf("  Input Redirection: %s\n", command_list->input_file);
-		if (command_list->output_file)
-			printf("  Output Redirection: %s\n", command_list->output_file);
-		if (command_list->append_infile)
-			printf("  Append Input Redirection: %s\n", command_list->append_infile);
-		if (command_list->append_outfile)
-			printf("  Append Output Redirection: %s\n", command_list->append_outfile);
-		command_list = command_list->next;
-		i++;
-	}
-}
+//	i = 0;
+//	while (command_list)
+//	{
+//		printf("Command[%d]:\n", i);
+//		j = 0;
+//		while (command_list->args[j])
+//		{
+//			printf("  Arg[%d]: %s\n", j, command_list->args[j]);
+//			j++;
+//		}
+//		if (command_list->input_file)
+//			printf("  Input Redirection: %s\n", command_list->input_file);
+//		if (command_list->output_file)
+//			printf("  Output Redirection: %s\n", command_list->output_file);
+//		if (command_list->append_file)
+//			printf("  Append Input Redirection: %s\n", command_list->append_file);
+//		if (command_list->append_file)
+//			printf("  Append Output Redirection: %s\n", command_list->append_file);
+//		command_list = command_list->next;
+//		i++;
+//	}
+//}
 
 void free_command_list(t_command *command_list)
 {
@@ -125,17 +125,17 @@ void free_command_list(t_command *command_list)
             temp->input_file = NULL;
         }
 
-        //if (temp->append_infile)
+        //if (temp->append_file)
         //{
-        //    free(temp->append_infile);
-        //    temp->append_infile = NULL;
+        //    free(temp->append_file);
+        //    temp->append_file = NULL;
         //}
 
-        if (temp->append_outfile)
-        {
-            free(temp->append_outfile);
-            temp->append_outfile = NULL;
-        }
+        //if (temp->append_outfile)
+        //{
+        //    free(temp->append_outfile);
+        //    temp->append_outfile = NULL;
+        //}
 
         // Free the command structure itself
         //if (temp->args)

@@ -5,10 +5,10 @@ int	parsing_error_inputfile(t_command *commands)
 	char	*filename;
 	int		fd;
 
-	if (commands->input_fd)
+	if (commands->input_file)
 		filename = commands->input_file;
 	else
-		filename = commands->append_infile;
+		filename = commands->heredoc_file;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
@@ -29,10 +29,10 @@ int	parsing_error_outputfile(t_command *commands)
 	char	*filename;
 	int fd;
 
-	if (commands->output_fd)
+	if (commands->output_file)
 		filename = commands->output_file;
 	else
-		filename = commands->append_outfile;
+		filename = commands->append_file;
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{

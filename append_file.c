@@ -18,7 +18,7 @@ void	append_child(t_command *command)
 {
 	int pipe_fd;
 
-	pipe_fd = open(command->append_outfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	pipe_fd = open(command->append_file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (pipe_fd < 0)
 	{
 		perror("Failed to open append_outfile");

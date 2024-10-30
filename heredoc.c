@@ -76,7 +76,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 void	heredoc_child(t_command *command, int *pipe_fd)
 {
 	close(pipe_fd[READ_END]);
-	read_heredoc(pipe_fd[WRITE_END], command->append_infile);
+	read_heredoc(pipe_fd[WRITE_END], command->append_file);
 	close(pipe_fd[WRITE_END]);
 	exit(EXIT_SUCCESS);
 }
@@ -113,7 +113,7 @@ void	check_heredoc(t_command *command)
 	head = command;
 	while (command)
 	{
-		if (command->append_infd == 1)
+		if (command->heredoc_file)
 			heredoc(command);
 		//else if (command->output_fd == 1)
 		//	redirect_management(command, NULL);

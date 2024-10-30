@@ -24,9 +24,9 @@ t_command	*init_command(int exit_code)
 	element->status = 0;
 	element->error_file = 0;
 	element->output_file = NULL;
-	element->append_outfile = NULL;
-	element->append_infile = NULL;
 	element->input_file = NULL;
+	element->append_file = NULL;
+	element->heredoc_file= NULL;
 	element->exit_code = 0;
 	if (exit_code != 0)
 		element->exit_code = exit_code;

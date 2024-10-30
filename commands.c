@@ -10,7 +10,7 @@ void    select_type(t_command *command, t_env **list)
     	choose_command(command, list);
 	else
 	{
-		//if (command->input_file || command->output_file || command->append_infile || command->append_outfile)
+		//if (command->input_file || command->output_file || command->append_file || command->append_outfile)
 		//	redirect_management(command, list);
 		//else
 		commands_manager(command, list);
