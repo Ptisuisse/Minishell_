@@ -27,11 +27,6 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_infile = strdup(buffer);
-		if (!parsing_error_inputfile(cmd))
-		{
-			cmd->error_file = 1;
-			return 0;
-		}
 	}
 	else
 	{
@@ -75,12 +70,12 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_outfile = strdup(buffer);
-		// if (!redirect_output(cmd))
-		// {
-		// 	cmd->append_outfd = 0;
-		// 	cmd->append_outfile = NULL;
-		// 	return 0;
-		// }
+		if (!parsing_error_outputfile(cmd))
+		{
+			cmd->append_outfd = 0;
+			cmd->append_outfile = NULL;
+			return 0;
+		}
 	}
 	else
 	{
@@ -102,6 +97,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 	}
 	return 0;
 }
+
 void advance_to_end_or_pipe(const char **input)
 {
     while (**input != '\0' && **input != '|')
