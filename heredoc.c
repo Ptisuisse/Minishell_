@@ -41,10 +41,10 @@ void	heredoc_parent(t_command *command, int *pipe_fd, int stdin_backup)
 		perror("Failed to reopen .heredoc");
 		return;
 	}
-	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
-		perror("dup2 error");
+	//if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+	//	perror("dup2 error");
 	close(heredoc_fd);
-	dup2(stdin_backup, STDIN_FILENO);
+	//dup2(stdin_backup, STDIN_FILENO);
 	close(stdin_backup);
 	command->args[WRITE_END] = ".heredoc";
 }

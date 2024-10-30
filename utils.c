@@ -101,18 +101,17 @@ void	print_commands(t_command *command_list)
 void free_command_list(t_command *command_list)
 {
     t_command *temp;
-	//int			j;
 
     while (command_list)
     {
         temp = command_list;
 
         // Free dynamically allocated strings
-        if (temp->command)
-        {
-           // free(temp->command);
-            temp->command = NULL;
-        }
+        //if (temp->command)
+        //{
+        //    free(temp->command);
+        //    temp->command = NULL;
+        //}
 
         if (temp->output_file)
         {
@@ -126,19 +125,25 @@ void free_command_list(t_command *command_list)
             temp->input_file = NULL;
         }
 
-        if (temp->append_infile)
-        {
-            free(temp->append_infile);
-            temp->append_infile = NULL;
-        }
+        //if (temp->append_infile)
+        //{
+        //    free(temp->append_infile);
+        //    temp->append_infile = NULL;
+        //}
 
         if (temp->append_outfile)
         {
             free(temp->append_outfile);
             temp->append_outfile = NULL;
         }
+
         // Free the command structure itself
-		//free(temp->args);
+        //if (temp->args)
+        //{
+        //    free(temp->args);
+        //    temp->args = NULL;
+        //}
+
         command_list = command_list->next;
         free(temp);
     }

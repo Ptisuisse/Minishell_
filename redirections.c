@@ -72,8 +72,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 		cmd->append_outfile = strdup(buffer);
 		if (!parsing_error_outputfile(cmd))
 		{
-			cmd->append_outfd = 0;
-			cmd->append_outfile = NULL;
+			cmd->error_file = 1;
 			return 0;
 		}
 	}

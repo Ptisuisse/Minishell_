@@ -42,13 +42,9 @@ typedef struct s_command
 	char				*command;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
-	int					input_fd;
 	char				*output_file;
-	int					output_fd;
-	char				*append_infile;
-	char				*append_outfile;
-	int					append_infd;
-	int					append_outfd;
+	char				*append_file;
+	char				*heredoc_file;
 	int					pipe[2];
 	struct s_command	*next;
 	struct s_command	*prev;
@@ -75,7 +71,7 @@ void    select_type(t_command *command, t_env **list);
 void	setup_signal_handling();
 void free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
-void	append_file(t_command *command, t_env **env_list);
+void	append_file(t_command *command);
 
 /*HEREDOC_C*/
 void	check_heredoc(t_command *command);

@@ -26,10 +26,7 @@ t_command	*init_command(int exit_code)
 	element->output_file = NULL;
 	element->append_outfile = NULL;
 	element->append_infile = NULL;
-	element->input_fd = 0;
-	element->output_fd = 0;
-	element->append_infd = 0;
-	element->append_outfd = 0;
+	element->input_file = NULL;
 	element->exit_code = 0;
 	if (exit_code != 0)
 		element->exit_code = exit_code;
