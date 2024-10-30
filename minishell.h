@@ -36,6 +36,7 @@ extern int g_received_signal;
 
 typedef struct s_command
 {
+	int					file;
 	int					error_file;
 	int					status;
 	int					exit_code;
@@ -65,6 +66,7 @@ typedef struct s_data
 	t_env				*env_list;
 }						t_data;
 
+void	put_into_args(t_command *commands);
 int	parsing_error_inputfile(t_command *commands);
 int	parsing_error_outputfile(t_command *commands);
 void    select_type(t_command *command, t_env **list);
