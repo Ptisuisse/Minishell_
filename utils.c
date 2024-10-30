@@ -110,7 +110,7 @@ void free_command_list(t_command *command_list)
         // Free dynamically allocated strings
         if (temp->command)
         {
-            free(temp->command);
+           // free(temp->command);
             temp->command = NULL;
         }
 

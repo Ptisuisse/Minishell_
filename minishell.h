@@ -32,10 +32,11 @@
 # define WRITE_END 1
 
 
-extern int g_received_signal; 
+extern int g_received_signal;
 
 typedef struct s_command
 {
+	int				error_file;
 	int					status;
 	int					exit_code;
 	char				*command;
@@ -68,6 +69,9 @@ typedef struct s_data
 	t_env				*env_list;
 }						t_data;
 
+int	parsing_error_inputfile(t_command *commands);
+int	parsing_error_outputfile(t_command *commands);
+void    select_type(t_command *command, t_env **list);
 void	setup_signal_handling();
 void free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
@@ -135,11 +139,11 @@ int	parse_redirection(const char **input, t_command *cmd);
 
 /*REDIRECTIONS_MANAGEMENT_C*/
 
-int	redirect_input(t_command *command);
+int	redirect_input(t_command *command, t_env **env_list);
 
-int	redirect_output(t_command *command);
+int	redirect_output(t_command *command, t_env **env_list);
 
-void	redirect_management(t_command *command, t_env **env_list);
+int	redirect_management(t_command *command, t_env **env_list);
 
 /*COMMAND_MANAGEMENT_C*/
 

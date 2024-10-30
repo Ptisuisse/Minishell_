@@ -12,30 +12,46 @@
 
 #include "minishell.h"
 
-void	handle_parent_process(t_command *commands)
-{
-	if (commands->next)
-		close(commands->pipe[WRITE_END]);
-	if (commands->prev)
-	{
-		close(commands->prev->pipe[WRITE_END]);
-		close(commands->prev->pipe[READ_END]);
-	}
-}
+// void	handle_parent_process(t_command *commands)
+// {
+// 	if (commands->prev == NULL && commands->next)
+// 	{
+// 		close(commands->pipe[1]);
+// 		dup2(commands->pipe[0], 0);
+// 		close(commands->pipe[0]);
+// 	}
+// 	else if (commands->next)
+// 	{
+// 		close(commands->prev->pipe[0]);
+// 		dup2(commands->prev->pipe[1], STDOUT_FILENO);
+// 		close(commands->prev->pipe[1]);
+// 		//close(commands->pipe[1]);
+// 		//dup2(commands->pipe[0], 0);
+// 		//close(commands->pipe[0]);
+// 	}
+//}
 
 void	handle_child_process(t_command *commands)
 {
-	if (commands->prev)
+	if (commands->prev == NULL && commands->next)
 	{
-		close(commands->prev->pipe[WRITE_END]);
-		dup2(commands->prev->pipe[READ_END], STDIN_FILENO);
-		close(commands->prev->pipe[READ_END]);
+		close(commands->pipe[0]);
+		dup2(commands->pipe[1], STDOUT_FILENO);
+		close(commands->pipe[1]);
 	}
-	if (commands->next)
+	else if (commands->next && commands->prev)
 	{
-		close(commands->pipe[READ_END]);
-		dup2(commands->pipe[WRITE_END], STDOUT_FILENO);
-		close(commands->pipe[WRITE_END]);
+		close(commands->prev->pipe[1]);
+		dup2(commands->prev->pipe[0], STDIN_FILENO);
+		close(commands->prev->pipe[0]);
+		close(commands->pipe[0]);
+		dup2(commands->pipe[1], STDOUT_FILENO);
+		close(commands->pipe[1]);
+	}
+	else if (commands->prev && commands->next == NULL)
+	{
+		dup2(commands->prev->pipe[0], STDIN_FILENO);
+		close(commands->prev->pipe[1]);
 	}
 }
 
@@ -44,48 +60,6 @@ void	setup_pipes(t_command *commands)
 	if (commands->next)
 		pipe(commands->pipe);
 	commands->pid = fork();
-}
-
-void	commands_manager(t_command *commands, t_env **env_list)
-{
-	t_command	*cmd;
-
-	cmd = commands;
-	check_heredoc(commands);
-	if (commands->next != NULL)
-	{
-		while (commands)
-		{
-			setup_pipes(commands);
-			if (commands->pid == 0)
-			{
-				handle_child_process(commands);
-				if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
-					redirect_management(commands, env_list);
-				else
-					choose_command(commands, env_list);
-				exit(0);
-			}
-			else
-			{
-				handle_parent_process(commands);
-				if (commands->next == NULL)
-					ft_process_wait(commands);
-				if (commands->status == 256)
-					commands->exit_code = 1;
-				commands = commands->next;
-			}
-		}
-	}
-	else
-	{
-		if (commands->input_fd || commands->output_fd || commands->append_infd || commands->append_outfd)
-			redirect_management(commands, env_list);
-		else
-			choose_command(commands, env_list);
-	}
-	ft_process_wait(commands);
-	commands = cmd;
 }
 
 void	start_builtins(t_command *command, t_env **env_list)
