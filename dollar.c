@@ -37,8 +37,6 @@ int	check_builtins(t_command *command, t_env **env_list)
         status = 1;
     else if (ft_strcmp(command->args[0], "pwd") == 0 && ft_strlen(command->args[0]) == 3)
         status = 1;
-    else if (ft_strcmp(command->args[0], "clear") == 0 && ft_strlen(command->args[0]) == 5)
-		clear_cmd();
 	if (status == 1)
         start_builtins(command, env_list);
     return (status);

@@ -67,7 +67,7 @@ typedef struct s_data
 }						t_data;
 
 int	choose_command_pipe(t_command *command, t_env **env_list);
-int    exec_pipe_command(t_command *command);
+int    exec_pipe_command(t_command *command, t_env **env_list);
 void	put_into_args(t_command *commands);
 int	parsing_error_inputfile(t_command *commands);
 int	parsing_error_outputfile(t_command *commands);
@@ -181,8 +181,6 @@ void	pwd_cmd(t_command *command);
 
 /*BUILTINS_CLEAR_EXIT_C*/
 
-void	clear_cmd(void);
-
 int	exit_cmd(t_command *command);
 
 /*BUILTINS_ECHO_C*/
@@ -197,7 +195,7 @@ void	create_env_list(char **envp, t_env **env_list);
 
 void	env_cmd(t_env *env_list);
 
-void	unset_cmd(t_command *command, t_env *env_list);
+void	unset_cmd(t_command *command, t_env **env_list);
 
 /*BUILTINS_C*/
 

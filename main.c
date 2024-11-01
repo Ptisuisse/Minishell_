@@ -67,6 +67,6 @@ int	main(int argc, char **argv, char **envp)
 		free(input);
 		input = NULL;
 	}
-	free_envlist(env_list);
+	//free_envlist(env_list);
 	return (0);
 }
