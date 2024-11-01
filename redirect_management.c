@@ -89,5 +89,8 @@ void	process_input(t_command **command_list, t_env **env_list, char *input, int 
 	if (!input)
 		return ;
 	if (parse_command_line(input, command_list, *save_exit_code))
-		*save_exit_code = 2;
+	{
+		(*command_list)->exit_code = 2;
+		*save_exit_code = 256;
+	}
 }

@@ -41,7 +41,7 @@ int	last_exitcode(t_command *command)
 	exit_code = 0;
 	if (command->next)
 	{
-		while (command)
+		while (command->next)
 			command = command->next;
 	}
 	exit_code = command->exit_code;

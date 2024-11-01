@@ -27,8 +27,8 @@ int	parsing_error_outputfile(t_command *commands)
 
 	if (commands->output_file)
 		filename = commands->output_file;
-	else
-		filename = commands->append_file;
+	//else
+	//	filename = commands->append_file;
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{

@@ -66,6 +66,8 @@ typedef struct s_data
 	t_env				*env_list;
 }						t_data;
 
+int	choose_command_pipe(t_command *command, t_env **env_list);
+int    exec_pipe_command(t_command *command);
 void	put_into_args(t_command *commands);
 int	parsing_error_inputfile(t_command *commands);
 int	parsing_error_outputfile(t_command *commands);
@@ -159,7 +161,7 @@ void	start_builtins(t_command *command, t_env **env_list);
 
 int	check_path(char *pathname);
 
-int	exec_command(t_command *command);
+int	exec_command(t_command *command, t_env **env_list);
 
 int	choose_command(t_command *command, t_env **env_list);
 
