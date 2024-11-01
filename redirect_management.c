@@ -66,24 +66,21 @@ int	redirect_output(t_command *command, t_env **env_list)
 	//save_stdout = dup(STDOUT_FILENO);
 	dup2(fd, STDOUT_FILENO);
 	close (fd);
+	put_into_args(command);
 	choose_command(command, env_list);
 	//dup2(save_stdout, STDOUT_FILENO);
 	//close(save_stdout);
 	return 0;
 }
 
-int	redirect_management(t_command *command, t_env **env_list)
+void	redirect_management(t_command *command, t_env **env_list)
 {
-	int status;
-
-	status = 0;
 	if (command->append_file)
 		append_file(command);
 	if (command->input_file)
-		status = redirect_input(command, env_list);
+		redirect_input(command, env_list);
 	if (command->output_file)
 		redirect_output(command, env_list);
-	return status;
 }
 
 void	process_input(t_command **command_list, t_env **env_list, char *input, int *save_exit_code)
@@ -93,12 +90,4 @@ void	process_input(t_command **command_list, t_env **env_list, char *input, int 
 		return ;
 	if (parse_command_line(input, command_list, *save_exit_code))
 		*save_exit_code = 2;
-	//else
-	//{
-	//	if (ft_isprint(*input))
-	//		select_type(*command_list, env_list);
-	//}
-	//*save_exit_code = last_exitcode(*command_list);
-	//free_command_list(*command_list);
-	//*command_list = NULL;
 }

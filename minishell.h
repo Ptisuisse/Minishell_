@@ -141,7 +141,7 @@ int	redirect_input(t_command *command, t_env **env_list);
 
 int	redirect_output(t_command *command, t_env **env_list);
 
-int	redirect_management(t_command *command, t_env **env_list);
+void	redirect_management(t_command *command, t_env **env_list);
 
 /*COMMAND_MANAGEMENT_C*/
 
