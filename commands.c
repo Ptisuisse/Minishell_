@@ -5,7 +5,7 @@ void    select_type(t_command *command, t_env **list)
 	int save_in = dup(STDIN_FILENO);
 	int save_out = dup(STDOUT_FILENO);
 
-	//check_heredoc(command);
+	check_heredoc(command);
 	if (command->next)
 		commands_manager(command, list);
 	else
@@ -75,13 +75,13 @@ void	commands_manager(t_command *commands, t_env **env_list)
 			{
 				count += 1;
 				commands = commands->next;
-			}		
+			}
 		}
 		setup_pipes(commands);
 		if (commands->pid == 0)
 		{
 			handle_child_process(commands);
-			if (commands->input_file || commands->output_file || commands->append_file || commands->append_file)
+			if (commands->file > 0)
 				redirect_management(commands, env_list);
 			else
 				choose_command(commands, env_list);

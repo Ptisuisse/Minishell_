@@ -12,19 +12,6 @@
 
 #include "minishell.h"
 
-void	put_into_args_test(t_command *commands)
-{
-	int i;
-
-	i = 0;
-	while (commands->args[i])
-	{
-		i++;
-	}
-	if (!commands->args[i])
-		commands->args[i] = ft_strdup(commands->input_file);
-}
-
 int	handle_input_redirection(const char **input, t_command *cmd)
 {
 	char	buffer[1024];
@@ -32,6 +19,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 
 	buf_index = 0;
 	(*input)++;
+	cmd->file++;
 	if (**input == '<')
 	{
 		(*input)++;
@@ -62,7 +50,6 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 			}
 			return 0;
 		}
-		put_into_args_test(cmd);
 	}
 	return 0;
 }
@@ -74,6 +61,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 
 	buf_index = 0;
 	(*input)++;
+	cmd->file++;
 	if (**input == '>')
 	{
 		(*input)++;

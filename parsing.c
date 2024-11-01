@@ -70,12 +70,23 @@ int check_double_redirection(const char **input, t_command *cmd)
     if (*(*input + 1) == '>' || *(*input + 1) == '<')
     {
         if (*(*input + 2) == '<')
-            token = "<";
-        else if (*(*input + 2) == '>')
-            token = ">";
+        {
+			token = "newline";
+		    if (*(*input + 3) == '<')
+				token = "<";
+			if (*(*input + 4) == '<')
+				token = "<<";
+		}
+		else if (*(*input + 2) == '>')
+		{
+			token = ">";
+            if (*(*input + 3) == '>')
+				token = ">>";
+		}
+		else if (cmd->append_file == NULL)
+			token = "newline";
         if (token)
         {
-            token = "newline";
             error_message(token, cmd);
             return (1);
         }
