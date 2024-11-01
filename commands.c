@@ -5,16 +5,15 @@ void    select_type(t_command *command, t_env **list)
 	int save_in = dup(STDIN_FILENO);
 	int save_out = dup(STDOUT_FILENO);
 
-	//check_heredoc(command);
 	if (command->next)
 		commands_manager(command, list);
 	else
 	{
-		if (command->file > 0)
+		if (command->file > 0 && command->heredoc_file == NULL)
 			redirect_management(command, list);
 		else
     		choose_command(command, list);
-	}
+    }
 	dup2(save_out, STDOUT_FILENO);
 	dup2(save_in, STDIN_FILENO);
 }

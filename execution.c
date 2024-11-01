@@ -117,7 +117,7 @@ int exec_command(t_command *command, t_env **env_list)
 {
     char    *cmd;
     char    **envp;
-	
+
 	envp = create_envp(*env_list);
 	cmd = ft_strdup(command->args[0]);
     if (!check_path(command->args[0])) 
@@ -162,7 +162,7 @@ int	choose_command_pipe(t_command *command, t_env **env_list)
 int	choose_command(t_command *command, t_env **env_list)
 {
 	int	result;
-
+	
 	result = -1;
 	if (check_builtins(command, env_list))
 		result = 0;

@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 //int g_received_signal = 0;

@@ -7,8 +7,10 @@ void	put_into_args(t_command *commands)
 	i = 0;
 	while (commands->args[i])
 	{
-		if (!commands->args[i])
-			commands->args[i] = ft_strdup(commands->args[i]);
+		if (!commands->args[i] && commands->input_file)
+			commands->args[i] = ft_strdup(commands->input_file);
+		if (!commands->args[i] && commands->heredoc_file)
+			commands->args[i] = ft_strdup(commands->append_file);
 		i++;
 	}
 }
@@ -16,7 +18,6 @@ void	put_into_args(t_command *commands)
 int	redirect_input(t_command *commands, t_env **env_list)
 {
 	char	*filename;
-	//int		save_stdin = 0;
 	int		fd;
 
 	(void)env_list;
@@ -37,14 +38,10 @@ int	redirect_input(t_command *commands, t_env **env_list)
 		close(fd);
 		return 1;
 	}
-	//save_stdin = dup(STDIN_FILENO);
 	dup2(fd, STDIN_FILENO);
 	close (fd);
 	put_into_args(commands);
 	choose_command(commands, env_list);
-	//dup2(save_stdin, STDIN_FILENO);
-	//close(save_stdin);
-	//dup2(fd, STDIN_FILENO);
 	return 0;
 }
 
@@ -52,7 +49,6 @@ int	redirect_output(t_command *command, t_env **env_list)
 {
 	char	*filename;
 	int fd;
-	//int		save_stdout;
 
 	filename = command->output_file;
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -63,13 +59,10 @@ int	redirect_output(t_command *command, t_env **env_list)
 		dup2(fd, STDOUT_FILENO);
 		return 1;
 	}
-	//save_stdout = dup(STDOUT_FILENO);
 	dup2(fd, STDOUT_FILENO);
 	close (fd);
 	put_into_args(command);
 	choose_command(command, env_list);
-	//dup2(save_stdout, STDOUT_FILENO);
-	//close(save_stdout);
 	return 0;
 }
 

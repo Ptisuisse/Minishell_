@@ -44,7 +44,7 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
 		perror("dup2 error");
 	close(heredoc_fd);
-	command->args[WRITE_END] = ".heredoc";
+	command->args[1] = ft_strdup(".heredoc");
 }
 
 void	read_heredoc(int pipe_fd_write, const char *end_of_input)

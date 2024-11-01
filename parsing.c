@@ -35,6 +35,7 @@ void	parse_argument(const char **input, char *buffer, int *buf_index, t_command 
 	}
 	buffer[*buf_index] = '\0';
 }
+
 void	handle_quotes(const char **input, char *buffer, int *buf_index, t_command *command_list)
 {
     char    quote_type;
