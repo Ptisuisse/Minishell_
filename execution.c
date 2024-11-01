@@ -61,16 +61,8 @@ int	choose_command(t_command *command, t_env **env_list)
 
 void	ft_process_wait(t_command *commands)
 {
-	//int			status;
-	t_command	*cmd;
-
-	//status = 0;
-	cmd = commands;
-	while (commands)
+	if (commands->pid != 0)
 	{
-		if (commands->pid > 0)
-			waitpid(commands->pid, &commands->status, 0);
-		commands = commands->next;
+		waitpid(commands->pid, &commands->status, 0);
 	}
-	commands = cmd;
 }

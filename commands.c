@@ -5,7 +5,7 @@ void    select_type(t_command *command, t_env **list)
 	int save_in = dup(STDIN_FILENO);
 	int save_out = dup(STDOUT_FILENO);
 
-	check_heredoc(command);
+	//check_heredoc(command);
 	if (command->next)
 		commands_manager(command, list);
 	else
@@ -15,7 +15,6 @@ void    select_type(t_command *command, t_env **list)
 		else
     		choose_command(command, list);
 	}
-
 	dup2(save_out, STDOUT_FILENO);
 	dup2(save_in, STDIN_FILENO);
 }
@@ -31,7 +30,7 @@ void	check_error_file(t_command *cmd)
 		{
 			redirect_input(cmd, NULL);
 			cmd->exit_code = 1;
-			break ;
+			// break ;
 		}
 		cmd = cmd->next;
 	}
@@ -72,14 +71,20 @@ void	commands_manager(t_command *commands, t_env **env_list)
 	{
 		if (commands->error_file == 1)
 		{
-			count += 1;
-			commands = commands->next;
+			while (commands->error_file == 1)
+			{
+				count += 1;
+				commands = commands->next;
+			}		
 		}
 		setup_pipes(commands);
 		if (commands->pid == 0)
 		{
 			handle_child_process(commands);
-			choose_command(commands, env_list);
+			if (commands->input_file || commands->output_file || commands->append_file || commands->append_file)
+				redirect_management(commands, env_list);
+			else
+				choose_command(commands, env_list);
 			exit(0);
 		}
 		else
@@ -90,8 +95,9 @@ void	commands_manager(t_command *commands, t_env **env_list)
 			commands = commands->next;
 		}
 	}
+	//ft_process_wait(commands);
 	//ft_close_fd(commands);
 	commands = cmd;
-	// if (count > 0)
-	// 	check_error_file(commands);
+	if (count > 0)
+	 	check_error_file(commands);
 }

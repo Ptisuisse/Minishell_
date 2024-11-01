@@ -27,6 +27,13 @@ int	redirect_input(t_command *commands, t_env **env_list)
 		ft_printf("bash: %s: No such file or directory\n", commands->input_file);
 		commands->exit_code = 1;
 		dup2(fd, STDIN_FILENO);
+		return 1;
+	}
+	if (access(filename, W_OK) == -1)
+	{
+		ft_printf("bash: %s: Permission denied\n", commands->input_file);
+		commands->exit_code = 1;
+		dup2(fd, STDIN_FILENO);
 		close(fd);
 		return 1;
 	}
@@ -54,7 +61,6 @@ int	redirect_output(t_command *command, t_env **env_list)
 		ft_printf("%s: No such file or directory\n", command->output_file);
 		command->exit_code = 1;
 		dup2(fd, STDOUT_FILENO);
-		close(fd);
 		return 1;
 	}
 	//save_stdout = dup(STDOUT_FILENO);

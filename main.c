@@ -35,6 +35,7 @@ int	main(int argc, char **argv, char **envp)
 		if (input && *input)
 			add_history(input);
 		process_input(&command_list, &env_list, input, &save_exit_code);
+		check_heredoc(command_list);
 		if (ft_isprint(*input))
 			select_type(command_list, &env_list);
 		save_exit_code = last_exitcode(command_list);
