@@ -41,11 +41,10 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 		perror("Failed to reopen .heredoc");
 		return;
 	}
-	//if (dup2(heredoc_fd, STDIN_FILENO) == -1)
-	//	perror("dup2 error");
+	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+		perror("dup2 error");
 	close(heredoc_fd);
-	//dup2(stdin_backup, STDIN_FILENO);
-	command->args[WRITE_END] = ".heredoc";
+	command->args[1] = ft_strdup(".heredoc");
 }
 
 void	read_heredoc(int pipe_fd_write, const char *end_of_input)
@@ -75,7 +74,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 void	heredoc_child(t_command *command, int *pipe_fd)
 {
 	close(pipe_fd[READ_END]);
-	read_heredoc(pipe_fd[WRITE_END], command->append_file);
+	read_heredoc(pipe_fd[WRITE_END], command->heredoc_file);
 	close(pipe_fd[WRITE_END]);
 	exit(EXIT_SUCCESS);
 }
@@ -84,7 +83,9 @@ void	heredoc(t_command *command)
 {
 	int		pipe_fd[2];
 	int		pid;
+	int	stdin_backup;
 
+	stdin_backup = dup(STDIN_FILENO);
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe error");
@@ -99,7 +100,11 @@ void	heredoc(t_command *command)
 	if (pid == 0)
 		heredoc_child(command, pipe_fd);
 	else
+	{
 		heredoc_parent(command, pipe_fd);
+		dup2(stdin_backup, STDIN_FILENO);
+		close(stdin_backup);
+	}
 	return ;
 }
 
@@ -112,8 +117,6 @@ void	check_heredoc(t_command *command)
 	{
 		if (command->heredoc_file)
 			heredoc(command);
-		//else if (command->output_fd == 1)
-		//	redirect_management(command, NULL);
 		command = command->next;
 	}
 	command = head;

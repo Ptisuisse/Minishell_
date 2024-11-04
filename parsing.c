@@ -35,6 +35,7 @@ void	parse_argument(const char **input, char *buffer, int *buf_index, t_command 
 	}
 	buffer[*buf_index] = '\0';
 }
+
 void	handle_quotes(const char **input, char *buffer, int *buf_index, t_command *command_list)
 {
     char    quote_type;
@@ -69,13 +70,24 @@ int check_double_redirection(const char **input, t_command *cmd)
 
     if (*(*input + 1) == '>' || *(*input + 1) == '<')
     {
-        if (*(*input + 2) == '<')
-            token = "<";
-        else if (*(*input + 2) == '>')
-            token = ">";
+        if (*(*input + 2) == '<' &&	*(*input + 3) != '\0')
+        {
+			token = "newline";
+		    if (*(*input + 3) == '<')
+				token = "<";
+			if (*(*input + 4) == '<')
+				token = "<<";
+		}
+		else if (*(*input + 2) == '>')
+		{
+			token = ">";
+            if (*(*input + 3) == '>')
+				token = ">>";
+		}
+		// else if (cmd->append_file == NULL)
+		// 	token = "newline";
         if (token)
         {
-            token = "newline";
             error_message(token, cmd);
             return (1);
         }
@@ -199,7 +211,11 @@ int	process_input_commands(const char *input, t_command **command_list, int exit
 		new_node = init_command(exit_code);
 		if (!new_node)
 			return (1);
-		parse_command(&input, new_node);
+		if (parse_command(&input, new_node))
+		{
+			append_command_node(command_list, new_node);
+			return 1;
+		}
 		if (new_node->args[0] != NULL)
 			append_command_node(command_list, new_node);
 		else

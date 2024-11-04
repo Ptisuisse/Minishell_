@@ -19,6 +19,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 
 	buf_index = 0;
 	(*input)++;
+	cmd->file++;
 	if (**input == '<')
 	{
 		(*input)++;
@@ -60,6 +61,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 
 	buf_index = 0;
 	(*input)++;
+	cmd->file++;
 	if (**input == '>')
 	{
 		(*input)++;

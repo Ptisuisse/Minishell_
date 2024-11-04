@@ -36,6 +36,7 @@ extern int g_received_signal;
 
 typedef struct s_command
 {
+	int					file;
 	int					error_file;
 	int					status;
 	int					exit_code;
@@ -65,6 +66,11 @@ typedef struct s_data
 	t_env				*env_list;
 }						t_data;
 
+
+char	*find_path(t_env **env_list, char *cmd);
+int	choose_command_pipe(t_command *command, t_env **env_list);
+int    exec_pipe_command(t_command *command, t_env **env_list);
+void	put_into_args(t_command *commands);
 int	parsing_error_inputfile(t_command *commands);
 int	parsing_error_outputfile(t_command *commands);
 void    select_type(t_command *command, t_env **list);
@@ -139,7 +145,7 @@ int	redirect_input(t_command *command, t_env **env_list);
 
 int	redirect_output(t_command *command, t_env **env_list);
 
-int	redirect_management(t_command *command, t_env **env_list);
+void	redirect_management(t_command *command, t_env **env_list);
 
 /*COMMAND_MANAGEMENT_C*/
 
@@ -157,7 +163,7 @@ void	start_builtins(t_command *command, t_env **env_list);
 
 int	check_path(char *pathname);
 
-int	exec_command(t_command *command);
+int	exec_command(t_command *command, t_env **env_list);
 
 int	choose_command(t_command *command, t_env **env_list);
 
@@ -177,8 +183,6 @@ void	pwd_cmd(t_command *command);
 
 /*BUILTINS_CLEAR_EXIT_C*/
 
-void	clear_cmd(void);
-
 int	exit_cmd(t_command *command);
 
 /*BUILTINS_ECHO_C*/
@@ -193,7 +197,7 @@ void	create_env_list(char **envp, t_env **env_list);
 
 void	env_cmd(t_env *env_list);
 
-void	unset_cmd(t_command *command, t_env *env_list);
+void	unset_cmd(t_command *command, t_env **env_list);
 
 /*BUILTINS_C*/
 
