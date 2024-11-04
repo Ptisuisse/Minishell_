@@ -84,7 +84,9 @@ int check_double_redirection(const char **input, t_command *cmd)
             if (*(*input + 3) == '>')
 				token = ">>";
 		}
-		// else if (cmd->append_file == NULL)
+		else if (*(*input + 3) == '\0')
+			token = "newline";
+		// else if (cmd->append_file == NULL) //echo a >> 2
 		// 	token = "newline";
         if (token)
         {
