@@ -36,7 +36,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 		if (ft_strchr(buffer, '<'))
 			{
 				error_message("<<", cmd);
-				return 1;
+				return (1);
 			}
 		cmd->input_file = ft_strdup(buffer);
 		if (!parsing_error_inputfile(cmd))
@@ -48,10 +48,10 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 					break ;
 				(*input)++;
 			}
-			return 0;
+			return (0);
 		}
 	}
-	return 0;
+	return (0);
 }
 
 int	handle_output_redirection(const char **input, t_command *cmd)
@@ -72,7 +72,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 		if (!parsing_error_outputfile(cmd))
 		{
 			cmd->error_file = 1;
-			return 0;
+			return (0);
 		}
 	}
 	else
@@ -89,23 +89,23 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 		if (!parsing_error_outputfile(cmd))
 		{
 			cmd->error_file = 1;
-			return 0;
+			return (0);
 		}
 	}
-	return 0;
+	return (0);
 }
 
 void advance_to_end_or_pipe(const char **input)
 {
-    while (**input != '\0' && **input != '|')
-    {
-        (*input)++;
-    }
+	while (**input != '\0' && **input != '|')
+		(*input)++;
 }
 
 int	parse_redirection(const char **input, t_command *cmd)
 {
-	int result = 0;
+	int result;
+
+	result = 0;
 	if (**input == '<')
 		result = handle_input_redirection(input, cmd);
 	else if (**input == '>')
