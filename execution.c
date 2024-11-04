@@ -179,25 +179,23 @@ void	ft_process_wait(t_command *commands)
 
 int    exec_pipe_command(t_command *command, t_env **env_list)
 {
-    char    *cmd;
-    char    **envp;
+	char	*cmd;
+	char	**envp;
 
 	envp = create_envp(*env_list);
 	cmd = ft_strdup(command->args[0]);
-    if (!check_path(command->args[0]))
-        cmd = find_path(env_list, command->args[0]);
-    if (execve(command->args[0], command->args, envp) == -1)
-    {
-        command->exit_code = 127;
-        ft_printf("%s: command not found\n", cmd);
-        free(cmd);
-        free(envp);
-        exit(command->exit_code);
-    }
-    command->exit_code = WEXITSTATUS(command->status);
-    free(cmd);
-    for (int i = 0; envp[i] != NULL; i++)
-        free(envp[i]);
-    free(envp);
-    return (1);
+	if (!check_path(command->args[0]))
+		cmd = find_path(env_list, command->args[0]);
+	if (execve(cmd, command->args, envp) == -1)
+	{
+	    command->exit_code = 127;
+	    ft_printf("%s: command not found\n", command->args[0]);
+	    free(cmd);
+	    free(envp);
+	    exit(command->exit_code);
+	}
+	command->exit_code = WEXITSTATUS(command->status);
+	free(cmd);
+	free_split(envp);
+	return (1);
 }

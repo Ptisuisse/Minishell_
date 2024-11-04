@@ -65,7 +65,7 @@ void	setup_pipes(t_command *commands)
 void	start_builtins(t_command *command, t_env **env_list)
 {
 	if (!(ft_strcmp(command->args[0], "exit")))
-		exit_cmd(command);
+		exit_cmd(command, env_list);
 	else if (!(ft_strcmp(command->args[0], "echo")))
 		echo_cmd(command);
 	else if (!(ft_strcmp(command->args[0], "cd")))
