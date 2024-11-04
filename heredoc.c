@@ -32,10 +32,12 @@ void	write_to_heredoc(int pipe_fd_read)
 
 void	heredoc_parent(t_command *command, int *pipe_fd)
 {
+	int	heredoc_fd;
+
 	close(pipe_fd[WRITE_END]);
 	write_to_heredoc(pipe_fd[READ_END]);
 	close(pipe_fd[READ_END]);
-	int heredoc_fd = open(".heredoc", O_RDONLY);
+	heredoc_fd = open(".heredoc", O_RDONLY);
 	if (heredoc_fd == -1)
 	{
 		perror("Failed to reopen .heredoc");

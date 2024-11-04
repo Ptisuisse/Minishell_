@@ -8,15 +8,10 @@ void	handle_signal(int sig)
 
 	if (sig == SIGINT || sig == SIGQUIT)
 	{
-		//rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		write(1, "\n", 1);
 		rl_redisplay();
-	}
-	if (sig == SIGSEGV)
-	{
-		printf("exit\n");
-		exit(1);
 	}
 }
 
@@ -25,7 +20,7 @@ void	setup_signal_handling()
 	g_received_signal = 0;
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGSEGV, handle_signal);
+	//signal(SIGSEGV, handle_signal);
 }
 
 int	handle_received_signal(int *save_exit_code)

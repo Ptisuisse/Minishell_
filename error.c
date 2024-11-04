@@ -39,12 +39,15 @@ int	last_exitcode(t_command *command)
 
 	cmd = command;
 	exit_code = 0;
-	if (command->next)
+	if (command)
 	{
-		while (command->next)
-			command = command->next;
+		if (command->next)
+		{
+			while (command->next)
+				command = command->next;
+		}
+		exit_code = command->exit_code;
 	}
-	exit_code = command->exit_code;
 	command = cmd;
 	return (exit_code);
 }

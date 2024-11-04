@@ -40,7 +40,6 @@ typedef struct s_command
 	int					error_file;
 	int					status;
 	int					exit_code;
-	char				*command;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
 	char				*output_file;
@@ -64,9 +63,10 @@ typedef struct s_data
 {
 	char				**env;
 	t_env				*env_list;
+	t_command				*command;
 }						t_data;
 
-
+void free_env_list(t_env *env_list);
 char	*find_path(t_env **env_list, char *cmd);
 int	choose_command_pipe(t_command *command, t_env **env_list);
 int    exec_pipe_command(t_command *command, t_env **env_list);
@@ -183,7 +183,7 @@ void	pwd_cmd(t_command *command);
 
 /*BUILTINS_CLEAR_EXIT_C*/
 
-int	exit_cmd(t_command *command);
+int	exit_cmd(t_command *command, t_env **env_list);
 
 /*BUILTINS_ECHO_C*/
 
