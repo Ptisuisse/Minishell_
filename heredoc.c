@@ -58,13 +58,13 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 
 	while (1)
 	{
-	setup_heredoc_signal_handling();
+		setup_heredoc_signal_handling();
 		input = readline("> ");
-		if (g_received_signal == SIGINT) 
+		if (g_received_signal == SIGINT)
 		{
 			printf("LALAL\n");
 			close(pipe_fd_write);
-			if (input) 
+			if (input)
 				free(input);
 			return;
 		}
@@ -116,6 +116,7 @@ void	heredoc(t_command *command)
 		heredoc_child(command, pipe_fd);
 	else
 	{
+		waitpid(pid, &command->status, 0);
 		heredoc_parent(command, pipe_fd);
 		dup2(stdin_backup, STDIN_FILENO);
 		close(stdin_backup);
