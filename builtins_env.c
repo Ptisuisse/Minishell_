@@ -79,27 +79,61 @@ void	env_cmd(t_env *env_list)
 	env_list = head;
 }
 
-void	unset_cmd(t_command *command, t_env *env_list)
-{
-	t_env	*prev;
 
-	prev = NULL;
+void	unset_cmd(t_command *command, t_env **env_list)
+{
+	t_env	*prev = NULL;
+	t_env	*current = *env_list;
+	t_env	*temp;
+
 	if (command->args[1] == NULL)
 	{
 		command->exit_code = 0;
-		return ;
+		return;
 	}
-	while (env_list)
+	while (current)
 	{
-		if (ft_strcmp(env_list->name, command->args[1]) == 0)
+		if (ft_strcmp(current->name, command->args[1]) == 0)
 		{
 			if (prev == NULL)
-				env_list = env_list->next;
+				*env_list = current->next;
 			else
-				prev->next = env_list->next;
+				prev->next = current->next;
+			temp = current;
+			current = current->next;
+			free(temp->name);
+			free(temp->value);
+			free(temp);
+			command->exit_code = 0;
+			return;
 		}
-		prev = env_list;
-		env_list = env_list->next;
+		prev = current;
+		current = current->next;
 	}
-	env_list = prev;
+	command->exit_code = 1;
 }
+
+// void	unset_cmd(t_command *command, t_env **env_list)
+// {
+// 	t_env	*prev;
+
+// 	prev = NULL;
+// 	if (command->args[1] == NULL)
+// 	{
+// 		command->exit_code = 0;
+// 		return ;
+// 	}
+// 	while (env_list)
+// 	{
+// 		if (ft_strcmp((*env_list)->name, command->args[1]) == 0)
+// 		{
+// 			if (prev == NULL)
+// 				env_list = (*env_list)->next;
+// 			else
+// 				prev->next = (*env_list)->next;
+// 		}
+// 		prev = env_list;
+// 		env_list = (*env_list)->next;
+// 	}
+// 	env_list = prev;
+// }

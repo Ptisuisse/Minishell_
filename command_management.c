@@ -77,5 +77,5 @@ void	start_builtins(t_command *command, t_env **env_list)
 	else if (!(ft_strcmp(command->args[0], "export")))
 		*env_list = export_cmd(*env_list, command);
 	else if (!(ft_strcmp(command->args[0], "unset")))
-		unset_cmd(command, *env_list);
+		unset_cmd(command, env_list);
 }

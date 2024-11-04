@@ -21,6 +21,20 @@ int	is_executable(t_command *command)
 	return 0;
 }
 
+void	free_envlist(t_env *env_list)
+{
+	t_env	*tmp;
+
+	while (env_list)
+	{
+		tmp = env_list;
+		env_list = env_list->next;
+		free(tmp->name);
+		free(tmp->value);
+		free(tmp);
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*input;
@@ -42,13 +56,17 @@ int	main(int argc, char **argv, char **envp)
 		if (input && *input)
 			add_history(input);
 		process_input(&command_list, &env_list, input, &save_exit_code);
-		if (is_executable(command_list))
+		if (is_executable(command_list) && save_exit_code != 256)
+		{
+			check_heredoc(command_list);
 			select_type(command_list, &env_list);
+		}
 		save_exit_code = last_exitcode(command_list);
 		free_command_list(command_list);
 		command_list = NULL;
 		free(input);
 		input = NULL;
 	}
+	//free_envlist(env_list);
 	return (0);
 }

@@ -12,11 +12,6 @@
 
 #include "minishell.h"
 
-void	clear_cmd(void)
-{
-	system("clear");
-}
-
 int	exit_cmd(t_command *command)
 {
 	if (ft_strcmp(command->args[0], "exit") == 0 && command->args[2])
