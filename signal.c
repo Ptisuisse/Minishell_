@@ -14,13 +14,31 @@ void	handle_signal(int sig)
 		rl_redisplay();
 	}
 }
+void	handle_heredoc_signal(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_received_signal = 1;  
+		rl_done = 1;            
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		write(1, "\n", 1);
+		rl_redisplay();
+	}
+}
 
 void	setup_signal_handling()
 {
 	g_received_signal = 0;
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, SIG_IGN);
-	//signal(SIGSEGV, handle_signal);
+}
+
+void	setup_heredoc_signal_handling()
+{
+	g_received_signal = 0;
+	signal(SIGINT, handle_heredoc_signal);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 int	handle_received_signal(int *save_exit_code)
@@ -39,30 +57,3 @@ int	handle_received_signal(int *save_exit_code)
 	}
 	return (0);
 }
-
-// void	handle_signal(int sig, t_command *command_list)
-// {
-// 	if (sig == SIGINT)
-// 	{
-// 		command_list->exit_code = 130;
-// 		rl_clear_history();
-// 		write(1, "\nMiniBash > ", 13);
-// 	}
-// 	else if (sig == SIGSEGV)
-// 		exit(1);
-// 	return ;
-// }
-
-// int	signal_handle(t_command *command_list)
-// {
-// 	struct sigaction	sa;
-
-// 	sa_handler = handle_signal(0, command_list);
-// 	sa_flags = 0;
-// 	sigemptyset(&sa.sa_mask);
-// 	sigaction(SIGINT, &sa, NULL);
-// 	sigaction(SIGSEGV, &sa, NULL);
-// 	sa_handler = SIG_IGN;
-// 	sigaction(SIGQUIT, &sa, NULL);
-// 	return (0);
-// }

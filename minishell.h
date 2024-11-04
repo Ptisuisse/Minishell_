@@ -170,7 +170,8 @@ int	choose_command(t_command *command, t_env **env_list);
 void	ft_process_wait(t_command *commands);
 
 /*HEREDOC_C*/
-
+void	handle_heredoc_signal(int sig);
+void	setup_heredoc_signal_handling();
 void	check_heredoc(t_command *command);
 
 /*BUILTINS_CD_PWD_C*/

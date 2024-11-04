@@ -52,10 +52,22 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 {
 	char	*input;
+	//int		save_exit_code = 0;
+	g_received_signal = 0;
+
 
 	while (1)
 	{
+	setup_heredoc_signal_handling();
 		input = readline("> ");
+		if (g_received_signal == SIGINT) 
+		{
+			printf("LALAL\n");
+			close(pipe_fd_write);
+			if (input) 
+				free(input);
+			return;
+		}
 		if (!input)
 		{
 			perror("readline error");
@@ -71,6 +83,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 		write(pipe_fd_write, "\n", 1);
 		free(input);
 	}
+	close(pipe_fd_write);
 }
 
 void	heredoc_child(t_command *command, int *pipe_fd)
