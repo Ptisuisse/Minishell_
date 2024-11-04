@@ -17,9 +17,7 @@ int	check_builtins(t_command *command, t_env **env_list)
 	int	status;
 
 	status = 0;
-	if (ft_strcmp(command->args[0], "$") == 0)
-		status = 1;
-	else if (ft_strcmp(command->args[0], "exit") == 0)
+	if (ft_strcmp(command->args[0], "exit") == 0)
 		status = 1;
 	else if (ft_strcmp(command->args[0], "echo") == 0 && ft_strlen(command->args[0]) == 4)
 		status = 1;
@@ -88,8 +86,6 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 	char	*env_value;
 
 	(*i)++;
-	// if (input[*i] == '?')
-	// 	result = replace_by_exit_code(result, result_index);
 	env_value = get_env_value(input, i);
 	if (env_value)
 	{
@@ -113,6 +109,7 @@ char	*search_dollar(const char *input, t_command *command_list)
 	char	result[1024];
 	int		result_index;
 	int		i;
+	//int dollar = 1;
 //	char *exit_code;
 
 	result_index = 0;
@@ -131,8 +128,11 @@ char	*search_dollar(const char *input, t_command *command_list)
             continue;
         }
 		if (input[i] == '$' && ft_isalnum(input[i + 1]))
-			handle_dollar(input, &i, result, &result_index);
-		else
+		{
+			if (!handle_dollar(input, &i, result, &result_index))
+				return 0;
+		}
+		else 
 			result[result_index++] = input[i++];
 	}
 	result[result_index] = '\0';
