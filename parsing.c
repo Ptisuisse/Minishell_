@@ -60,7 +60,8 @@ int parse_arguments(const char **input, t_command *cmd, int *arg_index)
 
     buf_index = 0;
     parse_argument(input, buffer, &buf_index, cmd);
-    cmd->args[(*arg_index)++] = strdup(buffer);
+	if (buffer[0] != 0)
+    	cmd->args[(*arg_index)++] = strdup(buffer);
     return buf_index;
 }
 
