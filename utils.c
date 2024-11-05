@@ -130,12 +130,6 @@ void free_command_list(t_command *command_list)
             temp->append_file = NULL;
         }
 
-        if (temp->append_file)
-        {
-            free(temp->append_file);
-            temp->append_file = NULL;
-        }
-
         command_list = command_list->next;
         free(temp);
     }
