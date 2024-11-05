@@ -96,11 +96,11 @@ void commands_manager(t_command *commands, t_env **env_list)
    commands = cmd;
    while (commands)
    {
-       waitpid(commands->pid, &status, 0);
-        if (WIFEXITED(status))
-            last_exit_code = WEXITSTATUS(status);
+        waitpid(commands->pid, &status, 0);
+        if ((status & 0xFF) == 0) // Check if exited normally
+            last_exit_code = (status >> 8) & 0xFF; // Extract exit code
         commands->exit_code = last_exit_code;
-       commands = commands->next;
+        commands = commands->next;
    }
    commands = cmd;
    check_error_file(commands);

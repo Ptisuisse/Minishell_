@@ -20,6 +20,8 @@ SRCS =	main.c \
 		append_file.c \
 		commands.c \
 		redirection_error.c \
+		parsing_redirections.c \
+		parsing_commands.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc
