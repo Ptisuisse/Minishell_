@@ -13,9 +13,41 @@ void    select_type(t_command *command, t_env **list)
 			redirect_management(command, list);
 		else
     		choose_command(command, list);
+		check_error_file(command);
     }
 	dup2(save_out, STDOUT_FILENO);
 	dup2(save_in, STDIN_FILENO);
+}
+
+void    redirect_error(t_command *command)
+{
+	char	*filename;
+	int		fd;
+
+	while (command)
+	{
+		if (command->input_file != NULL)
+			filename = command->input_file;
+		else if (command->append_file != NULL)
+			filename = command->append_file;
+		else if (command->output_file != NULL)
+			filename = command->output_file;
+		else
+			return ;
+		fd = open(filename,  O_RDONLY);
+		if (fd < 0)
+		{
+			if (!access(filename, F_OK))
+			{
+				ft_printf("bash: %s: Permission denied\n", filename);
+				return ;
+			}
+			else
+				ft_printf("%s: No such file or directory\n",filename);
+		}
+		command = command->next;
+	}
+	return ;
 }
 
 void	check_error_file(t_command *cmd)
@@ -27,7 +59,7 @@ void	check_error_file(t_command *cmd)
 	{
 		if (cmd->error_file == 1)
 		{
-			redirect_input(cmd, NULL);
+			redirect_error(cmd);
 			cmd->exit_code = 1;
 		}
 		cmd = cmd->next;

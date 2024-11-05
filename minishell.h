@@ -66,6 +66,7 @@ typedef struct s_data
 	t_command				*command;
 }						t_data;
 
+void	check_error_file(t_command *cmd);
 void free_env_list(t_env *env_list);
 char	*find_path(t_env **env_list, char *cmd);
 int	choose_command_pipe(t_command *command, t_env **env_list);

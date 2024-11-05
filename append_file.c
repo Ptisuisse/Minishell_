@@ -23,13 +23,13 @@ void	append_child(t_command *command)
 	{
 		if (!access(command->append_file, F_OK))
 		{
-			ft_printf("bash: %s: Permission denied\n", command->append_file);
+			//ft_printf("bash: %s: Permission denied\n", command->append_file);
 			command->exit_code = 1;
 			return ;
 		}
 		else
 		{
-			ft_printf("%s: No such file or directory\n", command->append_file);
+			//ft_printf("%s: No such file or directory\n", command->append_file);
 			command->exit_code = 1;
 			return ;
 		}

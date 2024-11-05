@@ -27,13 +27,13 @@ int	redirect_input(t_command *commands, t_env **env_list)
 	{
 		if (!access(filename, F_OK))
 		{
-			ft_printf("bash: %s: Permission denied\n", commands->input_file);
+			//ft_printf("bash: %s: Permission denied\n", commands->input_file);
 			commands->exit_code = 1;
 			return 1;
 		}
 		else
 		{
-			ft_printf("%s: No such file or directory\n", commands->input_file);
+			//ft_printf("%s: No such file or directory\n", commands->input_file);
 			commands->exit_code = 1;
 			return 1;
 		}
@@ -56,13 +56,11 @@ int	redirect_output(t_command *command, t_env **env_list)
 	{
 		if (!access(filename, F_OK))
 		{
-			ft_printf("bash: %s: Permission denied\n", command->output_file);
 			command->exit_code = 1;
 			return 1;
 		}
 		else
 		{
-			ft_printf("%s: No such file or directory\n", command->output_file);
 			command->exit_code = 1;
 			return 1;
 		}
@@ -76,11 +74,11 @@ int	redirect_output(t_command *command, t_env **env_list)
 
 void	redirect_management(t_command *command, t_env **env_list)
 {
-	if (command->append_file)
+	if (command->append_file != NULL)
 		append_file(command);
-	if (command->input_file)
+	if (command->input_file != NULL)
 		redirect_input(command, env_list);
-	if (command->output_file)
+	if (command->output_file != NULL)
 		redirect_output(command, env_list);
 }
 
