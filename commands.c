@@ -35,6 +35,24 @@ void	check_error_file(t_command *cmd)
 	cmd = head;
 }
 
+void	print_error_file(t_command *command)
+{
+	while (command)
+	{
+		if (command->error_message != NULL)
+		{
+			if (command->input_file!= NULL)
+				ft_printf("bash: %s: %s\n", command->input_file, command->error_message);
+			else if (command->output_file!= NULL)
+				ft_printf("bash: %s: %s\n", command->output_file, command->error_message);
+			else if (command->append_file!= NULL)
+				ft_printf("bash: %s: %s\n", command->append_file, command->error_message);
+			command->exit_code = 1;
+		}
+		command = command->next;
+	}
+}
+
 void commands_manager(t_command *commands, t_env **env_list)
 {
    t_command *cmd = commands;
@@ -103,7 +121,7 @@ void commands_manager(t_command *commands, t_env **env_list)
         commands = commands->next;
    }
    commands = cmd;
-   check_error_file(commands);
+    print_error_file(commands);
 }
 
 //void	commands_manager(t_command *commands, t_env **env_list)

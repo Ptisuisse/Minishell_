@@ -27,13 +27,13 @@ int	redirect_input(t_command *commands, t_env **env_list)
 	{
 		if (!access(filename, F_OK))
 		{
-			ft_printf("bash: %s: Permission denied\n", commands->input_file);
+			commands->error_message = ft_strdup("Permission denied\n");
 			commands->exit_code = 1;
 			return 1;
 		}
 		else
 		{
-			ft_printf("%s: No such file or directory\n", commands->input_file);
+			commands->error_message = ft_strdup("No such file or directory\n");
 			commands->exit_code = 1;
 			return 1;
 		}
@@ -47,40 +47,54 @@ int	redirect_input(t_command *commands, t_env **env_list)
 
 int	redirect_output(t_command *command, t_env **env_list)
 {
-	char	*filename;
-	int fd;
+    char	*filename;
+    int fd;
+    struct stat file_stat;
 
-	filename = command->output_file;
-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    filename = command->output_file;
+	fd = open (filename, O_RDONLY);
 	if (fd < 0)
 	{
-		if (!access(filename, F_OK))
-		{
-			ft_printf("bash: %s: Permission denied\n", command->output_file);
-			command->exit_code = 1;
-			return 1;
+    	if (stat(filename, &file_stat) == 0)
+    	{
+    	    if (access(filename, W_OK) != 0)
+    	    {
+    	        command->error_message = ft_strdup("Permission denied\n");
+    	        command->exit_code = 1;
+    	        return 1;
+    	    }
 		}
 		else
 		{
-			ft_printf("%s: No such file or directory\n", command->output_file);
+			command->error_message = ft_strdup("No such file or directory\n");
 			command->exit_code = 1;
 			return 1;
 		}
 	}
-	dup2(fd, STDOUT_FILENO);
-	close (fd);
-	put_into_args(command);
-	choose_command(command, env_list);
-	return 0;
+	else
+	{
+	    fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	    if (fd < 0)
+	    {
+			command->error_message = ft_strdup("No such file or directory\n");
+	        command->exit_code = 1;
+	        return 1;
+	    }
+	}
+    dup2(fd, STDOUT_FILENO);
+    close(fd);
+    put_into_args(command);
+    choose_command(command, env_list);
+    return 0;
 }
 
 void	redirect_management(t_command *command, t_env **env_list)
 {
-	if (command->append_file)
+	if (command->append_file != NULL)
 		append_file(command);
-	if (command->input_file)
+	if (command->input_file != NULL)
 		redirect_input(command, env_list);
-	if (command->output_file)
+	if (command->output_file != NULL)
 		redirect_output(command, env_list);
 }
 

@@ -78,7 +78,7 @@ int	just_a_path(t_command *command)
 			}
 			close(fd);
 		}
-		
+
 	}
 	return 1;
 }

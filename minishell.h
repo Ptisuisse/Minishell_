@@ -37,6 +37,7 @@ extern int g_received_signal;
 typedef struct s_command
 {
 	int					file;
+	char				*error_message;
 	int					error_file;
 	int					status;
 	int					exit_code;
