@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 15:11:58 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 15:11:59 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/05 15:57:05 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 {
 	char	*input;
-	//int		save_exit_code = 0;
 	g_received_signal = 0;
 
 
@@ -62,7 +61,6 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 		input = readline("> ");
 		if (g_received_signal == SIGINT)
 		{
-			printf("LALAL\n");
 			close(pipe_fd_write);
 			if (input)
 				free(input);
