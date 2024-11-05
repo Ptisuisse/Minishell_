@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:34 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:05:35 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/05 15:33:23 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,16 @@ void	parse_argument(const char **input, char *buffer, int *buf_index, t_command 
 
 void	handle_quotes(const char **input, char *buffer, int *buf_index, t_command *command_list);
 
-int parse_arguments(const char **input, t_command *cmd, int *arg_index);
+int 	parse_arguments(const char **input, t_command *cmd, int *arg_index);
 
-int parse_command(const char **input, t_command *cmd);
+int 	parse_command(const char **input, t_command *cmd);
 
-int	parse_command_line(const char *input, t_command **command_list, int exit_code);
+int		parse_command_line(const char *input, t_command **command_list, int exit_code);
+int		check_and_init_command(const char *input, t_command **command_list, int exit_code);
+int		parse_and_append_command(const char **input, t_command *new_node, t_command **command_list);
+int		process_input_commands(const char *input, t_command **command_list, int exit_code);
+int		parse_command_line(const char *input, t_command **command_list, int exit_code);
+int		check_initial_conditions(const char *input, t_command **command_list, int exit_code);
 
 /*PARSING_UTILS_C*/
 
@@ -111,17 +116,17 @@ void	append_command_node(t_command **lst, t_command *new);
 
 void	quoting_choice(bool *double_q, bool *sing_q, int *index, char c);
 
-int	open_quote(const char *line);
+int		open_quote(const char *line);
 
 /*DOLLAR_C*/
 
-int	check_builtins(t_command *command, t_env **env_list);
+int		check_builtins(t_command *command, t_env **env_list);
 
 void	process_dollar(const char **input, char *buffer, int *buf_index, t_command *command_list);
 
 void	handle_dollar_sign(const char **input, char *buffer, int *buf_index, t_command *command_list);
 
-int	handle_dollar(const char *input, int *i, char *result, int *result_index);
+int		handle_dollar(const char *input, int *i, char *result, int *result_index);
 
 char	*search_dollar(const char *input, t_command *command_list);
 
@@ -132,6 +137,16 @@ void	skip_spaces(const char **input);
 char	*get_env_value(const char *input, int *i);
 
 /*REDIRECTIONS_C*/
+
+int detect_invalid_double_redirection(const char **input, char **token);
+
+int handle_redirection_error(const char *token, t_command *cmd);
+
+int check_double_redirection(const char **input, t_command *cmd);
+
+int handle_redirection(const char **input, t_command *cmd);
+
+int handle_redirection_and_arguments(const char **input, t_command *cmd, int *arg_index);
 
 int	handle_input_redirection(const char **input, t_command *cmd);
 
