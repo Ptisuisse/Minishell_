@@ -45,11 +45,16 @@ void commands_manager(t_command *commands, t_env **env_list)
    while (commands)
    {
        if (commands->error_file > 0)
-           commands = commands->next;
+        {
+            if (commands->next != NULL)
+                commands = commands->next;
+            else
+                break;
+        }
        if (commands->next && pipe(commands->pipe) == -1)
        {
-           perror("pipe error");
-           exit(EXIT_FAILURE);
+            perror("pipe error");
+            exit(EXIT_FAILURE);
        }
        commands->pid = fork();
        if (commands->pid == 0)
@@ -86,7 +91,7 @@ void commands_manager(t_command *commands, t_env **env_list)
            perror("fork error");
            exit(EXIT_FAILURE);
        }
-       commands = commands->next;
+         commands = commands->next;
    }
    commands = cmd;
    while (commands)
