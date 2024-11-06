@@ -14,49 +14,48 @@
 
 int	parsing_error_inputfile(t_command *commands)
 {
-	char	*filename;
-	int		fd;
+	char		*filename;
+	struct stat	filestat;
 
 	filename = commands->input_file;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
+	if (access(filename, F_OK) == -1)
 	{
-		return (0);
+		commands->error_message = ft_strdup(" No such file or directory");
+		return (2);
 	}
-	if (access(filename, W_OK) == -1)
+	else if (access(filename, R_OK) == -1)
 	{
-		close(fd);
-		return (0);
+		commands->error_message = ft_strdup(" Permission denied");
+		return (1);
 	}
-	close(fd);
-	return (1);
+	else if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
+	{
+		commands->error_message = ft_strdup(" is a directory");
+		return (1);
+	}
+	return (0);
 }
 
 int	parsing_error_outputfile(t_command *commands)
 {
-	char	*filename;
-	int		fd;
+	char		*filename;
+	struct stat	filestat;
 
-	fd = 0;
-	if (commands->output_file)
+	filename = commands->output_file;
+	if (access(filename, F_OK) == -1)
 	{
-		filename = commands->output_file;
-		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		commands->error_message = ft_strdup(" No such file or directory");
+		return (2);
 	}
-	else if (commands->append_file)
+	else if (access(filename, R_OK) == -1)
 	{
-		filename = commands->append_file;
-		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		commands->error_message = ft_strdup(" Permission denied");
+		return (1);
 	}
-	else
-		return (0);
-	if (fd < 0)
-		return (0);
-	if (access(filename, W_OK) == -1)
+	else if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
 	{
-		close(fd);
-		return (0);
+		commands->error_message = ft_strdup(" is a directory");
+		return (1);
 	}
-	close(fd);
-	return (1);
+	return (0);
 }

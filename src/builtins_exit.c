@@ -21,7 +21,7 @@ int	exit_cmd(t_command *command, t_env **env_list)
 		{
 			if (ft_strcmp(command->args[0], "exit") == 0 && command->args[2])
 			{
-				ft_printf(" too many arguments\n");
+				ft_printf_error(" too many arguments\n");
 				command->exit_code = 1;
 			}
 			else if (ft_strcmp(command->args[0], "exit") == 0
@@ -33,7 +33,7 @@ int	exit_cmd(t_command *command, t_env **env_list)
 					command->exit_code = 156;
 				else if (ft_isalpha(command->args[1][0]))
 				{
-					ft_printf(" numeric argument required\n");
+					ft_printf_error(" numeric argument required\n");
 					command->exit_code = 2;
 				}
 				else
@@ -45,7 +45,7 @@ int	exit_cmd(t_command *command, t_env **env_list)
 	}
 	else
 	{
-		printf("exit\n");
+		ft_printf("exit\n");
 		exit(1);
 	}
 }

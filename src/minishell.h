@@ -39,6 +39,7 @@ typedef struct s_command
 	int					error_file;
 	int					status;
 	int					exit_code;
+	char				*error_message;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
 	char				*output_file;
@@ -65,6 +66,7 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+void	advance_to_end_or_pipe(const char **input);
 void					free_split(char **split);
 char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);

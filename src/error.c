@@ -30,7 +30,7 @@ void	error_message(const char *token, t_command *cmd)
 {
 	cmd->exit_code = 2;
 	if (token)
-		ft_printf(" syntax error near unexpected token `%s'\n", token);
+		ft_printf_error(" syntax error near unexpected token `%s'\n", token);
 }
 
 int	last_exitcode(t_command *command)

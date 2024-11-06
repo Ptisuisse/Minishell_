@@ -53,21 +53,20 @@ int	just_a_path(t_command *command)
 
 	while (command)
 	{
-		// if (!command->args[0] && command->next == NULL)
-		// 	break ;
 		if (command->args[0][0] == '.' || command->args[0][0] == '/')
 		{
 			if (stat(command->args[0], &path_stat) == 0)
 			{
 				if (S_ISDIR(path_stat.st_mode))
 				{
-					ft_printf("bash: %s: Is a directory\n", command->args[0]);
+					ft_printf_error("bash: %s: Is a directory\n",
+						command->args[0]);
 					command->exit_code = 126;
 					return (0);
 				}
 				else if (access(command->args[0], X_OK) != 0)
 				{
-					ft_printf("bash: %s: Permission denied\n",
+					ft_printf_error("bash: %s: Permission denied\n",
 						command->args[0]);
 					command->exit_code = 126;
 					return (0);
@@ -78,7 +77,7 @@ int	just_a_path(t_command *command)
 				fd = open(command->args[0], O_RDONLY);
 				if (fd < 0)
 				{
-					ft_printf("bash: %s: No such file or directory\n",
+					ft_printf_error("bash: %s: No such file or directory\n",
 						command->args[0]);
 					command->exit_code = 127;
 					return (0);
@@ -93,14 +92,14 @@ int	just_a_path(t_command *command)
 
 int	main(int argc, char **argv, char **envp)
 {
-	int status;
+	int			status;
 	char		*input;
 	int			save_exit_code;
 	t_command	*command_list;
 	t_env		*env_list;
 
 	save_exit_code = 0;
-	(void)argc; // rajouter pour argc > 1
+	(void)argc;
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
 	command_list = NULL;
@@ -118,7 +117,9 @@ int	main(int argc, char **argv, char **envp)
 		process_input(&command_list, &env_list, input, &save_exit_code);
 		if (is_executable(command_list))
 		{
-			if ((command_list->args[0] != NULL) && (command_list->args[0][0] == '.' || command_list->args[0][0] == '/'))
+			if ((command_list->args[0] != NULL)
+				&& (command_list->args[0][0] == '.'
+					|| command_list->args[0][0] == '/'))
 				status = just_a_path(command_list);
 			if (status == 1)
 			{

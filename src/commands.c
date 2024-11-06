@@ -12,31 +12,35 @@
 
 #include "minishell.h"
 
-void	redirect_error(t_command *command)
-{
-	char	*filename;
-	int		fd;
+// int	print_error_redirection(char *filename)
+//{
+//	int	fd;
 
+//	fd = open(filename, O_RDONLY);
+//	if (fd < 0)
+//	{
+//		if (!access(filename, F_OK))
+//		{
+//			ft_printf_error("bash: %s: Permission denied\n", filename);
+//			return (1);
+//		}
+//		else
+//			ft_printf_error("%s: No such file or directory\n", filename);
+//	}
+//	return (0);
+//}
+
+void	redirect_error(t_command *command, char *filename)
+{
+	int	status;
+
+	status = 0;
 	while (command)
 	{
-		if (command->input_file != NULL)
-			filename = command->input_file;
-		else if (command->append_file != NULL)
-			filename = command->append_file;
-		else if (command->output_file != NULL)
-			filename = command->output_file;
-		else
-			return ;
-		fd = open(filename, O_RDONLY);
-		if (fd < 0)
+		if (command->error_message != NULL)
 		{
-			if (!access(filename, F_OK))
-			{
-				ft_printf("bash: %s: Permission denied\n", filename);
-				return ;
-			}
-			else
-				ft_printf("%s: No such file or directory\n", filename);
+			ft_printf_error("bash : %s :%s\n", filename,
+				command->error_message);
 		}
 		command = command->next;
 	}
@@ -52,7 +56,8 @@ void	check_error_file(t_command *cmd)
 	{
 		if (cmd->error_file == 1)
 		{
-			redirect_error(cmd);
+			ft_printf_error("bash : %s :%s\n", cmd->args[0],
+				cmd->error_message);
 			cmd->exit_code = 1;
 		}
 		cmd = cmd->next;

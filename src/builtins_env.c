@@ -68,7 +68,7 @@ void	env_cmd(t_env *env_list)
 			env_list = env_list->next;
 		else
 		{
-			printf("%s=%s\n", env_list->name, env_list->value);
+			ft_printf("%s=%s\n", env_list->name, env_list->value);
 			env_list = env_list->next;
 		}
 	}

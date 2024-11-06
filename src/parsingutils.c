@@ -23,6 +23,7 @@ t_command	*init_command(int exit_code)
 	element->status = 0;
 	element->error_file = 0;
 	element->exit_code = 0;
+	element->error_message = NULL;
 	element->output_file = NULL;
 	element->input_file = NULL;
 	element->append_file = NULL;
