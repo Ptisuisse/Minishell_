@@ -12,17 +12,23 @@
 
 #include "minishell.h"
 
-t_command	*init_command(void)
+t_command	*init_command(int exit_code)
 {
 	t_command	*element;
 
 	element = malloc(sizeof(t_command));
 	if (element == NULL)
 		return (NULL);
-	element->input_file = NULL;
+	element->file = 0;
+	element->status = 0;
+	element->error_file = 0;
+	element->exit_code = 0;
 	element->output_file = NULL;
-	element->append_outfile = NULL;
-	element->append_infile = NULL;
+	element->input_file = NULL;
+	element->append_file = NULL;
+	element->heredoc_file = NULL;
+	if (exit_code != 0)
+		element->exit_code = exit_code;
 	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;
@@ -42,7 +48,7 @@ void	append_command_node(t_command **lst, t_command *new)
 {
 	t_command	*tmp;
 
-	if (!new || !lst)
+	if (!new)
 		return ;
 	if (*lst == NULL)
 		*lst = new;
@@ -79,10 +85,13 @@ void	quoting_choice(bool *double_q, bool *sing_q, int *index, char c)
 
 int	open_quote(const char *line)
 {
-	bool double_q = false;
-	bool sing_q = false;
-	int i = 0;
+	bool	double_q;
+	bool	sing_q;
+	int		i;
 
+	double_q = false;
+	sing_q = false;
+	i = 0;
 	while (line && line[i])
 	{
 		quoting_choice(&double_q, &sing_q, &i, line[i]);

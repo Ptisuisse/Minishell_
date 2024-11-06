@@ -103,7 +103,7 @@ t_env	*export_cmd(t_env *env_list, t_command *command)
 	head = env_list;
 	if (command->args[1] != NULL)
 	{
-		if (!ft_is_valid(command->args))
+		if (!ft_is_valid(command))
 			return (head);
 		env_list = export_args(command->args[1], env_list);
 		if (env_list != NULL)

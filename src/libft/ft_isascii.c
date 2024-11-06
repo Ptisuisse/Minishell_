@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/17 13:05:12 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:05:14 by lvan-slu         ###   ########.fr       */
+/*   Created: 2023/11/10 22:14:46 by lvan-slu          #+#    #+#             */
+/*   Updated: 2023/11/10 22:14:59 by lvan-slu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-char	*replace_by_exit_code(char *result, int *result_index)
+int	ft_isascii(int c)
 {
-	char	*exit_code;
-	int		i;
-
-	i = 0;
-	exit_code = ft_itoa(g_exit_code);
-	while (exit_code[i])
-		result[(*result_index)++] = exit_code[i++];
-	free(exit_code);
-	return (result);
-}
-
-void error_message(const char *token)
-{
-	g_exit_code = 2;
-    if (token)
-        ft_printf(" syntax error near unexpected token `%s'\n", token);
+	if (c >= 0 && c <= 127 && c != 124)
+		return (1);
+	else
+		return (0);
 }

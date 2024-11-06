@@ -14,42 +14,41 @@
 
 int	check_builtins(t_command *command, t_env **env_list)
 {
-    int    status;
+	int	status;
 
-    status = 0;
-    if (ft_strcmp(command->args[0], "$") == 0)
-        status = 1;
-    else if (ft_strcmp(command->args[0], "exit") == 0)
-        status = 1;
-    //else if (ft_strcmp(command->args[0], "echo") == 0 && ft_strlen(command->args[0]) == 4)
-    //    status = 1;
-	else if (ft_strncmp(command->args[0], "echo", 5) == 0)
-        status = 1;
-	//else if (ft_strncmp(command->args[0], "cd", 3) == 0)
-    //    status = 1;
-    else if (ft_strcmp(command->args[0], "cd") == 0 && ft_strlen(command->args[0]) == 2)
-        status = 1;
-    else if (ft_strcmp(command->args[0], "export") == 0 && ft_strlen(command->args[0]) == 6)
-        status = 1;
-    else if (ft_strcmp(command->args[0], "unset") == 0 && ft_strlen(command->args[0]) == 5)
-        status = 1;
-    else if (ft_strcmp(command->args[0], "env") == 0 && ft_strlen(command->args[0]) == 3)
-        status = 1;
-    else if (ft_strcmp(command->args[0], "pwd") == 0 && ft_strlen(command->args[0]) == 3)
-        status = 1;
-    else if (ft_strcmp(command->args[0], "clear") == 0 && ft_strlen(command->args[0]) == 5)
-		clear_cmd();
+	status = 0;
+	if (ft_strcmp(command->args[0], "exit") == 0)
+		status = 1;
+	else if (ft_strcmp(command->args[0], "echo") == 0
+		&& ft_strlen(command->args[0]) == 4)
+		status = 1;
+	else if (ft_strcmp(command->args[0], "cd") == 0
+		&& ft_strlen(command->args[0]) == 2)
+		status = 1;
+	else if (ft_strcmp(command->args[0], "export") == 0
+		&& ft_strlen(command->args[0]) == 6)
+		status = 1;
+	else if (ft_strcmp(command->args[0], "unset") == 0
+		&& ft_strlen(command->args[0]) == 5)
+		status = 1;
+	else if (ft_strcmp(command->args[0], "env") == 0
+		&& ft_strlen(command->args[0]) == 3)
+		status = 1;
+	else if (ft_strcmp(command->args[0], "pwd") == 0
+		&& ft_strlen(command->args[0]) == 3)
+		status = 1;
 	if (status == 1)
-        start_builtins(command, env_list);
-    return (status);
+		start_builtins(command, env_list);
+	return (status);
 }
 
-void	process_dollar(const char **input, char *buffer, int *buf_index)
+void	process_dollar(const char **input, char *buffer, int *buf_index,
+		t_command *command_list)
 {
 	char	*dollar;
 	int		temp_index;
 
-	dollar = search_dollar(*input);
+	dollar = search_dollar(*input, command_list);
 	temp_index = 0;
 	if (dollar)
 	{
@@ -61,11 +60,13 @@ void	process_dollar(const char **input, char *buffer, int *buf_index)
 		buffer[(*buf_index)++] = *(*input)++;
 	else
 		buffer[*buf_index] = '\0';
-	while (**input && **input != ' ' && **input != '"' && **input != '\'' && **input != '=')
+	while (**input && **input != ' ' && **input != '"' && **input != '\''
+		&& **input != '=')
 		(*input)++;
 }
 
-void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
+void	handle_dollar_sign(const char **input, char *buffer, int *buf_index,
+		t_command *command_list)
 {
 	char	quote_type;
 
@@ -84,9 +85,9 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index)
 			(*input)++;
 	}
 	else
-		process_dollar(input, buffer, buf_index);
-	while (**input)
-			input++;
+		process_dollar(input, buffer, buf_index, command_list);
+	// while (**input)
+	// 	input++;
 }
 
 int	handle_dollar(const char *input, int *i, char *result, int *result_index)
@@ -94,8 +95,6 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 	char	*env_value;
 
 	(*i)++;
-	if (input[*i] == '?')
-		result = replace_by_exit_code(result, result_index);
 	env_value = get_env_value(input, i);
 	if (env_value)
 	{
@@ -103,7 +102,8 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 			result[(*result_index)++] = *env_value++;
 		return (1);
 	}
-	else if (!env_value && (input[*i] == '"' || input[*i] == '\'') && !ft_isalpha(input[*i + 1]))
+	else if (!env_value && (input[*i] == '"' || input[*i] == '\'')
+			&& !ft_isalpha(input[*i + 1]))
 	{
 		(*i)++;
 		return (0);
@@ -114,12 +114,14 @@ int	handle_dollar(const char *input, int *i, char *result, int *result_index)
 		return (0);
 	}
 }
-char	*search_dollar(const char *input)
+char	*search_dollar(const char *input, t_command *command_list)
 {
 	char	result[1024];
 	int		result_index;
 	int		i;
 
+	// int dollar = 1;
+	//	char *exit_code;
 	result_index = 0;
 	i = 0;
 	while (ft_isprint(input[i]) && input[i] != ' ' && input[i] != '=')
@@ -127,10 +129,19 @@ char	*search_dollar(const char *input)
 		if (input[i] == '"' || input[i] == '\'')
 		{
 			i++;
-			continue;
+			continue ;
+		}
+		if (input[i] == '$' && (input[i + 1] == '?'))
+		{
+			replace_by_exit_code(result, &result_index, command_list);
+			i += 2;
+			continue ;
 		}
 		if (input[i] == '$' && ft_isalnum(input[i + 1]))
-			handle_dollar(input, &i, result, &result_index);
+		{
+			if (!handle_dollar(input, &i, result, &result_index))
+				return (0);
+		}
 		else
 			result[result_index++] = input[i++];
 	}
