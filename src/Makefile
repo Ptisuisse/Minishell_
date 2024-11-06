@@ -1,25 +1,27 @@
 SRCS =	main.c \
 		builtins_cd_pwd.c \
-		builtins_clear_exit.c \
+		builtins_exit.c \
 		builtins_echo.c \
 		builtins_env.c \
 		builtins_export_utils.c \
 		builtins_export.c \
-		command_management.c \
 		dollar.c \
+		parsingutils.c \
+		parsing.c \
+		parsing_redirections.c \
+		commands.c \
+		redirection_manager.c \
+		redirection_error.c \
 		env_var.c \
 		error.c \
-		execution.c \
-		parsing.c \
-		parsingutils.c \
-		redirect_management.c \
-		redirections.c \
+		execution_manager.c \
+		execution_utils.c \
+		execution_with_pipe.c \
+		execution_without_pipe.c \
 		signal.c \
 		utils.c \
 		heredoc.c \
 		append_file.c \
-		commands.c \
-		redirection_error.c \
 
 OBJS = $(SRCS:.c=.o)
 CC = cc

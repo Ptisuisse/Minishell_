@@ -16,7 +16,8 @@ int	print_error(t_command *command)
 {
 	command->exit_code = 1;
 	if (command->args[0])
-		ft_printf("Minishell: export: `%s': not a valid identifier\n", command->args[0]);
+		ft_printf("Minishell: export: `%s': not a valid identifier\n",
+			command->args[0]);
 	else
 		ft_printf("Minishell: export: not a valid identifier\n");
 	return (0);
@@ -40,7 +41,9 @@ int	check_each_argument(t_command *command, int *equal)
 			if (!ft_isalnum(command->args[1][j - 1]))
 				return (print_error(command));
 		}
-		else if (command->args[1][j] == '-' || (!ft_isalnum(command->args[1][j]) || ft_isdigit(command->args[1][0])) || command->args[1][j] == '_')
+		else if (command->args[1][j] == '-' || (!ft_isalnum(command->args[1][j])
+				|| ft_isdigit(command->args[1][0]))
+			|| command->args[1][j] == '_')
 		{
 			if (*equal != 1)
 				return (print_error(command));
@@ -78,8 +81,8 @@ void	sorted_insert(t_env **head_ref, t_env *new_node)
 	else
 	{
 		current = *head_ref;
-		while (current->next != NULL
-			&& ft_strcmp(current->next->name, new_node->name) <= 0)
+		while (current->next != NULL && ft_strcmp(current->next->name,
+				new_node->name) <= 0)
 		{
 			current = current->next;
 		}

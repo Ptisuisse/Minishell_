@@ -26,7 +26,7 @@ t_command	*init_command(int exit_code)
 	element->output_file = NULL;
 	element->input_file = NULL;
 	element->append_file = NULL;
-	element->heredoc_file= NULL;
+	element->heredoc_file = NULL;
 	if (exit_code != 0)
 		element->exit_code = exit_code;
 	memset(element->args, 0, sizeof(element->args));
@@ -85,10 +85,13 @@ void	quoting_choice(bool *double_q, bool *sing_q, int *index, char c)
 
 int	open_quote(const char *line)
 {
-	bool double_q = false;
-	bool sing_q = false;
-	int i = 0;
+	bool	double_q;
+	bool	sing_q;
+	int		i;
 
+	double_q = false;
+	sing_q = false;
+	i = 0;
 	while (line && line[i])
 	{
 		quoting_choice(&double_q, &sing_q, &i, line[i]);

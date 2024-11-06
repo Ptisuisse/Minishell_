@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-char	*replace_by_exit_code(char *result, int *result_index, t_command *command)
+char	*replace_by_exit_code(char *result, int *result_index,
+		t_command *command)
 {
 	char	*exit_code;
 	int		i;
@@ -25,17 +26,17 @@ char	*replace_by_exit_code(char *result, int *result_index, t_command *command)
 	return (result);
 }
 
-void error_message(const char *token, t_command *cmd)
+void	error_message(const char *token, t_command *cmd)
 {
 	cmd->exit_code = 2;
-    if (token)
-        ft_printf(" syntax error near unexpected token `%s'\n", token);
+	if (token)
+		ft_printf(" syntax error near unexpected token `%s'\n", token);
 }
 
 int	last_exitcode(t_command *command)
 {
 	t_command	*cmd;
-	int	exit_code;
+	int			exit_code;
 
 	cmd = command;
 	exit_code = 0;

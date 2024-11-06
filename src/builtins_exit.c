@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_clear_exit.c                              :+:      :+:    :+:   */
+/*   builtins_exit.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:04:05 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:04:08 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/06 11:51:44 by lvan-slu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	exit_cmd(t_command *command, t_env **env_list)
 				ft_printf(" too many arguments\n");
 				command->exit_code = 1;
 			}
-			else if (ft_strcmp(command->args[0], "exit") == 0 && command->args[1])
+			else if (ft_strcmp(command->args[0], "exit") == 0
+				&& command->args[1])
 			{
 				if (ft_isdigit(command->args[1][0]))
 					command->exit_code = ft_atoi(command->args[1]);
@@ -41,11 +42,10 @@ int	exit_cmd(t_command *command, t_env **env_list)
 		}
 		exit(command->exit_code);
 		free_command_list(command);
-		//free_env_list(env_list);
 	}
 	else
 	{
 		printf("exit\n");
-		exit (1);
+		exit(1);
 	}
 }

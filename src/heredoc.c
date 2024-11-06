@@ -18,15 +18,20 @@ void	write_to_heredoc(int pipe_fd_read)
 	char	buffer[1024];
 	size_t	bytes_read;
 
+	bytes_read = 0;
 	heredoc_fd = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (heredoc_fd == -1)
 	{
 		perror("Failed to open .heredoc");
 		close(pipe_fd_read);
-		return;
+		return ;
 	}
-	while ((bytes_read = read(pipe_fd_read, buffer, sizeof(buffer))) > 0)
+	bytes_read = read(pipe_fd_read, buffer, sizeof(buffer));
+	while (bytes_read > 0)
+	{
 		write(heredoc_fd, buffer, bytes_read);
+		bytes_read = read(pipe_fd_read, buffer, sizeof(buffer));
+	}
 	close(heredoc_fd);
 }
 
@@ -41,7 +46,7 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 	if (heredoc_fd == -1)
 	{
 		perror("Failed to reopen .heredoc");
-		return;
+		return ;
 	}
 	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
 		perror("dup2 error");
@@ -52,10 +57,8 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 {
 	char	*input;
-	//int		save_exit_code = 0;
+
 	g_received_signal = 0;
-
-
 	while (1)
 	{
 		setup_heredoc_signal_handling();
@@ -66,7 +69,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 			close(pipe_fd_write);
 			if (input)
 				free(input);
-			return;
+			return ;
 		}
 		if (!input)
 		{
@@ -77,7 +80,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 		if (strcmp(input, end_of_input) == 0)
 		{
 			free(input);
-			break;
+			break ;
 		}
 		write(pipe_fd_write, input, strlen(input));
 		write(pipe_fd_write, "\n", 1);
@@ -96,21 +99,21 @@ void	heredoc_child(t_command *command, int *pipe_fd)
 
 void	heredoc(t_command *command)
 {
-	int		pipe_fd[2];
-	int		pid;
+	int	pipe_fd[2];
+	int	pid;
 	int	stdin_backup;
 
 	stdin_backup = dup(STDIN_FILENO);
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe error");
-		return;
+		return ;
 	}
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork error");
-		return;
+		return ;
 	}
 	if (pid == 0)
 		heredoc_child(command, pipe_fd);
@@ -122,18 +125,4 @@ void	heredoc(t_command *command)
 		close(stdin_backup);
 	}
 	return ;
-}
-
-void	check_heredoc(t_command *command)
-{
-	t_command *head;
-
-	head = command;
-	while (command)
-	{
-		if (command->heredoc_file)
-			heredoc(command);
-		command = command->next;
-	}
-	command = head;
 }

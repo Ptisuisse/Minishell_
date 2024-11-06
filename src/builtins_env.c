@@ -12,15 +12,17 @@
 
 #include "minishell.h"
 
-t_env *create_env_node(const char *env_str)
+t_env	*create_env_node(const char *env_str)
 {
-	t_env *node;
-	char *equal_sign;
+	t_env	*node;
+	char	*equal_sign;
+
 	node = (t_env *)malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
 	equal_sign = strchr(env_str, '=');
-	if (!equal_sign) {
+	if (!equal_sign)
+	{
 		free(node);
 		return (NULL);
 	}
@@ -73,17 +75,18 @@ void	env_cmd(t_env *env_list)
 	env_list = head;
 }
 
-
 void	unset_cmd(t_command *command, t_env **env_list)
 {
-	t_env	*prev = NULL;
-	t_env	*current = *env_list;
+	t_env	*prev;
+	t_env	*current;
 	t_env	*temp;
 
+	prev = NULL;
+	current = *env_list;
 	if (command->args[1] == NULL)
 	{
 		command->exit_code = 0;
-		return;
+		return ;
 	}
 	while (current)
 	{
@@ -99,35 +102,10 @@ void	unset_cmd(t_command *command, t_env **env_list)
 			free(temp->value);
 			free(temp);
 			command->exit_code = 0;
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
 	}
 	command->exit_code = 0;
 }
-
-// void	unset_cmd(t_command *command, t_env **env_list)
-// {
-// 	t_env	*prev;
-
-// 	prev = NULL;
-// 	if (command->args[1] == NULL)
-// 	{
-// 		command->exit_code = 0;
-// 		return ;
-// 	}
-// 	while (env_list)
-// 	{
-// 		if (ft_strcmp((*env_list)->name, command->args[1]) == 0)
-// 		{
-// 			if (prev == NULL)
-// 				env_list = (*env_list)->next;
-// 			else
-// 				prev->next = (*env_list)->next;
-// 		}
-// 		prev = env_list;
-// 		env_list = (*env_list)->next;
-// 	}
-// 	env_list = prev;
-// }
