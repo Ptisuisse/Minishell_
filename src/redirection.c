@@ -22,6 +22,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 	buf_index = 0;
 	(*input)++;
 	cmd->file++;
+	cmd->infile = 1;
 	if (**input == '<')
 	{
 		(*input)++;
@@ -76,6 +77,14 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_file = strdup(buffer);
+		status = parsing_error_outputfile(cmd);
+		if (status > 0)
+		{
+			// if (status == 1)
+			advance_to_end_or_pipe(input);
+			cmd->error_file = 1;
+			return (status);
+		}
 	}
 	else
 	{
@@ -91,8 +100,8 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 		status = parsing_error_outputfile(cmd);
 		if (status > 0)
 		{
-			if (status == 1)
-				advance_to_end_or_pipe(input);
+			// if (status == 1)
+			advance_to_end_or_pipe(input);
 			cmd->error_file = 1;
 			return (status);
 		}

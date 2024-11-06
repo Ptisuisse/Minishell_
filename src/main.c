@@ -110,12 +110,12 @@ int	main(int argc, char **argv, char **envp)
 		status = 1;
 		input = readline("Minishell > ");
 		if (!input)
-			exit_cmd(command_list, &env_list);
+			exit_cmd(command_list, &env_list, save_exit_code);
 		handle_received_signal(&save_exit_code);
 		if (input && *input)
 			add_history(input);
 		process_input(&command_list, &env_list, input, &save_exit_code);
-		if (is_executable(command_list))
+		if (is_executable(command_list) && save_exit_code != 256)
 		{
 			if ((command_list->args[0] != NULL)
 				&& (command_list->args[0][0] == '.'

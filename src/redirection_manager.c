@@ -14,12 +14,13 @@
 
 void	redirect_management(t_command *command, t_env **env_list)
 {
-	if (command->error_file == 0)
+	while (command->infile > 0)
 	{
 		if (command->input_file != NULL)
 			redirect_input(command, env_list);
 		if (command->output_file != NULL)
 			redirect_output(command, env_list);
+		command->infile--;
 	}
 	if (command->append_file != NULL)
 		append_file(command);

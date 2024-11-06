@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	exit_cmd(t_command *command, t_env **env_list)
+int	exit_cmd(t_command *command, t_env **env_list, int save_exit_code)
 {
 	(void)env_list;
 	if (command)
@@ -40,12 +40,16 @@ int	exit_cmd(t_command *command, t_env **env_list)
 					command->exit_code = 255;
 			}
 		}
+		ft_printf("exit\n");
 		exit(command->exit_code);
 		free_command_list(command);
 	}
-	else
-	{
-		ft_printf("exit\n");
-		exit(1);
-	}
+	ft_printf("exit\n");
+	exit(save_exit_code);
+	return (0);
+	// else
+	//{
+	//	ft_printf("exit\n");
+	//	exit(command->exit_code);
+	//}
 }

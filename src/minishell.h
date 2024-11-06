@@ -35,6 +35,7 @@ extern int				g_received_signal;
 
 typedef struct s_command
 {
+	int					infile;
 	int					file;
 	int					error_file;
 	int					status;
@@ -228,7 +229,7 @@ void					pwd_cmd(t_command *command);
 
 /*BUILTINS_CLEAR_EXIT_C*/
 
-int						exit_cmd(t_command *command, t_env **env_list);
+int						exit_cmd(t_command *command, t_env **env_list, int save_exit_code);
 
 /*BUILTINS_ECHO_C*/
 

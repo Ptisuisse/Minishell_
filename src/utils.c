@@ -79,15 +79,15 @@ void	free_command_list(t_command *command_list)
 	while (command_list)
 	{
 		temp = command_list;
-		while (temp->args[i])
-		{
-			if (temp->args[i])
-			{
-				free(temp->args[i]);
-				temp->args[i] = NULL;
-				i++;
-			}
-		}
+		// while (temp->args[i])
+		//{
+		//	if (temp->args[i])
+		//	{
+		//		free(temp->args[i]);
+		//		temp->args[i] = NULL;
+		//		i++;
+		//	}
+		//}
 		if (temp->output_file)
 		{
 			free(temp->output_file);
