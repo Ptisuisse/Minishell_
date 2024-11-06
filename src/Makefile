@@ -22,6 +22,9 @@ SRCS =	main.c \
 		utils.c \
 		heredoc.c \
 		append_file.c \
+		redirection.c \
+		parsing_commands.c \
+
 
 OBJS = $(SRCS:.c=.o)
 CC = cc
