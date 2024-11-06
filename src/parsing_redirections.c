@@ -12,103 +12,82 @@
 
 #include "minishell.h"
 
-int	handle_input_redirection(const char **input, t_command *cmd)
+int	detect_invalid_double_redirection(const char **input, char **token)
 {
-	char	buffer[1024];
-	int		buf_index;
-
-	buf_index = 0;
-	(*input)++;
-	cmd->file++;
-	if (**input == '<')
+	*token = NULL;
+	if (*(*input + 1) == '>' || *(*input + 1) == '<')
 	{
-		(*input)++;
-		while (**input == ' ')
-			(*input)++;
-		parse_argument(input, buffer, &buf_index, cmd);
-		cmd->heredoc_file = strdup(buffer);
-	}
-	else
-	{
-		while (**input == ' ')
-			(*input)++;
-		parse_argument(input, buffer, &buf_index, cmd);
-		if (ft_strchr(buffer, '<'))
+		if (*(*input + 2) == '<' && *(*input + 3) != '\0')
 		{
-			error_message("<<", cmd);
-			return (1);
+			*token = "newline";
+			if (*(*input + 3) == '<')
+				*token = "<";
+			if (*(*input + 4) == '<')
+				*token = "<<";
 		}
-		cmd->input_file = ft_strdup(buffer);
-		if (!parsing_error_inputfile(cmd))
+		else if (*(*input + 2) == '>')
 		{
-			cmd->error_file = 1;
-			while (**input)
-			{
-				if (**input == '|')
-					break ;
-				(*input)++;
-			}
-			return (0);
+			*token = ">";
+			if (*(*input + 3) == '>')
+				*token = ">>";
 		}
+		else if (*(*input + 3) == '\0')
+			*token = "newline";
+		return (*token != NULL);
 	}
 	return (0);
 }
 
-int	handle_output_redirection(const char **input, t_command *cmd)
+int	handle_redirection_error(const char *token, t_command *cmd)
 {
-	char	buffer[1024];
-	int		buf_index;
-
-	buf_index = 0;
-	(*input)++;
-	cmd->file++;
-	if (**input == '>')
+	if (token)
 	{
-		(*input)++;
-		while (**input == ' ')
-			(*input)++;
-		parse_argument(input, buffer, &buf_index, cmd);
-		cmd->append_file = strdup(buffer);
-		if (!parsing_error_outputfile(cmd))
-		{
-			cmd->error_file = 1;
-			return (0);
-		}
-	}
-	else
-	{
-		while (**input == ' ')
-			(*input)++;
-		parse_argument(input, buffer, &buf_index, cmd);
-		if (ft_strchr(buffer, '>'))
-		{
-			error_message(">>", cmd);
-			return (1);
-		}
-		cmd->output_file = strdup(buffer);
-		if (!parsing_error_outputfile(cmd))
-		{
-			cmd->error_file = 1;
-			return (0);
-		}
+		error_message(token, cmd);
+		return (1);
 	}
 	return (0);
 }
 
-void	advance_to_end_or_pipe(const char **input)
+int	check_double_redirection(const char **input, t_command *cmd)
 {
-	while (**input != '\0' && **input != '|')
-		(*input)++;
+	char	*token;
+
+	if (detect_invalid_double_redirection(input, &token))
+		return (handle_redirection_error(token, cmd));
+	return (0);
 }
 
-int	parse_redirection(const char **input, t_command *cmd)
+int	handle_redirection(const char **input, t_command *cmd)
 {
-	int	result;
+	char	*token;
 
-	result = 0;
-	if (**input == '<')
-		result = handle_input_redirection(input, cmd);
-	else if (**input == '>')
-		result = handle_output_redirection(input, cmd);
-	return (result);
+	token = NULL;
+	if (check_double_redirection(input, cmd))
+		return (1);
+	if (*(*input + 1) && *(*input + 1) != ' ' && !ft_isascii(*(*input + 1)))
+	{
+		token = "|";
+		error_message(token, cmd);
+		return (1);
+	}
+	else if (*(*input + 1) == '\0' || *(*input + 1) == '|')
+	{
+		token = "newline";
+		error_message(token, cmd);
+		return (1);
+	}
+	return (parse_redirection(input, cmd));
+}
+
+int	handle_redirection_and_arguments(const char **input, t_command *cmd,
+		int *arg_index)
+{
+	if (**input == '<' || **input == '>')
+	{
+		if (handle_redirection(input, cmd))
+			return (1);
+	}
+	else
+		parse_arguments(input, cmd, arg_index);
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:34 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:05:35 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/05 15:33:23 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,16 @@ int						parse_command(const char **input, t_command *cmd);
 
 int						parse_command_line(const char *input,
 							t_command **command_list, int exit_code);
+int						check_and_init_command(const char *input,
+							t_command **command_list, int exit_code);
+int						parse_and_append_command(const char **input,
+							t_command *new_node, t_command **command_list);
+int						process_input_commands(const char *input,
+							t_command **command_list, int exit_code);
+int						parse_command_line(const char *input,
+							t_command **command_list, int exit_code);
+int						check_initial_conditions(const char *input,
+							t_command **command_list, int exit_code);
 
 /*PARSING_UTILS_C*/
 
@@ -146,6 +156,20 @@ void					skip_spaces(const char **input);
 char					*get_env_value(const char *input, int *i);
 
 /*REDIRECTIONS_C*/
+
+int						detect_invalid_double_redirection(const char **input,
+							char **token);
+
+int						handle_redirection_error(const char *token,
+							t_command *cmd);
+
+int						check_double_redirection(const char **input,
+							t_command *cmd);
+
+int						handle_redirection(const char **input, t_command *cmd);
+
+int						handle_redirection_and_arguments(const char **input,
+							t_command *cmd, int *arg_index);
 
 int						handle_input_redirection(const char **input,
 							t_command *cmd);
@@ -264,5 +288,17 @@ int						last_exitcode(t_command *command);
 void					error_message(const char *token, t_command *cmd);
 char					*replace_by_exit_code(char *result, int *result_index,
 							t_command *command);
+
+void					free_env_list(t_env *env_list);
+char					*find_path(t_env **env_list, char *cmd);
+int						choose_command_pipe(t_command *command,
+							t_env **env_list);
+int						exec_pipe_command(t_command *command, t_env **env_list);
+void					put_into_args(t_command *commands);
+int						parsing_error_inputfile(t_command *commands);
+int						parsing_error_outputfile(t_command *commands);
+void					select_type(t_command *command, t_env **list);
+void					setup_signal_handling(void);
+void					free_command_list(t_command *command_list);
 
 #endif
