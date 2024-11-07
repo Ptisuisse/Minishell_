@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:06:00 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/05 15:48:16 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/07 10:35:53 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	free_command_list(t_command *command_list)
 		temp->file = 0;
 		temp->status = 0;
 		temp->error_file = 0;
-		temp->exit_code = 0;
 		temp->output_file = NULL;
 		temp->input_file = NULL;
 		temp->append_file = NULL;

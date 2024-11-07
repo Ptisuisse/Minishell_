@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_manager.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:28 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/06 11:53:31 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/07 10:42:24 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	process_input(t_command **command_list, t_env **env_list, char *input,
 		return ;
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{
-		(*command_list)->exit_code = 0;
+		(*command_list)->exit_code = 2;
 		*save_exit_code = 256;
 	}
 }
