@@ -43,18 +43,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 		cmd->input_file = ft_strdup(buffer);
 		status = parsing_error_inputfile(cmd, cmd->input_file);
 		if (status > 0)
-		{
-			cmd->error_file = 1;
-			while (**input)
-			{
-				if (**input == '|')
-				{
-					break ;
-				}
-				(*input)++;
-			}
-			return (status);
-		}
+			advance_to_end_or_pipe(input);
 	}
 	return (0);
 }
@@ -65,10 +54,10 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 	int		buf_index;
 	int		status;
 
+	cmd->file++;
 	status = 0;
 	buf_index = 0;
 	(*input)++;
-	cmd->file++;
 	if (**input == '>')
 	{
 		(*input)++;
@@ -79,11 +68,12 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 		status = parsing_error_outputfile(cmd);
 		if (status > 0)
 		{
-			// if (status == 1)
 			advance_to_end_or_pipe(input);
-			cmd->error_file = 1;
 			return (status);
 		}
+		else
+			open(cmd->append_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		cmd->output = 3;
 	}
 	else
 	{
@@ -99,11 +89,12 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 		status = parsing_error_outputfile(cmd);
 		if (status > 0)
 		{
-			// if (status == 1)
 			advance_to_end_or_pipe(input);
-			cmd->error_file = 1;
 			return (status);
 		}
+		else
+			open(cmd->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		cmd->output = 4;
 	}
 	return (0);
 }

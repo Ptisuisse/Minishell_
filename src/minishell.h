@@ -36,6 +36,7 @@ extern int				g_received_signal;
 typedef struct s_command
 {
 	int					file;
+	int					output;
 	int					error_file;
 	int					status;
 	int					exit_code;
@@ -66,6 +67,7 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+int						check_file(const char *filename, t_command *commands);
 int						multiple_redirection_output(t_command *command,
 							t_env **env_list);
 void					multiple_redirection(t_command *command,
@@ -305,7 +307,8 @@ int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						exec_pipe_command(t_command *command, t_env **env_list);
 void					put_into_args(t_command *commands);
-int						parsing_error_inputfile(t_command *commands, char *filename);
+int						parsing_error_inputfile(t_command *commands,
+							char *filename);
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
