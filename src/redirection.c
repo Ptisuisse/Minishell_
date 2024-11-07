@@ -84,6 +84,8 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			cmd->error_file = 1;
 			return (status);
 		}
+		else
+			open(cmd->output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	}
 	else
 	{
@@ -95,6 +97,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			error_message(">>", cmd);
 			return (1);
 		}
+		cmd->output++;
 		cmd->output_file = strdup(buffer);
 		status = parsing_error_outputfile(cmd);
 		if (status > 0)
@@ -104,6 +107,8 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			cmd->error_file = 1;
 			return (status);
 		}
+		else
+			open(cmd->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	}
 	return (0);
 }

@@ -14,10 +14,10 @@
 
 int	parsing_error_inputfile(t_command *commands, char *filename)
 {
-	//char		*filename;
 	struct stat	filestat;
 
-	//filename = commands->input_file;
+	// char		*filename;
+	// filename = commands->input_file;
 	if (access(filename, F_OK) == -1)
 	{
 		commands->error_file = 1;
