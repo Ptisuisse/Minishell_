@@ -67,6 +67,7 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+int						check_file(const char *filename, t_command *commands);
 int						multiple_redirection_output(t_command *command,
 							t_env **env_list);
 void					multiple_redirection(t_command *command,

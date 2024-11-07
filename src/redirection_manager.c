@@ -16,7 +16,7 @@ void	redirect_management(t_command *command, t_env **env_list)
 {
 	if (command->error_file == 0 && command->file > 1)
 		multiple_redirection(command, env_list);
-	if (command->error_file == 0 && command->file == 1)
+	else if (command->error_file == 0 && command->file == 1)
 	{
 		if (command->input_file != NULL)
 			redirect_input(command, env_list);

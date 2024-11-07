@@ -1,32 +1,5 @@
 #include "minishell.h"
 
-int	multiple_check_append_file(t_command *commands)
-{
-	char		*filename;
-	struct stat	filestat;
-
-	filename = commands->append_file;
-	if (access(filename, F_OK) == -1)
-	{
-		commands->error_file = 1;
-		commands->error_message = ft_strdup(" No such file or directory");
-		return (2);
-	}
-	else if (access(filename, R_OK) == -1)
-	{
-		commands->error_file = 1;
-		commands->error_message = ft_strdup(" Permission denied");
-		return (1);
-	}
-	else if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
-	{
-		commands->error_file = 1;
-		commands->error_message = ft_strdup(" is a directory");
-		return (1);
-	}
-	return (0);
-}
-
 void	multiple_append_child(t_command *command)
 {
 	int	pipe_fd;
@@ -34,52 +7,18 @@ void	multiple_append_child(t_command *command)
 	pipe_fd = open(command->append_file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (pipe_fd < 0)
 	{
-		if (!access(command->append_file, F_OK))
-		{
 			command->exit_code = 1;
 			return ;
-		}
-		else
-		{
-			command->exit_code = 1;
-			return ;
-		}
 	}
 	dup2(pipe_fd, STDOUT_FILENO);
-	choose_command(command, NULL);
 	close(pipe_fd);
 	return ;
 }
 
 void	multiple_append_file(t_command *command)
 {
-	int	pipe_fd[2];
-	int	pid;
-
-	if (multiple_check_append_file(command))
-		return ;
-	if (pipe(pipe_fd) < 0)
-	{
-		perror("pipe error");
-		return ;
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork error");
-		return ;
-	}
-	if (pid == 0)
-	{
-		multiple_append_child(command);
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		waitpid(pid, &command->status, 0);
-		if (WIFEXITED(command->status))
-			command->exit_code = WEXITSTATUS(command->status);
-	}
+	multiple_append_child(command);
+	command->append_file = NULL;
 	return ;
 }
 
@@ -127,7 +66,6 @@ int	multiple_redirection_input(t_command *command, t_env **env_list)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	put_into_args(command);
 	command->input_file = NULL;
 	return (0);
 }
@@ -147,7 +85,6 @@ int	multiple_redirection_output(t_command *command, t_env **env_list)
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
-	put_into_args(command);
 	command->output_file = NULL;
 	return (0);
 }
@@ -158,11 +95,11 @@ void	multiple_redirection(t_command *command, t_env **env_list)
 	{
 		if (command->input_file != NULL)
 			multiple_redirection_input(command, env_list);
-		if (command->append_file != NULL)
-			multiple_append_file(command);
-		if (command->output_file != NULL)
+		if (command->output_file != NULL && command->output == 4)
 			multiple_redirection_output(command, env_list);
+		if (command->append_file != NULL && command->output == 3)
+			multiple_append_file(command);
 		command->file--;
 	}
-	multiple_redirection_exec(command, env_list);
+	exec_command(command, env_list);
 }

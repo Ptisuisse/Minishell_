@@ -41,26 +41,41 @@ int	parsing_error_inputfile(t_command *commands, char *filename)
 
 int	parsing_error_outputfile(t_command *commands)
 {
-	char		*filename;
-	struct stat	filestat;
+	char	*filename;
 
 	if (commands->output_file != NULL)
 		filename = commands->output_file;
 	else if (commands->append_file != NULL)
 		filename = commands->append_file;
-	if (access(filename, F_OK) == -1)
-		return (0);
-	if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
-	{
-		commands->error_file = 1;
-		commands->error_message = ft_strdup(" is a directory");
-		return (2);
-	}
-	if (access(filename, W_OK) == -1)
-	{
-		commands->error_file = 1;
-		commands->error_message = ft_strdup(" Permission denied");
+	if (check_file(filename, commands) > 0)
 		return (1);
-	}
 	return (0);
 }
+
+// int	parsing_error_outputfile(t_command *commands)
+//{
+//	char		*filename;
+//	struct stat	filestat;
+
+//	if (commands->output_file != NULL)
+//		filename = commands->output_file;
+//	else if (commands->append_file != NULL)
+//		filename = commands->append_file;
+//	if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
+//	{
+//		commands->error_file = 1;
+//		commands->error_message = ft_strdup(" is a directory");
+//		return (2);
+//	}
+//	if (access(filename, F_OK) == -1)
+//	{
+//		if (access(filename, W_OK) == -1)
+//		{
+//			commands->error_file = 1;
+//			commands->error_message = ft_strdup(" Permission denied");
+//			return (1);
+//		}
+//		return (0);
+//	}
+//	return (0);
+//}

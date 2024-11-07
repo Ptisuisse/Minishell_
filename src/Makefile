@@ -25,6 +25,7 @@ SRCS =	main.c \
 		redirection.c \
 		parsing_commands.c \
 		multiple_redirections.c \
+		check_files.c
 
 
 OBJS = $(SRCS:.c=.o)
