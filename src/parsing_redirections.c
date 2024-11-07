@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:47 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/07 11:31:19 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/07 13:15:33 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ int	detect_invalid_double_redirection(const char **input, char **token)
 		if (*(*input + 2) == '<' && *(*input + 3) != '\0')
 		{
 			*token = "newline";
-			if (*(*input + 3) == '<' || *(*input + 3) == '>')
+			if (*(*input + 2) == '<')
+				*token = "<";
+			if (*(*input + 3) == '<')
 				*token = "<";
 			if (*(*input + 3) == '>')
 				*token = ">";
@@ -34,7 +36,7 @@ int	detect_invalid_double_redirection(const char **input, char **token)
 			if (*(*input + 3) == '>')
 				*token = ">>";
 		}
-		else if (*(*input + 3) == '\0')
+		else if (*(*input + 3) == '\0' || !*(*input + 3))
 			*token = "newline";
 		return (*token != NULL);
 	}

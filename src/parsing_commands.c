@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 14:30:42 by lisambet          #+#    #+#             */
-/*   Updated: 2024/11/05 14:30:43 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/07 13:29:53 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	parse_command(const char **input, t_command *cmd)
 	if (**input == '|')
 	{
 		(*input)++;
-		if (**input != ' ' && !ft_isalpha(**input))
+		if ((**input != ' ' && !ft_isalpha(**input)) || *(*input + 1) == '|' || **input == '|')
 		{
 			error_message("|", cmd);
 			return (1);
