@@ -16,7 +16,9 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 {
 	char	buffer[1024];
 	int		buf_index;
+	int		status;
 
+	status = 0;
 	buf_index = 0;
 	(*input)++;
 	cmd->file++;
@@ -39,16 +41,19 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 			return (1);
 		}
 		cmd->input_file = ft_strdup(buffer);
-		if (!parsing_error_inputfile(cmd))
+		status = parsing_error_inputfile(cmd, cmd->input_file);
+		if (status > 0)
 		{
 			cmd->error_file = 1;
 			while (**input)
 			{
 				if (**input == '|')
+				{
 					break ;
+				}
 				(*input)++;
 			}
-			return (0);
+			return (status);
 		}
 	}
 	return (0);
@@ -58,7 +63,9 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 {
 	char	buffer[1024];
 	int		buf_index;
+	int		status;
 
+	status = 0;
 	buf_index = 0;
 	(*input)++;
 	cmd->file++;
@@ -69,10 +76,13 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_file = strdup(buffer);
-		if (!parsing_error_outputfile(cmd))
+		status = parsing_error_outputfile(cmd);
+		if (status > 0)
 		{
+			// if (status == 1)
+			advance_to_end_or_pipe(input);
 			cmd->error_file = 1;
-			return (0);
+			return (status);
 		}
 	}
 	else
@@ -86,10 +96,13 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			return (1);
 		}
 		cmd->output_file = strdup(buffer);
-		if (!parsing_error_outputfile(cmd))
+		status = parsing_error_outputfile(cmd);
+		if (status > 0)
 		{
+			// if (status == 1)
+			advance_to_end_or_pipe(input);
 			cmd->error_file = 1;
-			return (0);
+			return (status);
 		}
 	}
 	return (0);
@@ -107,8 +120,8 @@ int	parse_redirection(const char **input, t_command *cmd)
 
 	result = 0;
 	if (**input == '<')
-		result = handle_input_redirection(input, cmd);
+		handle_input_redirection(input, cmd);
 	else if (**input == '>')
-		result = handle_output_redirection(input, cmd);
+		handle_output_redirection(input, cmd);
 	return (result);
 }

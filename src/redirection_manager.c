@@ -14,12 +14,17 @@
 
 void	redirect_management(t_command *command, t_env **env_list)
 {
-	if (command->append_file != NULL)
-		append_file(command);
-	if (command->input_file != NULL)
-		redirect_input(command, env_list);
-	if (command->output_file != NULL)
-		redirect_output(command, env_list);
+	if (command->error_file == 0 && command->file > 1)
+		multiple_redirection(command, env_list);
+	if (command->error_file == 0 && command->file == 1)
+	{
+		if (command->input_file != NULL)
+			redirect_input(command, env_list);
+		if (command->output_file != NULL)
+			redirect_output(command, env_list);
+		if (command->append_file != NULL)
+			append_file(command);
+	}
 }
 
 int	redirect_input(t_command *commands, t_env **env_list)
@@ -32,10 +37,7 @@ int	redirect_input(t_command *commands, t_env **env_list)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		if (!access(filename, F_OK))
-			commands->exit_code = 1;
-		else
-			commands->exit_code = 1;
+		commands->exit_code = 1;
 		return (1);
 	}
 	dup2(fd, STDIN_FILENO);
@@ -54,10 +56,7 @@ int	redirect_output(t_command *command, t_env **env_list)
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
-		if (!access(filename, F_OK))
-			command->exit_code = 1;
-		else
-			command->exit_code = 1;
+		command->exit_code = 1;
 		return (1);
 	}
 	dup2(fd, STDOUT_FILENO);

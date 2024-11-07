@@ -65,7 +65,6 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 		input = readline("> ");
 		if (g_received_signal == SIGINT)
 		{
-			printf("LALAL\n");
 			close(pipe_fd_write);
 			if (input)
 				free(input);

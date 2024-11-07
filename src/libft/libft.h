@@ -154,4 +154,22 @@ char				*sorting_line(char *tmp);
 
 char				*sorting_buf(char *buf);
 
+/*FT_PRINTF_ERROR*/
+
+int					ft_printf_error(const char *format, ...);
+
+int					print_char_error(int c);
+
+int					print_str_error(char *str);
+
+int					print_type_error(char type, va_list ap);
+
+int					print_digit_error(long n, int base, char type);
+
+int					print_pointeur_error(unsigned long long n,
+						unsigned long long base);
+
+int					print_add_error(unsigned long long n,
+						unsigned long long base);
+
 #endif

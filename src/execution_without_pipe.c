@@ -42,7 +42,7 @@ int	exec_command(t_command *command, t_env **env_list)
 		if (execve(cmd, command->args, envp) == -1)
 		{
 			command->exit_code = 127;
-			ft_printf("%s: command not found\n", command->args[0]);
+			ft_printf_error("%s: command not found\n", command->args[0]);
 			free(cmd);
 			free(envp);
 			exit(command->exit_code);

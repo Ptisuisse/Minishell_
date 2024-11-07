@@ -12,6 +12,33 @@
 
 #include "minishell.h"
 
+int	check_append_file(t_command *commands)
+{
+	char		*filename;
+	struct stat	filestat;
+
+	filename = commands->append_file;
+	if (access(filename, F_OK) == -1)
+	{
+		commands->error_file = 1;
+		commands->error_message = ft_strdup(" No such file or directory");
+		return (2);
+	}
+	else if (access(filename, R_OK) == -1)
+	{
+		commands->error_file = 1;
+		commands->error_message = ft_strdup(" Permission denied");
+		return (1);
+	}
+	else if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
+	{
+		commands->error_file = 1;
+		commands->error_message = ft_strdup(" is a directory");
+		return (1);
+	}
+	return (0);
+}
+
 void	append_child(t_command *command)
 {
 	int	pipe_fd;
@@ -41,6 +68,8 @@ void	append_file(t_command *command)
 	int	pipe_fd[2];
 	int	pid;
 
+	if (check_append_file(command))
+		return ;
 	if (pipe(pipe_fd) < 0)
 	{
 		perror("pipe error");

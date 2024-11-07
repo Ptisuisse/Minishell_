@@ -16,10 +16,10 @@ int	print_error(t_command *command)
 {
 	command->exit_code = 1;
 	if (command->args[0])
-		ft_printf("Minishell: export: `%s': not a valid identifier\n",
+		ft_printf_error("Minishell: export: `%s': not a valid identifier\n",
 			command->args[0]);
 	else
-		ft_printf("Minishell: export: not a valid identifier\n");
+		ft_printf_error("Minishell: export: not a valid identifier\n");
 	return (0);
 }
 

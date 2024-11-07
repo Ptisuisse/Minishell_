@@ -37,6 +37,9 @@ SRCS =  ft_atoi \
 	print_add \
 	print_digit \
 	free_strjoin \
+	ft_printf_error \
+	print_add_error \
+	print_digit_error \
 
 SRCB =	ft_lstnew \
 	ft_lstadd_front \
