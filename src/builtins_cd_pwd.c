@@ -40,12 +40,12 @@ void	cd_cmd(t_command *command, t_env *env_list)
 		command->args[1] = ft_strdup(getenv("HOME"));
 	if (command->args[2])
 	{
-		ft_printf("Minishell: cd: too many arguments\n");
+		ft_printf_error("Minishell: cd: too many arguments\n");
 		command->exit_code = 1;
 	}
 	else if (chdir(command->args[1]) < 0)
 	{
-		ft_printf("Minishell: cd: %s: No such file or directory\n",
+		ft_printf_error("Minishell: cd: %s: No such file or directory\n",
 			command->args[1]);
 		command->exit_code = 1;
 	}
@@ -65,13 +65,13 @@ void	pwd_cmd(t_command *command)
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{
-		printf("%s\n", cwd);
+		ft_printf("%s\n", cwd);
 		free(cwd);
 		command->exit_code = 0;
 	}
 	else
 	{
-		ft_printf("Error : pwd\n");
+		ft_printf_error("Error : pwd\n");
 		command->exit_code = 1;
 	}
 }

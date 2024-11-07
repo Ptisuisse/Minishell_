@@ -89,9 +89,9 @@ void	print_variables(t_env **head)
 				break ;
 		}
 		if (current->value == NULL)
-			printf("declare -x %s\n", current->name);
+			ft_printf("declare -x %s\n", current->name);
 		else
-			printf("declare -x %s=\"%s\"\n", current->name, current->value);
+			ft_printf("declare -x %s=\"%s\"\n", current->name, current->value);
 		current = current->next;
 	}
 }

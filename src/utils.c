@@ -19,8 +19,8 @@ void	printf_list(t_env *env_list)
 	tmp = env_list;
 	while (tmp)
 	{
-		printf("%s=", tmp->name);
-		printf("%s\n", tmp->value);
+		ft_printf("%s=", tmp->name);
+		ft_printf("%s\n", tmp->value);
 		tmp = tmp->next;
 	}
 }
@@ -79,15 +79,15 @@ void	free_command_list(t_command *command_list)
 	while (command_list)
 	{
 		temp = command_list;
-		while (temp->args[i])
-		{
-			if (temp->args[i])
-			{
-				free(temp->args[i]);
-				temp->args[i] = NULL;
-				i++;
-			}
-		}
+		// while (temp->args[i])
+		//{
+		//	if (temp->args[i])
+		//	{
+		//		free(temp->args[i]);
+		//		temp->args[i] = NULL;
+		//		i++;
+		//	}
+		//}
 		if (temp->output_file)
 		{
 			free(temp->output_file);
@@ -103,6 +103,11 @@ void	free_command_list(t_command *command_list)
 			free(temp->append_file);
 			temp->append_file = NULL;
 		}
+		if (temp->error_message)
+		{
+			free(temp->error_message);
+			temp->error_message = NULL;
+		}
 		temp->file = 0;
 		temp->status = 0;
 		temp->error_file = 0;
@@ -110,6 +115,7 @@ void	free_command_list(t_command *command_list)
 		temp->input_file = NULL;
 		temp->append_file = NULL;
 		temp->heredoc_file = NULL;
+		temp->error_message = NULL;
 		temp->next = NULL;
 		temp->prev = NULL;
 		command_list = command_list->next;

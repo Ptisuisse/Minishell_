@@ -39,6 +39,7 @@ typedef struct s_command
 	int					error_file;
 	int					status;
 	int					exit_code;
+	char				*error_message;
 	char				*args[MAX_TOKENS];
 	char				*input_file;
 	char				*output_file;
@@ -65,6 +66,15 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+int						multiple_redirection_output(t_command *command,
+							t_env **env_list);
+void					multiple_redirection(t_command *command,
+							t_env **env_list);
+int						multiple_redirection_input(t_command *command,
+							t_env **env_list);
+void					multiple_redirection_exec(t_command *command,
+							t_env **env_list);
+void					advance_to_end_or_pipe(const char **input);
 void					free_split(char **split);
 char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);
@@ -74,7 +84,6 @@ int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						exec_pipe_command(t_command *command, t_env **env_list);
 void					put_into_args(t_command *commands);
-int						parsing_error_inputfile(t_command *commands);
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
@@ -226,7 +235,8 @@ void					pwd_cmd(t_command *command);
 
 /*BUILTINS_CLEAR_EXIT_C*/
 
-int						exit_cmd(t_command *command, t_env **env_list);
+int						exit_cmd(t_command *command, t_env **env_list,
+							int save_exit_code);
 
 /*BUILTINS_ECHO_C*/
 
@@ -295,7 +305,7 @@ int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						exec_pipe_command(t_command *command, t_env **env_list);
 void					put_into_args(t_command *commands);
-int						parsing_error_inputfile(t_command *commands);
+int						parsing_error_inputfile(t_command *commands, char *filename);
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);

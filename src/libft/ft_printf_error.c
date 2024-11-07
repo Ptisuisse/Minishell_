@@ -12,57 +12,57 @@
 
 #include "libft.h"
 
-int	print_char(int c)
+int	print_char_error(int c)
 {
-	return (write(1, &c, 1));
+	return (write(2, &c, 1));
 }
 
-int	print_str(char *str)
+int	print_str_error(char *str)
 {
 	int	i;
 
 	i = 0;
 	if (str == NULL)
 	{
-		write(1, "(null)", 6);
+		write(2, "(null)", 6);
 		return (i + 6);
 	}
 	while (*str != '\0')
 	{
-		print_char((int)*str);
+		print_char_error((int)*str);
 		i++;
 		str++;
 	}
 	return (i);
 }
 
-int	print_type(char type, va_list ap)
+int	print_type_error(char type, va_list ap)
 {
 	int	i;
 
 	i = 0;
 	if (type == 'c')
-		i += print_char(va_arg(ap, int));
+		i += print_char_error(va_arg(ap, int));
 	else if (type == 's')
-		i += print_str(va_arg(ap, char *));
+		i += print_str_error(va_arg(ap, char *));
 	else if (type == 'p')
-		i += print_add(va_arg(ap, unsigned long long), 16);
+		i += print_add_error(va_arg(ap, unsigned long long), 16);
 	else if (type == 'd')
-		i += print_digit((long)va_arg(ap, int), 10, type);
+		i += print_digit_error((long)va_arg(ap, int), 10, type);
 	else if (type == 'i')
-		i += print_digit((long)va_arg(ap, int), 10, type);
+		i += print_digit_error((long)va_arg(ap, int), 10, type);
 	else if (type == 'u')
-		i += print_digit((long)va_arg(ap, unsigned int), 10, type);
+		i += print_digit_error((long)va_arg(ap, unsigned int), 10, type);
 	else if (type == 'x')
-		i += print_digit((long)va_arg(ap, unsigned int), 16, type);
+		i += print_digit_error((long)va_arg(ap, unsigned int), 16, type);
 	else if (type == 'X')
-		i += print_digit((long)va_arg(ap, unsigned int), 16, type);
+		i += print_digit_error((long)va_arg(ap, unsigned int), 16, type);
 	else if (type == '%')
-		i += write(1, "%", 1);
+		i += write(2, "%", 1);
 	return (i);
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_printf_error(const char *format, ...)
 {
 	va_list	ap;
 	int		i;
@@ -72,9 +72,9 @@ int	ft_printf(const char *format, ...)
 	while (*format != '\0')
 	{
 		if (*format == '%')
-			i += print_type(*(++format), ap);
+			i += print_type_error(*(++format), ap);
 		else
-			i += write(1, format, 1);
+			i += write(2, format, 1);
 		format++;
 	}
 	va_end(ap);

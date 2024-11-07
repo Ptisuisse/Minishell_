@@ -38,7 +38,7 @@ void	select_type(t_command *command, t_env **list)
 void	start_builtins(t_command *command, t_env **env_list)
 {
 	if (!(ft_strcmp(command->args[0], "exit")))
-		exit_cmd(command, env_list);
+		exit_cmd(command, env_list, 0);
 	else if (ft_strcmp(command->args[0], "echo") == 0
 		|| (ft_strcmp(command->args[0], "$") == 0))
 		echo_cmd(command);
