@@ -22,7 +22,6 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 	buf_index = 0;
 	(*input)++;
 	cmd->file++;
-	cmd->infile = 1;
 	if (**input == '<')
 	{
 		(*input)++;
@@ -42,7 +41,7 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 			return (1);
 		}
 		cmd->input_file = ft_strdup(buffer);
-		status = parsing_error_inputfile(cmd);
+		status = parsing_error_inputfile(cmd, cmd->input_file);
 		if (status > 0)
 		{
 			cmd->error_file = 1;

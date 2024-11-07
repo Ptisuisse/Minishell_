@@ -24,6 +24,7 @@ SRCS =	main.c \
 		append_file.c \
 		redirection.c \
 		parsing_commands.c \
+		multiple_redirections.c \
 
 
 OBJS = $(SRCS:.c=.o)

@@ -14,16 +14,17 @@
 
 void	redirect_management(t_command *command, t_env **env_list)
 {
-	while (command->infile > 0)
+	if (command->error_file == 0 && command->file > 1)
+		multiple_redirection(command, env_list);
+	if (command->error_file == 0 && command->file == 1)
 	{
 		if (command->input_file != NULL)
 			redirect_input(command, env_list);
 		if (command->output_file != NULL)
 			redirect_output(command, env_list);
-		command->infile--;
+		if (command->append_file != NULL)
+			append_file(command);
 	}
-	if (command->append_file != NULL)
-		append_file(command);
 }
 
 int	redirect_input(t_command *commands, t_env **env_list)
