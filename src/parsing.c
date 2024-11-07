@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:38 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:05:39 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/07 10:25:50 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	handle_quotes(const char **input, char *buffer, int *buf_index,
 		else
 			buffer[(*buf_index)++] = *(*input)++;
 	}
+	if (*buf_index == 0)
+		buffer[(*buf_index)++] = '\0';
 	if (**input == quote_type)
 		(*input)++;
 }
@@ -63,7 +65,7 @@ int	parse_arguments(const char **input, t_command *cmd, int *arg_index)
 	buf_index = 0;
 	buf_index = 0;
 	parse_argument(input, buffer, &buf_index, cmd);
-	if (buffer[0] != 0)
+	if (buffer[0] != 0 || buf_index != 0)
 		cmd->args[(*arg_index)++] = strdup(buffer);
 	return (buf_index);
 }
@@ -74,7 +76,7 @@ int	check_initial_conditions(const char *input, t_command **command_list,
 	t_command	*new_node;
 
 	if (open_quote((char *)input))
-		return (1);
+		return (-1);
 	if (*input == '|')
 	{
 		new_node = init_command(exit_code);

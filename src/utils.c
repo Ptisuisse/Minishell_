@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:06:00 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/05 15:48:16 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:06:33 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,15 @@ void	free_command_list(t_command *command_list)
 	while (command_list)
 	{
 		temp = command_list;
-		// while (temp->args[i])
-		//{
-		//	if (temp->args[i])
-		//	{
-		//		free(temp->args[i]);
-		//		temp->args[i] = NULL;
-		//		i++;
-		//	}
-		//}
+		while (temp->args[i])
+		{
+			if (temp->args[i])
+			{
+				free(temp->args[i]);
+				temp->args[i] = NULL;
+				i++;
+			}
+		}
 		if (temp->output_file)
 		{
 			free(temp->output_file);
@@ -111,7 +111,6 @@ void	free_command_list(t_command *command_list)
 		temp->file = 0;
 		temp->status = 0;
 		temp->error_file = 0;
-		temp->exit_code = 0;
 		temp->output_file = NULL;
 		temp->input_file = NULL;
 		temp->append_file = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redirections.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:47 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/06 11:52:50 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:31:19 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 int	detect_invalid_double_redirection(const char **input, char **token)
 {
 	*token = NULL;
-	if (*(*input + 1) == '>' || *(*input + 1) == '<')
+	if ((*(*input + 1) == '>' || *(*input + 1) == '<') 
+	|| (*(*input + 2) == '>' || *(*input + 2) == '<'))
 	{
 		if (*(*input + 2) == '<' && *(*input + 3) != '\0')
 		{
 			*token = "newline";
-			if (*(*input + 3) == '<')
+			if (*(*input + 3) == '<' || *(*input + 3) == '>')
 				*token = "<";
+			if (*(*input + 3) == '>')
+				*token = ">";
 			if (*(*input + 4) == '<')
 				*token = "<<";
 		}
