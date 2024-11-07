@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:01 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:05:02 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/07 10:30:15 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ int	check_builtins(t_command *command, t_env **env_list)
 	int	status;
 
 	status = 0;
-	if (ft_strcmp(command->args[0], "exit") == 0)
+	if (ft_strcmp(command->args[0], "") == 0)
+		status = 0;
+	else if (ft_strcmp(command->args[0], "exit") == 0)
 		status = 1;
 	else if (ft_strcmp(command->args[0], "echo") == 0
 		&& ft_strlen(command->args[0]) == 4)

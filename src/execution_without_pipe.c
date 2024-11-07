@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_without_pipe.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:18 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/06 11:52:32 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:08:04 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	exec_command(t_command *command, t_env **env_list)
 	else
 		ft_process_wait(command);
 	command->exit_code = WEXITSTATUS(command->status);
-	free(cmd);
+	//free(cmd);
 	free_split(envp);
 	return (1);
 }

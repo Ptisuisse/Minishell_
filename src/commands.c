@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 10:32:45 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/06 10:32:47 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:06:06 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@
 
 void	redirect_error(t_command *command, char *filename)
 {
-	int	status;
+	// int	status;
 
-	status = 0;
+	// status = 0;
 	while (command)
 	{
 		if (command->error_message != NULL)
