@@ -39,7 +39,7 @@ int	check_append_file(t_command *commands)
 	return (0);
 }
 
-void	append_child(t_command *command)
+void	append_child(t_command *command, t_env **env_list)
 {
 	int	pipe_fd;
 
@@ -58,12 +58,12 @@ void	append_child(t_command *command)
 		}
 	}
 	dup2(pipe_fd, STDOUT_FILENO);
-	choose_command(command, NULL);
+	choose_command_pipe(command, env_list);
 	close(pipe_fd);
 	return ;
 }
 
-void	append_file(t_command *command)
+void	append_file(t_command *command, t_env **env_list)
 {
 	int	pipe_fd[2];
 	int	pid;
@@ -83,7 +83,7 @@ void	append_file(t_command *command)
 	}
 	if (pid == 0)
 	{
-		append_child(command);
+		append_child(command, env_list);
 		exit(EXIT_SUCCESS);
 	}
 	else

@@ -36,7 +36,7 @@ int	detect_invalid_double_redirection(const char **input, char **token)
 			if (*(*input + 3) == '>')
 				*token = ">>";
 		}
-		else if (*(*input + 3) == '\0' || !*(*input + 3))
+		else if (!ft_isascii(*(*input + 2)) && (*(*input + 3) == '\0' || !*(*input + 3)))
 			*token = "newline";
 		return (*token != NULL);
 	}

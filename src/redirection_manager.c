@@ -23,7 +23,7 @@ void	redirect_management(t_command *command, t_env **env_list)
 		if (command->output_file != NULL)
 			redirect_output(command, env_list);
 		if (command->append_file != NULL)
-			append_file(command);
+			append_file(command, env_list);
 	}
 }
 
@@ -88,7 +88,10 @@ void	process_input(t_command **command_list, t_env **env_list, char *input,
 		return ;
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{
-		(*command_list)->exit_code = 2;
+		if (!ft_strcmp(input, "$EMPTY"))
+			(*command_list)->exit_code = 0;
+		else
+			(*command_list)->exit_code = 2;
 		*save_exit_code = 256;
 	}
 }
