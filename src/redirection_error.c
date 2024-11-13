@@ -39,16 +39,35 @@ int	parsing_error_inputfile(t_command *commands, char *filename)
 	return (0);
 }
 
+int	parsing_error_appendfile(t_command *commands)
+{
+	char	*filename;
+
+	filename = commands->append_file;
+	if (check_file(filename, commands) > 0)
+	{
+		if (commands->input_file != NULL)
+			commands->input_file = NULL;
+		if (commands->output_file != NULL)
+			commands->output_file = NULL;
+		return (1);
+	}
+	return (0);
+}
+
 int	parsing_error_outputfile(t_command *commands)
 {
 	char	*filename;
 
-	if (commands->output_file != NULL)
-		filename = commands->output_file;
-	else if (commands->append_file != NULL)
-		filename = commands->append_file;
+	filename = commands->output_file;
 	if (check_file(filename, commands) > 0)
+	{
+		if (commands->append_file != NULL)
+			commands->append_file = NULL;
+		if (commands->input_file != NULL)
+			commands->input_file = NULL;
 		return (1);
+	}
 	return (0);
 }
 

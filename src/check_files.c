@@ -21,7 +21,7 @@ int	check_file(const char *filename, t_command *commands)
 	if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
 	{
 		commands->error_file = 1;
-		commands->error_message = strdup(" is a directory");
+		commands->error_message = ft_strdup(" is a directory");
 		return (2);
 	}
 
@@ -34,7 +34,7 @@ int	check_file(const char *filename, t_command *commands)
 		if (!check_directory(dirname))
 		{
 			commands->error_file = 1;
-			commands->error_message = strdup(" No such file or directory");
+			commands->error_message = ft_strdup(" No such file or directory");
 			free(dirname);
 			return (1);
 		}
@@ -52,7 +52,7 @@ int	check_file(const char *filename, t_command *commands)
 	if (access(filename, W_OK) == -1)
 	{
 		commands->error_file = 1;
-		commands->error_message = strdup(" Permission denied");
+		commands->error_message = ft_strdup(" Permission denied");
 		return (1);
 	}
 
