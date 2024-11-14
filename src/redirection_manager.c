@@ -42,7 +42,7 @@ int	redirect_input(t_command *commands, t_env **env_list)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	//put_into_args(commands);
+	// put_into_args(commands);
 	choose_command(commands, env_list);
 	return (0);
 }
@@ -85,7 +85,12 @@ int	process_input(t_command **command_list, t_env **env_list, char *input,
 {
 	(void)env_list;
 	if (!input)
-		return 0;
+		return (0);
+	if (ft_strlen(input) > 250)
+	{
+		input = strncpy(input, input, 10); // changer pour ft_strncpy
+		input[10] = '\0';
+	}
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{
 		if (!ft_strcmp(input, "$EMPTY"))
@@ -93,7 +98,7 @@ int	process_input(t_command **command_list, t_env **env_list, char *input,
 		else
 			(*command_list)->exit_code = 2;
 		*save_exit_code = 256;
-		return 0;
+		return (0);
 	}
-	return 1;
+	return (1);
 }
