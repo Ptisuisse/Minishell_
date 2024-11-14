@@ -72,7 +72,6 @@ int	just_a_path(t_command *command)
 
 int	main(int argc, char **argv, char **envp)
 {
-	int			status;
 	char		*input;
 	int			save_exit_code;
 	t_command	*command_list;
@@ -88,7 +87,6 @@ int	main(int argc, char **argv, char **envp)
 	setup_signal_handling();
 	while (1)
 	{
-		status = 1;
 		input = readline("Minishell > ");
 		if (!input)
 			exit_cmd(command_list, &env_list, save_exit_code);
@@ -101,8 +99,7 @@ int	main(int argc, char **argv, char **envp)
 				check_error_file(command_list);
 			else
 			{
-				status = just_a_path(command_list);
-				if (status == 1)
+				if (just_a_path(command_list))
 				{
 					check_heredoc(command_list);
 					select_type(command_list, &env_list);

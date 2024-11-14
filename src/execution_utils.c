@@ -19,14 +19,16 @@ int	check_path(char *pathname)
 	return (0);
 }
 
-char	*find_path(t_env **env_list, char *pathname)
+char	*find_path(t_env **env_list, t_command *command)
 {
 	t_env	*head;
 	char	**path;
+	char	*temp_path;
 	char	*full_path;
 	int		i;
 
 	i = 0;
+	full_path = NULL;
 	head = *env_list;
 	while (head)
 	{
@@ -39,17 +41,30 @@ char	*find_path(t_env **env_list, char *pathname)
 	path = ft_split(head->value, ':');
 	while (path[i])
 	{
-		full_path = ft_strjoin(ft_strjoin(path[i], "/"), pathname);
+		temp_path = ft_strjoin(path[i], "/");
+		if (!temp_path)
+		{
+			free_split(path);
+			return (NULL);
+		}
+		full_path = ft_strjoin(temp_path, command->args[0]);
+		free(temp_path);
+		if (!full_path)
+		{
+			free_split(path);
+			return (NULL);
+		}
 		if (!(access(full_path, F_OK)))
 		{
-			pathname = full_path;
+			command->args[0] = full_path;
 			break ;
 		}
 		free(full_path);
+		full_path = NULL;
 		i++;
 	}
 	free_split(path);
-	return (pathname);
+	return (command->args[0]);
 }
 
 int	count_env_vars(t_env *env_list)

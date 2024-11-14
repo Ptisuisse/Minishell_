@@ -83,18 +83,10 @@ int	process_input(t_command **command_list, char *input, int *save_exit_code)
 {
 	if (!input || !(*input))
 		return (0);
-	if (ft_strlen(input) > 1000)
+	if (ft_strlen(input) > 1024 && ft_strncmp(input, "echo", 4) != 0)
 	{
-		if (!ft_strncmp(input, "echo", 4))
-		{
-			input = strncpy(input, input, 500);
-			input[500] = '\0';
-		}
-		else
-		{
-			input = strncpy(input, input, 10);
-			input[10] = '\0';
-		}
+		input = strncpy(input, input, 10);
+		input[10] = '\0';
 	}
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{
