@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:47 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/07 13:15:33 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:29:29 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,13 @@ int	handle_redirection_and_arguments(const char **input, t_command *cmd,
 	{
 		if (handle_redirection(input, cmd))
 			return (1);
+	}
+	else if (**input == '.' || **input == '/')
+	{
+		parse_arguments(input, cmd, arg_index);
+		just_a_path(cmd); //./libft/ft_atoi.c echo
+		return 0;
+		
 	}
 	else
 		parse_arguments(input, cmd, arg_index);
