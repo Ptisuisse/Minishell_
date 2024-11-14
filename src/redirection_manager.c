@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:28 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/07 10:42:24 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:33:33 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ void	put_into_args(t_command *commands)
 		commands->args[i] = ft_strdup(commands->append_file);
 }
 
-void	process_input(t_command **command_list, t_env **env_list, char *input,
+int	process_input(t_command **command_list, t_env **env_list, char *input,
 		int *save_exit_code)
 {
 	(void)env_list;
 	if (!input)
-		return ;
+		return 0;
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{
 		if (!ft_strcmp(input, "$EMPTY"))
@@ -93,5 +93,7 @@ void	process_input(t_command **command_list, t_env **env_list, char *input,
 		else
 			(*command_list)->exit_code = 2;
 		*save_exit_code = 256;
+		return 0;
 	}
+	return 1;
 }

@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:38 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/07 10:25:50 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:15:48 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	parse_arguments(const char **input, t_command *cmd, int *arg_index)
 	char	buffer[1024];
 	int		buf_index;
 
-	buf_index = 0;
 	buf_index = 0;
 	parse_argument(input, buffer, &buf_index, cmd);
 	if (buffer[0] != 0 || buf_index != 0)
