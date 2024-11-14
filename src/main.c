@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:26 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/07 10:37:23 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:32:55 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,21 +116,24 @@ int	main(int argc, char **argv, char **envp)
 		handle_received_signal(&save_exit_code);
 		if (input && *input)
 			add_history(input);
-		process_input(&command_list, &env_list, input, &save_exit_code);
-		if (command_list->error_file > 0 && command_list->next == NULL)
-			check_error_file(command_list);
-		else
+		status = process_input(&command_list, &env_list, input, &save_exit_code);
+		if (status == 1)
 		{
-			if (is_executable(command_list) && save_exit_code != 256)
+			if (command_list->error_file > 0 && command_list->next == NULL)
+				check_error_file(command_list);
+			else
 			{
-				if ((command_list->args[0] != NULL)
-					&& (command_list->args[0][0] == '.'
-						|| command_list->args[0][0] == '/'))
-					status = just_a_path(command_list);
-				if (status == 1)
+				if (is_executable(command_list) && save_exit_code != 256)
 				{
-					check_heredoc(command_list);
-					select_type(command_list, &env_list);
+					if ((command_list->args[0] != NULL)
+						&& (command_list->args[0][0] == '.'
+							|| command_list->args[0][0] == '/'))
+						status = just_a_path(command_list);
+					if (status == 1)
+					{
+						check_heredoc(command_list);
+						select_type(command_list, &env_list);
+					}
 				}
 			}
 		}

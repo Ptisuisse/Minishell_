@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:34 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/05 15:33:23 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:34:16 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void					free_split(char **split);
 char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);
 void					free_env_list(t_env *env_list);
+int	just_a_path(t_command *command);
 char					*find_path(t_env **env_list, char *cmd);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
@@ -132,7 +133,7 @@ int						check_initial_conditions(const char *input,
 
 /*PARSING_UTILS_C*/
 
-void					process_input(t_command **command_list,
+int					process_input(t_command **command_list,
 							t_env **env_list, char *input, int *save_exit_code);
 
 t_command				*init_command(int exit_code);
