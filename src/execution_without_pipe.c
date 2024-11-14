@@ -51,7 +51,6 @@ int	exec_command(t_command *command, t_env **env_list)
 	else
 		ft_process_wait(command);
 	command->exit_code = WEXITSTATUS(command->status);
-	//free(cmd);
 	free_split(envp);
 	return (1);
 }

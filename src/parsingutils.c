@@ -52,7 +52,8 @@ void	append_command_node(t_command **lst, t_command *new)
 
 	if (!new)
 		return ;
-	if (*lst == NULL)
+	if ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->args[0] == NULL
+		&& (*lst)->file == 0)
 		*lst = new;
 	else
 	{

@@ -67,7 +67,10 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
-
+int						ft_isspace(char c);
+int						is_numeric(const char *str);
+void					handle_exit_error(char *arg);
+void					handle_exit_code(char *arg, int *exit_code);
 int						parsing_error_appendfile(t_command *commands);
 int						check_file(const char *filename, t_command *commands);
 int						multiple_redirection_output(t_command *command,
@@ -83,7 +86,7 @@ void					free_split(char **split);
 char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);
 void					free_env_list(t_env *env_list);
-int	just_a_path(t_command *command);
+int						just_a_path(t_command *command);
 char					*find_path(t_env **env_list, char *cmd);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
@@ -133,8 +136,8 @@ int						check_initial_conditions(const char *input,
 
 /*PARSING_UTILS_C*/
 
-int					process_input(t_command **command_list,
-							t_env **env_list, char *input, int *save_exit_code);
+int						process_input(t_command **command_list, char *input,
+							int *save_exit_code);
 
 t_command				*init_command(int exit_code);
 

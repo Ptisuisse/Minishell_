@@ -75,7 +75,7 @@ void	env_cmd(t_env *env_list)
 	env_list = head;
 }
 
-void	unset_cmd(t_command *command, t_env **env_list)
+void	loop_unset(t_command *command, t_env **env_list)
 {
 	t_env	*prev;
 	t_env	*current;
@@ -83,11 +83,6 @@ void	unset_cmd(t_command *command, t_env **env_list)
 
 	prev = NULL;
 	current = *env_list;
-	if (command->args[1] == NULL)
-	{
-		command->exit_code = 0;
-		return ;
-	}
 	while (current)
 	{
 		if (ft_strcmp(current->name, command->args[1]) == 0)
@@ -107,5 +102,15 @@ void	unset_cmd(t_command *command, t_env **env_list)
 		prev = current;
 		current = current->next;
 	}
+}
+
+void	unset_cmd(t_command *command, t_env **env_list)
+{
+	if (command->args[1] == NULL)
+	{
+		command->exit_code = 0;
+		return ;
+	}
+	loop_unset(command, env_list);
 	command->exit_code = 0;
 }

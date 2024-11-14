@@ -95,8 +95,6 @@ int	parse_command(const char **input, t_command *cmd)
 				return (1);
 		}
 	}
-	if (cmd->file > arg_index)
-		arg_index += cmd->file;
 	cmd->args[arg_index] = NULL;
 	if (**input == '|')
 	{
@@ -110,6 +108,3 @@ int	parse_command(const char **input, t_command *cmd)
 	}
 	return (0);
 }
-
-// if (((**input != ' ') || (**input != '|'))
-//&& !ft_isprint(**input)/*!ft_isalpha(**input)*/)

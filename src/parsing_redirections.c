@@ -36,7 +36,8 @@ int	detect_invalid_double_redirection(const char **input, char **token)
 			if (*(*input + 3) == '>')
 				*token = ">>";
 		}
-		else if (!ft_isascii(*(*input + 2)) && (*(*input + 3) == '\0' || !*(*input + 3)))
+		else if (!ft_isascii(*(*input + 2)) && (*(*input + 3) == '\0'
+				|| !*(*input + 3)))
 			*token = "newline";
 		return (*token != NULL);
 	}
@@ -93,13 +94,6 @@ int	handle_redirection_and_arguments(const char **input, t_command *cmd,
 	{
 		if (handle_redirection(input, cmd))
 			return (1);
-	}
-	else if (**input == '.' || **input == '/')
-	{
-		parse_arguments(input, cmd, arg_index);
-		just_a_path(cmd); //./libft/ft_atoi.c echo
-		return 0;
-		
 	}
 	else
 		parse_arguments(input, cmd, arg_index);
