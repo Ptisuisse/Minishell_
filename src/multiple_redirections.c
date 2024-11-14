@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   multiple_redirections.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/14 16:14:59 by lvan-slu          #+#    #+#             */
+/*   Updated: 2024/11/14 16:15:01 by lvan-slu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	multiple_append_child(t_command *command)
@@ -7,8 +19,8 @@ void	multiple_append_child(t_command *command)
 	pipe_fd = open(command->append_file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (pipe_fd < 0)
 	{
-			command->exit_code = 1;
-			return ;
+		command->exit_code = 1;
+		return ;
 	}
 	dup2(pipe_fd, STDOUT_FILENO);
 	close(pipe_fd);
@@ -19,35 +31,6 @@ void	multiple_append_file(t_command *command)
 {
 	multiple_append_child(command);
 	command->append_file = NULL;
-	return ;
-}
-
-void	multiple_redirection_exec(t_command *command, t_env **env_list)
-{
-	char	*cmd;
-	char	**envp;
-
-	envp = create_envp(*env_list);
-	cmd = ft_strdup(command->args[0]);
-	if (!check_path(command->args[0]))
-		cmd = find_path(env_list, command->args[0]);
-	command->pid = fork();
-	if (command->pid == 0)
-	{
-		if (execve(cmd, command->args, envp) == -1)
-		{
-			command->exit_code = 127;
-			ft_printf_error("%s: command not found\n", command->args[0]);
-			free(cmd);
-			free(envp);
-			exit(command->exit_code);
-		}
-	}
-	else
-		ft_process_wait(command);
-	command->exit_code = WEXITSTATUS(command->status);
-	free(cmd);
-	free_split(envp);
 	return ;
 }
 
@@ -101,5 +84,5 @@ void	multiple_redirection(t_command *command, t_env **env_list)
 			multiple_append_file(command);
 		command->file--;
 	}
-	exec_command(command, env_list);
+	choose_command(command, env_list);
 }

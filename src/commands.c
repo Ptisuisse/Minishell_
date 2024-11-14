@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-// int	print_error_redirection(char *filename)
-//{
-//	int	fd;
-
-//	fd = open(filename, O_RDONLY);
-//	if (fd < 0)
-//	{
-//		if (!access(filename, F_OK))
-//		{
-//			ft_printf_error("bash: %s: Permission denied\n", filename);
-//			return (1);
-//		}
-//		else
-//			ft_printf_error("%s: No such file or directory\n", filename);
-//	}
-//	return (0);
-//}
-
 void	redirect_error(t_command *command, char *filename)
 {
 	while (command)
