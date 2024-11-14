@@ -91,7 +91,8 @@ char	*strjoin_env(const char *s1, const char *s2, const char *s3)
 		return (NULL);
 	ft_strcpy(result, s1);
 	ft_strcat(result, s2);
-	ft_strcat(result, s3);
+	if (s3)
+		ft_strcat(result, s3);
 	return (result);
 }
 

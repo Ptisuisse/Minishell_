@@ -55,6 +55,8 @@ int	just_a_path(t_command *command)
 	{
 		if (command->args[0][0] == '.' || command->args[0][0] == '/')
 		{
+			if (command->args[0][0] == '.' && command->args[0][1] != '/')
+				return (1);
 			if (stat(command->args[0], &path_stat) == 0)
 			{
 				if (S_ISDIR(path_stat.st_mode))

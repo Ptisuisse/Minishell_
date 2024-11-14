@@ -43,7 +43,13 @@ int	handle_input_redirection(const char **input, t_command *cmd)
 		cmd->input_file = ft_strdup(buffer);
 		status = parsing_error_inputfile(cmd, cmd->input_file);
 		if (status > 0)
+		{
 			advance_to_end_or_pipe(input);
+			if (cmd->append_file != NULL)
+				cmd->append_file = NULL;
+			if (cmd->output_file != NULL)
+				cmd->output_file = NULL;
+		}
 	}
 	return (0);
 }
@@ -65,7 +71,7 @@ int	handle_output_redirection(const char **input, t_command *cmd)
 			(*input)++;
 		parse_argument(input, buffer, &buf_index, cmd);
 		cmd->append_file = strdup(buffer);
-		status = parsing_error_outputfile(cmd);
+		status = parsing_error_appendfile(cmd);
 		if (status > 0)
 		{
 			advance_to_end_or_pipe(input);

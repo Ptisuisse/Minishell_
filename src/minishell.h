@@ -67,6 +67,8 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+
+int						parsing_error_appendfile(t_command *commands);
 int						check_file(const char *filename, t_command *commands);
 int						multiple_redirection_output(t_command *command,
 							t_env **env_list);
@@ -91,7 +93,7 @@ void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
 void					free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
-void					append_file(t_command *command);
+void					append_file(t_command *command, t_env **env_list);
 
 /*HEREDOC_C*/
 void					check_heredoc(t_command *command);
