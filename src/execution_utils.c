@@ -19,21 +19,6 @@ int	check_path(char *pathname)
 	return (0);
 }
 
-void	free_split(char **split)
-{
-	int	i;
-
-	i = 0;
-	if (!split)
-		return ;
-	while (split[i])
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
-}
-
 char	*find_path(t_env **env_list, char *pathname)
 {
 	t_env	*head;
