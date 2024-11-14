@@ -41,7 +41,7 @@ int	parse_and_append_command(const char **input, t_command *new_node,
 		append_command_node(command_list, new_node);
 		return (1);
 	}
-	if (new_node->args[0] != NULL)
+	if (new_node->args[0] != NULL || new_node->file > 0)
 		append_command_node(command_list, new_node);
 	else
 	{
@@ -95,11 +95,14 @@ int	parse_command(const char **input, t_command *cmd)
 				return (1);
 		}
 	}
+	if (cmd->file > arg_index)
+		arg_index += cmd->file;
 	cmd->args[arg_index] = NULL;
 	if (**input == '|')
 	{
 		(*input)++;
-		if ((**input != ' ' && !ft_isalpha(**input)) || *(*input + 1) == '|' || **input == '|')
+		if ((**input != ' ' && !ft_isprint(**input)) || *(*input + 1) == '|'
+			|| **input == '|')
 		{
 			error_message("|", cmd);
 			return (1);
@@ -107,3 +110,6 @@ int	parse_command(const char **input, t_command *cmd)
 	}
 	return (0);
 }
+
+// if (((**input != ' ') || (**input != '|'))
+//&& !ft_isprint(**input)/*!ft_isalpha(**input)*/)

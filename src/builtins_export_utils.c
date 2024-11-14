@@ -17,7 +17,7 @@ int	print_error(t_command *command)
 	command->exit_code = 1;
 	if (command->args[0])
 		ft_printf_error("Minishell: export: `%s': not a valid identifier\n",
-			command->args[0]);
+			command->args[1]);
 	else
 		ft_printf_error("Minishell: export: not a valid identifier\n");
 	return (0);
@@ -30,15 +30,20 @@ int	check_each_argument(t_command *command, int *equal)
 	j = 0;
 	while (command->args[1][j])
 	{
-		if (command->args[1][0] == '_')
+		if (command->args[1][0] == '_' || command->args[1][0] == '=')
 		{
 			if (command->args[1][1] == '\0')
 				return (print_error(command));
 		}
-		else if (command->args[1][j] == '=')
+		else if (command->args[1][j] == '=' || (command->args[1][j] == '+'
+				&& command->args[1][j + 1] == '='))
 		{
 			*equal = 1;
-			if (!ft_isalnum(command->args[1][j - 1]))
+			if (command->args[1][j] == '+' && command->args[1][j + 1] == '=')
+				j++;
+			if (command->args[1][j + 1] == '\0' || command->args[1][j] == '\0')
+				break ;
+			else if (j > 0 && (command->args[1][j + 1] != '=' && !ft_isalnum(command->args[1][j + 1])))
 				return (print_error(command));
 		}
 		else if (command->args[1][j] == '-' || (!ft_isalnum(command->args[1][j])
@@ -62,6 +67,8 @@ int	ft_is_valid(t_command *command)
 	while (command->args[i])
 	{
 		equal = 0;
+		if (command->args[i][0] == '+' || command->args[i][0] == '=')
+			return (print_error(command));
 		if (!check_each_argument(command, &equal))
 			return (0);
 		i++;

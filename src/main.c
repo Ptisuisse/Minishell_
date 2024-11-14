@@ -55,6 +55,8 @@ int	just_a_path(t_command *command)
 	{
 		if (command->args[0][0] == '.' || command->args[0][0] == '/')
 		{
+			if (command->args[0][0] == '.' && command->args[0][1] != '/')
+				return (1);
 			if (stat(command->args[0], &path_stat) == 0)
 			{
 				if (S_ISDIR(path_stat.st_mode))
@@ -115,16 +117,21 @@ int	main(int argc, char **argv, char **envp)
 		if (input && *input)
 			add_history(input);
 		process_input(&command_list, &env_list, input, &save_exit_code);
-		if (is_executable(command_list) && save_exit_code != 256)
+		if (command_list->error_file > 0 && command_list->next == NULL)
+			check_error_file(command_list);
+		else
 		{
-			if ((command_list->args[0] != NULL)
-				&& (command_list->args[0][0] == '.'
-					|| command_list->args[0][0] == '/'))
-				status = just_a_path(command_list);
-			if (status == 1)
+			if (is_executable(command_list) && save_exit_code != 256)
 			{
-				check_heredoc(command_list);
-				select_type(command_list, &env_list);
+				if ((command_list->args[0] != NULL)
+					&& (command_list->args[0][0] == '.'
+						|| command_list->args[0][0] == '/'))
+					status = just_a_path(command_list);
+				if (status == 1)
+				{
+					check_heredoc(command_list);
+					select_type(command_list, &env_list);
+				}
 			}
 		}
 		save_exit_code = last_exitcode(command_list);

@@ -16,14 +16,14 @@ void	redirect_management(t_command *command, t_env **env_list)
 {
 	if (command->error_file == 0 && command->file > 1)
 		multiple_redirection(command, env_list);
-	if (command->error_file == 0 && command->file == 1)
+	else if (command->error_file == 0 && command->file == 1)
 	{
 		if (command->input_file != NULL)
 			redirect_input(command, env_list);
 		if (command->output_file != NULL)
 			redirect_output(command, env_list);
 		if (command->append_file != NULL)
-			append_file(command);
+			append_file(command, env_list);
 	}
 }
 
@@ -42,7 +42,7 @@ int	redirect_input(t_command *commands, t_env **env_list)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	put_into_args(commands);
+	//put_into_args(commands);
 	choose_command(commands, env_list);
 	return (0);
 }
@@ -61,7 +61,6 @@ int	redirect_output(t_command *command, t_env **env_list)
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
-	put_into_args(command);
 	choose_command(command, env_list);
 	return (0);
 }
@@ -72,13 +71,13 @@ void	put_into_args(t_command *commands)
 
 	i = 0;
 	while (commands->args[i])
-	{
-		if (!commands->args[i] && commands->input_file)
-			commands->args[i] = ft_strdup(commands->input_file);
-		if (!commands->args[i] && commands->heredoc_file)
-			commands->args[i] = ft_strdup(commands->append_file);
 		i++;
-	}
+	if (!commands->args[i] && commands->input_file)
+		commands->args[i] = ft_strdup(commands->input_file);
+	if (!commands->args[i] && commands->output_file)
+		commands->args[i] = ft_strdup(commands->output_file);
+	if (!commands->args[i] && commands->heredoc_file)
+		commands->args[i] = ft_strdup(commands->append_file);
 }
 
 void	process_input(t_command **command_list, t_env **env_list, char *input,
@@ -89,7 +88,10 @@ void	process_input(t_command **command_list, t_env **env_list, char *input,
 		return ;
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{
-		(*command_list)->exit_code = 2;
+		if (!ft_strcmp(input, "$EMPTY"))
+			(*command_list)->exit_code = 0;
+		else
+			(*command_list)->exit_code = 2;
 		*save_exit_code = 256;
 	}
 }

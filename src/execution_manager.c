@@ -30,7 +30,7 @@ void	select_type(t_command *command, t_env **list)
 		check_error_file(command);
 	}
 	if (command->heredoc_file != NULL)
-		remove(".heredoc");
+		unlink(".heredoc");
 	dup2(save_out, STDOUT_FILENO);
 	dup2(save_in, STDIN_FILENO);
 }
@@ -67,33 +67,3 @@ void	check_heredoc(t_command *command)
 	}
 	command = head;
 }
-// void	handle_child_process(t_command *commands)
-//{
-//	if (commands->prev == NULL && commands->next)
-//	{
-//		close(commands->pipe[0]);
-//		dup2(commands->pipe[1], STDOUT_FILENO);
-//		close(commands->pipe[1]);
-//	}
-//	else if (commands->next && commands->prev)
-//	{
-//		close(commands->prev->pipe[1]);
-//		dup2(commands->prev->pipe[0], STDIN_FILENO);
-//		close(commands->prev->pipe[0]);
-//		close(commands->pipe[0]);
-//		dup2(commands->pipe[1], STDOUT_FILENO);
-//		close(commands->pipe[1]);
-//	}
-//	else if (commands->prev && commands->next == NULL)
-//	{
-//		dup2(commands->prev->pipe[0], STDIN_FILENO);
-//		close(commands->prev->pipe[1]);
-//	}
-//}
-
-// void	setup_pipes(t_command *commands)
-//{
-//	if (commands->next)
-//		pipe(commands->pipe);
-//	commands->pid = fork();
-//}

@@ -15,8 +15,8 @@
 int	detect_invalid_double_redirection(const char **input, char **token)
 {
 	*token = NULL;
-	if ((*(*input + 1) == '>' || *(*input + 1) == '<') 
-	|| (*(*input + 2) == '>' || *(*input + 2) == '<'))
+	if ((*(*input + 1) == '>' || *(*input + 1) == '<') || (*(*input + 2) == '>'
+			|| *(*input + 2) == '<'))
 	{
 		if (*(*input + 2) == '<' && *(*input + 3) != '\0')
 		{
@@ -36,12 +36,14 @@ int	detect_invalid_double_redirection(const char **input, char **token)
 			if (*(*input + 3) == '>')
 				*token = ">>";
 		}
-		else if (*(*input + 3) == '\0' || !*(*input + 3))
+		else if (!ft_isascii(*(*input + 2)) && (*(*input + 3) == '\0' || !*(*input + 3)))
 			*token = "newline";
 		return (*token != NULL);
 	}
 	return (0);
 }
+
+//	else if (*(*input + 3) == '\0' && *(*input + 2) == '>')
 
 int	handle_redirection_error(const char *token, t_command *cmd)
 {

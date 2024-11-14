@@ -30,16 +30,29 @@ t_env	*add_new_var(char *name, char *value, t_env *env_list)
 	return (new_node);
 }
 
-int	update_existing_var(t_env *tmp, char *name, char *value, char *equal_sign)
+int	update_existing_var(t_env *tmp, char *name, char *value, char *equal_sign,
+		int append)
 {
+	char	*new_value;
+
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->name, name) == 0)
 		{
 			if (equal_sign)
 			{
-				free(tmp->value);
-				tmp->value = value;
+				if (append)
+				{
+					new_value = ft_strjoin(tmp->value, value);
+					free(tmp->value);
+					free(value);
+					tmp->value = new_value;
+				}
+				else
+				{
+					free(tmp->value);
+					tmp->value = value;
+				}
 			}
 			free(name);
 			return (1);
@@ -55,10 +68,18 @@ t_env	*export_args(char *arg, t_env *env_list)
 	char	*name;
 	char	*value;
 	char	*equal_sign;
+	int		append;
 
 	tmp = env_list;
 	equal_sign = ft_strchr(arg, '=');
-	if (equal_sign)
+	append = 0;
+	if (equal_sign && equal_sign > arg && *(equal_sign - 1) == '+')
+	{
+		append = 1;
+		name = ft_substr(arg, 0, equal_sign - arg - 1);
+		value = ft_strdup(equal_sign + 1);
+	}
+	else if (equal_sign)
 	{
 		name = ft_substr(arg, 0, equal_sign - arg);
 		value = ft_strdup(equal_sign + 1);
@@ -68,7 +89,7 @@ t_env	*export_args(char *arg, t_env *env_list)
 		name = ft_strdup(arg);
 		value = NULL;
 	}
-	if (update_existing_var(tmp, name, value, equal_sign))
+	if (update_existing_var(tmp, name, value, equal_sign, append))
 		return (env_list);
 	return (add_new_var(name, value, env_list));
 }

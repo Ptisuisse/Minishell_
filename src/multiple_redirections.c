@@ -1,5 +1,27 @@
 #include "minishell.h"
 
+void	multiple_append_child(t_command *command)
+{
+	int	pipe_fd;
+
+	pipe_fd = open(command->append_file, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (pipe_fd < 0)
+	{
+			command->exit_code = 1;
+			return ;
+	}
+	dup2(pipe_fd, STDOUT_FILENO);
+	close(pipe_fd);
+	return ;
+}
+
+void	multiple_append_file(t_command *command)
+{
+	multiple_append_child(command);
+	command->append_file = NULL;
+	return ;
+}
+
 void	multiple_redirection_exec(t_command *command, t_env **env_list)
 {
 	char	*cmd;
@@ -44,7 +66,6 @@ int	multiple_redirection_input(t_command *command, t_env **env_list)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	put_into_args(command);
 	command->input_file = NULL;
 	return (0);
 }
@@ -64,7 +85,6 @@ int	multiple_redirection_output(t_command *command, t_env **env_list)
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
-	put_into_args(command);
 	command->output_file = NULL;
 	return (0);
 }
@@ -75,11 +95,11 @@ void	multiple_redirection(t_command *command, t_env **env_list)
 	{
 		if (command->input_file != NULL)
 			multiple_redirection_input(command, env_list);
-		if (command->append_file != NULL)
-			append_file(command);
-		if (command->output_file != NULL)
+		if (command->output_file != NULL && command->output == 4)
 			multiple_redirection_output(command, env_list);
+		if (command->append_file != NULL && command->output == 3)
+			multiple_append_file(command);
 		command->file--;
 	}
-	multiple_redirection_exec(command, env_list);
+	exec_command(command, env_list);
 }

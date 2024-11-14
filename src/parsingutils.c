@@ -19,6 +19,7 @@ t_command	*init_command(int exit_code)
 	element = malloc(sizeof(t_command));
 	if (element == NULL)
 		return (NULL);
+	element->output = 0;
 	element->file = 0;
 	element->status = 0;
 	element->error_file = 0;

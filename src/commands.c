@@ -32,9 +32,6 @@
 
 void	redirect_error(t_command *command, char *filename)
 {
-	// int	status;
-
-	// status = 0;
 	while (command)
 	{
 		if (command->error_message != NULL)
@@ -56,8 +53,15 @@ void	check_error_file(t_command *cmd)
 	{
 		if (cmd->error_file == 1)
 		{
-			ft_printf_error("bash : %s :%s\n", cmd->args[0],
-				cmd->error_message);
+			if (cmd->input_file)
+				ft_printf_error("bash : %s :%s\n", cmd->input_file,
+					cmd->error_message);
+			else if (cmd->output_file)
+				ft_printf_error("bash : %s :%s\n", cmd->output_file,
+					cmd->error_message);
+			else if (cmd->append_file)
+				ft_printf_error("bash : %s :%s\n", cmd->append_file,
+					cmd->error_message);
 			cmd->exit_code = 1;
 		}
 		cmd = cmd->next;
