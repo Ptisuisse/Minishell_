@@ -95,13 +95,6 @@ int	handle_redirection_and_arguments(const char **input, t_command *cmd,
 		if (handle_redirection(input, cmd))
 			return (1);
 	}
-	else if ((**input == '"' && *(*input + 1) == '.') || (**input == '.'
-			|| **input == '/'))
-	{
-		parse_arguments(input, cmd, arg_index);
-		just_a_path(cmd); //./libft/ft_atoi.c echo
-		return (0);
-	}
 	else
 		parse_arguments(input, cmd, arg_index);
 	return (0);

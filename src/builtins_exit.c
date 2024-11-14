@@ -46,7 +46,7 @@ void	handle_exit_code(char *arg, int *exit_code)
 	long	exit_code_long;
 
 	exit_code_long = atol(arg);
-	if (exit_code_long > INT_MAX || exit_code_long < INT_MIN)
+	if (exit_code_long > 9223372036854775807 || exit_code_long < INT_MIN)
 		handle_exit_error(arg);
 	*exit_code = (int)exit_code_long;
 }

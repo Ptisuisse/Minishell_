@@ -86,10 +86,18 @@ int	process_input(t_command **command_list, t_env **env_list, char *input,
 	(void)env_list;
 	if (!input)
 		return (0);
-	if (ft_strlen(input) > 250)
+	if (ft_strlen(input) > 1000)
 	{
-		input = strncpy(input, input, 10); // changer pour ft_strncpy
-		input[10] = '\0';
+		if (!ft_strncmp(input, "echo", 4))
+		{
+			input = strncpy(input, input, 500);
+			input[500] = '\0';
+		}
+		else
+		{
+			input = strncpy(input, input, 10);
+			input[10] = '\0';
+		}
 	}
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{
