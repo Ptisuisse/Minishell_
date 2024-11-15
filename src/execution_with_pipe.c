@@ -36,7 +36,7 @@ int	exec_pipe_command(t_command *command, t_env **env_list)
 	cmd = ft_strdup(command->args[0]);
 	if (!check_path(command->args[0]))
 		cmd = find_path(env_list, command);
-	if (execve(cmd, command->args, envp) == -1)
+	if (execve(cmd, &command->args[0], envp) == -1)
 	{
 		command->exit_code = 127;
 		ft_printf_error("%s: command not found\n", command->args[0]);
@@ -50,15 +50,34 @@ int	exec_pipe_command(t_command *command, t_env **env_list)
 	return (1);
 }
 
+void	handle_command(t_command *commands, t_env **env_list, int *prev_pipe_fd)
+{
+	setup_pipes(commands);
+	commands->pid = fork();
+	if (commands->pid == 0)
+		process_child_pipe(commands, env_list, prev_pipe_fd);
+	else if (commands->pid > 0)
+	{
+		if (*prev_pipe_fd != -1)
+			close(*prev_pipe_fd);
+		if (commands->next)
+			close(commands->pipe[1]);
+		*prev_pipe_fd = commands->pipe[0];
+	}
+	else
+	{
+		perror("fork error");
+		exit(EXIT_FAILURE);
+	}
+}
+
 void	commands_pipe_manager(t_command *commands, t_env **env_list)
 {
 	t_command	*cmd;
 	int			prev_pipe_fd;
-	int			status;
-	int			last_exit_code;
 
-	cmd = commands;
 	prev_pipe_fd = -1;
+	cmd = commands;
 	while (commands)
 	{
 		if (commands->error_file > 0)
@@ -68,55 +87,12 @@ void	commands_pipe_manager(t_command *commands, t_env **env_list)
 			else
 				break ;
 		}
-		if (commands->next && pipe(commands->pipe) == -1)
-		{
-			perror("pipe error");
-			exit(EXIT_FAILURE);
-		}
-		commands->pid = fork();
-		if (commands->pid == 0)
-		{
-			if (prev_pipe_fd != -1)
-			{
-				dup2(prev_pipe_fd, STDIN_FILENO);
-				close(prev_pipe_fd);
-			}
-			if (commands->next)
-			{
-				close(commands->pipe[0]);
-				dup2(commands->pipe[1], STDOUT_FILENO);
-				close(commands->pipe[1]);
-			}
-			if (commands->file > 0)
-				redirect_management(commands, env_list);
-			else
-				choose_command_pipe(commands, env_list);
-			exit(EXIT_SUCCESS);
-		}
-		else if (commands->pid > 0)
-		{
-			if (prev_pipe_fd != -1)
-				close(prev_pipe_fd);
-			if (commands->next)
-				close(commands->pipe[1]);
-			prev_pipe_fd = commands->pipe[0];
-		}
-		else
-		{
-			perror("fork error");
-			exit(EXIT_FAILURE);
-		}
+		handle_command(commands, env_list, &prev_pipe_fd);
 		commands = commands->next;
 	}
-	commands = cmd;
-	while (commands)
+	if (prev_pipe_fd != -1)
 	{
-		waitpid(commands->pid, &status, 0);
-		if (WIFEXITED(status))
-			last_exit_code = WEXITSTATUS(status);
-		commands->exit_code = last_exit_code;
-		commands = commands->next;
+		close(prev_pipe_fd);
 	}
-	commands = cmd;
-	check_error_file(commands);
+	wait_for_commands(cmd);
 }

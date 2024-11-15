@@ -15,7 +15,6 @@ SRCS =	main.c \
 		env_var.c \
 		error.c \
 		execution_manager.c \
-		execution_utils.c \
 		execution_with_pipe.c \
 		execution_without_pipe.c \
 		signal.c \
@@ -29,6 +28,10 @@ SRCS =	main.c \
 		builtins_exit_utils.c \
 		heredoc_utils.c \
 		ft_free.c \
+		builtins_export_sort.c \
+		execution_w_pipe_utils.c \
+		env_exec.c \
+		path_exec.c \
 
 
 OBJS = $(SRCS:.c=.o)

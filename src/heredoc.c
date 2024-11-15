@@ -28,6 +28,11 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
 		perror("dup2 error");
 	close(heredoc_fd);
+	if (command->args[1] != NULL)
+	{
+		free(command->args[1]);
+		command->args[1] = NULL;
+	}
 	command->args[1] = ft_strdup(".heredoc");
 }
 

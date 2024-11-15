@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+int	print_error(t_command *command)
+{
+	command->exit_code = 1;
+	if (command->args[0])
+		ft_printf_error("Minishell: export: `%s': not a valid identifier\n",
+			command->args[1]);
+	else
+		ft_printf_error("Minishell: export: not a valid identifier\n");
+	return (0);
+}
+
 void	free_split(char **split)
 {
 	int	i;
@@ -91,49 +102,53 @@ void	free_command_list(t_command *command_list)
 	int			i;
 
 	i = 0;
-	while (command_list)
+	if (!command_list)
 	{
-		temp = command_list;
-		while (temp->args[i])
+		while (command_list)
 		{
-			if (temp->args[i])
+			temp = command_list;
+			if (temp->args[0])
 			{
-				free(temp->args[i]);
-				temp->args[i] = NULL;
-				i++;
+				while (temp->args[i])
+				{
+					free(temp->args[i]);
+					// temp->args[i] = NULL;
+					i++;
+				}
+				free(temp->args);
 			}
-		}
-		if (temp->output_file)
-		{
-			free(temp->output_file);
+			if (temp->output_file)
+			{
+				free(temp->output_file);
+				temp->output_file = NULL;
+			}
+			if (temp->input_file)
+			{
+				free(temp->input_file);
+				temp->input_file = NULL;
+			}
+			if (temp->append_file)
+			{
+				free(temp->append_file);
+				temp->append_file = NULL;
+			}
+			if (temp->error_message)
+			{
+				free(temp->error_message);
+				temp->error_message = NULL;
+			}
+			temp->file = 0;
+			temp->status = 0;
+			temp->error_file = 0;
 			temp->output_file = NULL;
-		}
-		if (temp->input_file)
-		{
-			free(temp->input_file);
 			temp->input_file = NULL;
-		}
-		if (temp->append_file)
-		{
-			free(temp->append_file);
 			temp->append_file = NULL;
-		}
-		if (temp->error_message)
-		{
-			free(temp->error_message);
+			temp->heredoc_file = NULL;
 			temp->error_message = NULL;
+			temp->next = NULL;
+			temp->prev = NULL;
+			command_list = command_list->next;
+			free(temp);
 		}
-		temp->file = 0;
-		temp->status = 0;
-		temp->error_file = 0;
-		temp->output_file = NULL;
-		temp->input_file = NULL;
-		temp->append_file = NULL;
-		temp->heredoc_file = NULL;
-		temp->error_message = NULL;
-		temp->next = NULL;
-		temp->prev = NULL;
-		command_list = command_list->next;
-		free(temp);
 	}
 }

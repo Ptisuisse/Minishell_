@@ -41,7 +41,7 @@ typedef struct s_command
 	int					status;
 	int					exit_code;
 	char				*error_message;
-	char				*args[MAX_TOKENS];
+	char				**args;
 	char				*input_file;
 	char				*output_file;
 	char				*append_file;
@@ -67,6 +67,14 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+void					process_child_pipe(t_command *commands,
+							t_env **env_list, int *prev_pipe_fd);
+void					setup_pipes(t_command *commands);
+void					wait_for_commands(t_command *commands);
+void					append_node(t_env *env_list, char *value);
+void					print_variables(t_env **head);
+int						update_existing_var(t_env *tmp, char *name, char *value,
+							int append);
 int						ft_isspace(char c);
 int						is_numeric(const char *str);
 void					handle_exit_error(char *arg);
@@ -116,7 +124,7 @@ void					parse_argument(const char **input, char *buffer,
 void					handle_quotes(const char **input, char *buffer,
 							int *buf_index, t_command *command_list);
 
-int						parse_arguments(const char **input, t_command *cmd,
+char						*parse_arguments(const char **input, t_command *cmd,
 							int *arg_index);
 
 int						parse_command(const char **input, t_command *cmd);
@@ -269,7 +277,8 @@ t_env					*export_cmd(t_env *env_list, t_command *command);
 /*BUILTINS_EXPORT_UTILS_C*/
 int						print_error(t_command *command);
 
-int						check_each_argument(t_command *command, int *equal);
+int						check_each_argument(t_command *command, int *equal,
+							int j);
 
 int						ft_is_valid(t_command *command);
 
