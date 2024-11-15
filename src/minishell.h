@@ -41,7 +41,7 @@ typedef struct s_command
 	int					status;
 	int					exit_code;
 	char				*error_message;
-	char				**args;
+	char				*args[MAX_TOKENS];
 	char				*input_file;
 	char				*output_file;
 	char				*append_file;
@@ -124,7 +124,7 @@ void					parse_argument(const char **input, char *buffer,
 void					handle_quotes(const char **input, char *buffer,
 							int *buf_index, t_command *command_list);
 
-char						*parse_arguments(const char **input, t_command *cmd,
+int						parse_arguments(const char **input, t_command *cmd,
 							int *arg_index);
 
 int						parse_command(const char **input, t_command *cmd);
