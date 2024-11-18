@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 void	parse_argument(const char **input, char *buffer, int *buf_index,
-		t_command *cmd)
+		t_command **cmd)
 {
 	skip_spaces(input);
 	while (**input)
@@ -38,7 +38,7 @@ void	parse_argument(const char **input, char *buffer, int *buf_index,
 }
 
 void	handle_quotes(const char **input, char *buffer, int *buf_index,
-		t_command *command_list)
+		t_command **command_list)
 {
 	char	quote_type;
 
@@ -60,7 +60,7 @@ void	handle_quotes(const char **input, char *buffer, int *buf_index,
 		(*input)++;
 }
 
-int	parse_arguments(const char **input, t_command *cmd, int *arg_index)
+int	parse_arguments(const char **input, t_command **cmd, int *arg_index)
 {
 	char	buffer[1024];
 	int		buf_index;
@@ -68,12 +68,12 @@ int	parse_arguments(const char **input, t_command *cmd, int *arg_index)
 	buf_index = 0;
 	parse_argument(input, buffer, &buf_index, cmd);
 	if (buffer[0] != 0 || buf_index != 0)
-		cmd->args[(*arg_index)++] = strdup(buffer);
+		(*cmd)->args[(*arg_index)++] = strdup(buffer);
 	return (buf_index);
 }
 
 int	check_initial_conditions(const char *input, t_command **command_list,
-		int exit_code)
+		int exit_code, t_env **env_list)
 {
 	t_command	*new_node;
 
@@ -81,16 +81,16 @@ int	check_initial_conditions(const char *input, t_command **command_list,
 		return (-1);
 	if (*input == '|')
 	{
-		new_node = init_command(exit_code);
+		new_node = init_command(exit_code, env_list);
 		if (!new_node)
 			return (1);
 		append_command_node(command_list, new_node);
-		error_message("|", *command_list);
+		error_message("|", command_list);
 		return (1);
 	}
 	if (!(*input))
 	{
-		new_node = init_command(exit_code);
+		new_node = init_command(exit_code, env_list);
 		if (!new_node)
 			return (1);
 		append_command_node(command_list, new_node);

@@ -75,7 +75,7 @@ void	put_into_args(t_command *commands)
 		commands->args[i] = ".heredoc";
 }
 
-int	process_input(t_command **command_list, char *input, int *save_exit_code)
+int	process_input(t_command **command_list, char *input, int *save_exit_code, t_env **env_list)
 {
 	if (!input || !(*input))
 		return (0);
@@ -84,7 +84,7 @@ int	process_input(t_command **command_list, char *input, int *save_exit_code)
 		input = strncpy(input, input, 10);
 		input[10] = '\0';
 	}
-	if (parse_command_line(input, command_list, *save_exit_code))
+	if (parse_command_line(input, command_list, *save_exit_code, env_list))
 	{
 		if (!ft_strcmp(input, "$EMPTY"))
 			(*command_list)->exit_code = 0;
