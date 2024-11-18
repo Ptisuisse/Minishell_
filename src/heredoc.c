@@ -16,6 +16,7 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 {
 	int	heredoc_fd;
 
+	(void)command;
 	close(pipe_fd[WRITE_END]);
 	write_to_heredoc(pipe_fd[READ_END]);
 	close(pipe_fd[READ_END]);
@@ -28,12 +29,9 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
 		perror("dup2 error");
 	close(heredoc_fd);
-	if (command->args[1] != NULL)
-	{
-		free(command->args[1]);
-		command->args[1] = NULL;
-	}
-	command->args[1] = ft_strdup(".heredoc");
+	if (!ft_strcmp(command->args[0], "cat") || !ft_strcmp(command->args[0],
+			"grep"))
+		put_into_args(command);
 }
 
 void	heredoc_child(t_command *command, int *pipe_fd)

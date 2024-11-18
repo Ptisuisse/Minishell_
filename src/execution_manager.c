@@ -30,7 +30,7 @@ void	select_type(t_command *command, t_env **list)
 		check_error_file(command);
 	}
 	if (command->heredoc_file != NULL)
-		unlink(".heredoc");
+		remove(".heredoc");
 	dup2(save_out, STDOUT_FILENO);
 	dup2(save_in, STDIN_FILENO);
 }
