@@ -71,30 +71,18 @@ void	put_into_args(t_command *commands)
 	i = 0;
 	while (commands->args[i])
 		i++;
-	if (!commands->args[i] && commands->input_file)
-		commands->args[i] = ft_strdup(commands->input_file);
-	if (!commands->args[i] && commands->output_file)
-		commands->args[i] = ft_strdup(commands->output_file);
 	if (!commands->args[i] && commands->heredoc_file)
-		commands->args[i] = ft_strdup(commands->append_file);
+		commands->args[i] = ".heredoc";
 }
 
 int	process_input(t_command **command_list, char *input, int *save_exit_code)
 {
 	if (!input || !(*input))
 		return (0);
-	if (ft_strlen(input) > 1000)
+	if (ft_strlen(input) > 1024 && ft_strncmp(input, "echo", 4) != 0)
 	{
-		if (!ft_strncmp(input, "echo", 4))
-		{
-			input = strncpy(input, input, 500);
-			input[500] = '\0';
-		}
-		else
-		{
-			input = strncpy(input, input, 10);
-			input[10] = '\0';
-		}
+		input = strncpy(input, input, 10);
+		input[10] = '\0';
 	}
 	if (parse_command_line(input, command_list, *save_exit_code))
 	{

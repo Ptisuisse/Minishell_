@@ -19,7 +19,8 @@ int	check_builtins(t_command *command, t_env **env_list)
 	status = 0;
 	if (ft_strcmp(command->args[0], "") == 0)
 		status = 0;
-	else if (ft_strcmp(command->args[0], "exit") == 0)
+	else if (ft_strcmp(command->args[0], "exit") == 0
+		&& ft_strlen(command->args[0]) == 4)
 		status = 1;
 	else if (ft_strcmp(command->args[0], "echo") == 0
 		&& ft_strlen(command->args[0]) == 4)

@@ -67,6 +67,14 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+void					process_child_pipe(t_command *commands,
+							t_env **env_list, int *prev_pipe_fd);
+void					setup_pipes(t_command *commands);
+void					wait_for_commands(t_command *commands);
+void					append_node(t_env *env_list, char *value);
+void					print_variables(t_env **head);
+int						update_existing_var(t_env *tmp, char *name, char *value,
+							int append);
 int						ft_isspace(char c);
 int						is_numeric(const char *str);
 void					handle_exit_error(char *arg);
@@ -87,11 +95,10 @@ char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);
 void					free_env_list(t_env *env_list);
 int						just_a_path(t_command *command);
-char					*find_path(t_env **env_list, char *cmd);
+char					*find_path(t_env **env_list, t_command *command);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						exec_pipe_command(t_command *command, t_env **env_list);
-void					put_into_args(t_command *commands);
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
@@ -269,7 +276,8 @@ t_env					*export_cmd(t_env *env_list, t_command *command);
 /*BUILTINS_EXPORT_UTILS_C*/
 int						print_error(t_command *command);
 
-int						check_each_argument(t_command *command, int *equal);
+int						check_each_argument(t_command *command, int *equal,
+							int j);
 
 int						ft_is_valid(t_command *command);
 
@@ -308,7 +316,6 @@ char					*replace_by_exit_code(char *result, int *result_index,
 							t_command *command);
 
 void					free_env_list(t_env *env_list);
-char					*find_path(t_env **env_list, char *cmd);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						exec_pipe_command(t_command *command, t_env **env_list);

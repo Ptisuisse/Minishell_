@@ -30,29 +30,19 @@ t_env	*add_new_var(char *name, char *value, t_env *env_list)
 	return (new_node);
 }
 
-int	update_existing_var(t_env *tmp, char *name, char *value, char *equal_sign,
-		int append)
+int	update_existing_var(t_env *tmp, char *name, char *value, int append)
 {
-	char	*new_value;
-
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->name, name) == 0)
+		if (ft_strcmp(tmp->name, name) == 0
+			&& ft_strlen(tmp->name) == ft_strlen(name))
 		{
-			if (equal_sign)
+			if (append)
+				append_node(tmp, value);
+			else
 			{
-				if (append)
-				{
-					new_value = ft_strjoin(tmp->value, value);
-					free(tmp->value);
-					free(value);
-					tmp->value = new_value;
-				}
-				else
-				{
-					free(tmp->value);
-					tmp->value = value;
-				}
+				free(tmp->value);
+				tmp->value = value;
 			}
 			free(name);
 			return (1);
@@ -60,6 +50,18 @@ int	update_existing_var(t_env *tmp, char *name, char *value, char *equal_sign,
 		tmp = tmp->next;
 	}
 	return (0);
+}
+
+char	*env_name_substr(char *equal_sign, char *arg)
+{
+	char	*name;
+
+	name = NULL;
+	if (equal_sign > arg && *(equal_sign - 1) == '+')
+		name = ft_substr(arg, 0, equal_sign - arg - 1);
+	else
+		name = ft_substr(arg, 0, equal_sign - arg);
+	return (name);
 }
 
 t_env	*export_args(char *arg, t_env *env_list)
@@ -70,18 +72,15 @@ t_env	*export_args(char *arg, t_env *env_list)
 	char	*equal_sign;
 	int		append;
 
+	name = NULL;
 	tmp = env_list;
 	equal_sign = ft_strchr(arg, '=');
 	append = 0;
-	if (equal_sign && equal_sign > arg && *(equal_sign - 1) == '+')
+	if (equal_sign)
 	{
-		append = 1;
-		name = ft_substr(arg, 0, equal_sign - arg - 1);
-		value = ft_strdup(equal_sign + 1);
-	}
-	else if (equal_sign)
-	{
-		name = ft_substr(arg, 0, equal_sign - arg);
+		if (equal_sign > arg && *(equal_sign - 1) == '+')
+			append = 1;
+		name = env_name_substr(equal_sign, arg);
 		value = ft_strdup(equal_sign + 1);
 	}
 	else
@@ -89,32 +88,9 @@ t_env	*export_args(char *arg, t_env *env_list)
 		name = ft_strdup(arg);
 		value = NULL;
 	}
-	if (update_existing_var(tmp, name, value, equal_sign, append))
+	if (update_existing_var(tmp, name, value, append))
 		return (env_list);
 	return (add_new_var(name, value, env_list));
-}
-
-void	print_variables(t_env **head)
-{
-	t_env	*current;
-
-	sort_env_list(head);
-	current = *head;
-	while (current)
-	{
-		if (current->name[0] == '_' && current->name[1] == '\0')
-		{
-			if (current->next)
-				current = current->next;
-			else
-				break ;
-		}
-		if (current->value == NULL)
-			ft_printf("declare -x %s\n", current->name);
-		else
-			ft_printf("declare -x %s=\"%s\"\n", current->name, current->value);
-		current = current->next;
-	}
 }
 
 t_env	*export_cmd(t_env *env_list, t_command *command)
