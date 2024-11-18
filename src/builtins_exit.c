@@ -44,7 +44,6 @@ int	check_and_handle_exit_args(t_command *command)
 
 int	exit_cmd(t_command *command, t_env **env_list, int save_exit_code)
 {
-	(void)env_list;
 	if (command && command->args[0] && ft_strcmp(command->args[0], "exit") == 0)
 	{
 		if (command->args[1])
@@ -55,11 +54,11 @@ int	exit_cmd(t_command *command, t_env **env_list, int save_exit_code)
 		else
 			command->exit_code = save_exit_code;
 		ft_printf("exit\n");
-		exit(command->exit_code);
+		exit(save_exit_code);
 	}
 	ft_printf("exit\n");
 	free_env_list(*env_list);
-	free_command_list(command);
+	free_command_list(&command);
 	exit(save_exit_code);
 	return (0);
 }

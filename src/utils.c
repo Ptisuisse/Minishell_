@@ -96,58 +96,49 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-void	free_command_list(t_command *command_list)
+void	free_command_list(t_command **command_list)
 {
-	t_command	*temp;
+	t_command	*tmp;
 	int			i;
 
-	i = 0;
 	if (!command_list)
+		return ;
+	while (*command_list)
 	{
-		while (command_list)
+		tmp = (*command_list)->next;
+		i = 0;
+		while ((*command_list)->args[i])
 		{
-			temp = command_list;
-			while (temp->args[i])
+			if ((*command_list)->args[i])
 			{
-				if (temp->args[i])
-				{
-					free(temp->args[i]);
-					temp->args[i] = NULL;
-					i++;
-				}
+				free((*command_list)->args[i]);
+				(*command_list)->args[i] = NULL;
+				i++;
 			}
-			if (temp->output_file)
-			{
-				free(temp->output_file);
-				temp->output_file = NULL;
-			}
-			if (temp->input_file)
-			{
-				free(temp->input_file);
-				temp->input_file = NULL;
-			}
-			if (temp->append_file)
-			{
-				free(temp->append_file);
-				temp->append_file = NULL;
-			}
-			if (temp->error_message)
-			{
-				free(temp->error_message);
-				temp->error_message = NULL;
-			}
-			temp->file = 0;
-			temp->status = 0;
-			temp->error_file = 0;
-			temp->output_file = NULL;
-			temp->input_file = NULL;
-			temp->append_file = NULL;
-			temp->heredoc_file = NULL;
-			temp->error_message = NULL;
-			temp->next = NULL;
-			temp->prev = NULL;
-			command_list = command_list->next;
-			free(temp);
 		}
+		if ((*command_list)->output_file)
+		{
+			free((*command_list)->output_file);
+			(*command_list)->output_file = NULL;
+		}
+		if ((*command_list)->input_file)
+		{
+			free((*command_list)->input_file);
+			(*command_list)->input_file = NULL;
+		}
+		if ((*command_list)->append_file)
+		{
+			free((*command_list)->append_file);
+			(*command_list)->append_file = NULL;
+		}
+		if ((*command_list)->error_message)
+		{
+			free((*command_list)->error_message);
+			(*command_list)->error_message = NULL;
+		}
+		free((*command_list));
+		*command_list = tmp;
 	}
+	//free(command_list);
+	*command_list = NULL;
 }
