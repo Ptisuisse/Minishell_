@@ -102,7 +102,6 @@ int						exec_pipe_command(t_command *command, t_env **env_list);
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
-void					free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
 void					append_file(t_command *command, t_env **env_list);
 
@@ -325,6 +324,6 @@ int						parsing_error_inputfile(t_command *commands,
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
-void					free_command_list(t_command *command_list);
+void					free_command_list(t_command **command_list);
 
 #endif

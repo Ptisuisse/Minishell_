@@ -52,7 +52,10 @@ void	handle_quotes(const char **input, char *buffer, int *buf_index,
 			buffer[(*buf_index)++] = *(*input)++;
 	}
 	if (*buf_index == 0)
+	{
+		buffer[(*buf_index)++] = ' ';
 		buffer[(*buf_index)++] = '\0';
+	}
 	if (**input == quote_type)
 		(*input)++;
 }

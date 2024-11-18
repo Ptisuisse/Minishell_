@@ -31,7 +31,8 @@ t_command	*init_command(int exit_code)
 	element->heredoc_file = NULL;
 	if (exit_code != 0)
 		element->exit_code = exit_code;
-	memset(element->args, 0, sizeof(element->args));
+	ft_memset(element->args, 0, sizeof(element->args));
+	// element->args = NULL;
 	element->next = NULL;
 	element->prev = NULL;
 	return (element);
@@ -52,8 +53,7 @@ void	append_command_node(t_command **lst, t_command *new)
 
 	if (!new)
 		return ;
-	if ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->args[0] == NULL
-		&& (*lst)->file == 0)
+	if ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->file == 0)
 		*lst = new;
 	else
 	{
