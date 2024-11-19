@@ -75,7 +75,8 @@ void	put_into_args(t_command *commands)
 		commands->args[i] = ft_strdup(".heredoc");
 }
 
-int	process_input(t_command **command_list, char *input, int *save_exit_code, t_env **env_list)
+int	process_input(t_command **command_list, char *input, int *save_exit_code,
+		t_env **env_list)
 {
 	if (!input || !(*input))
 		return (0);

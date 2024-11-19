@@ -33,16 +33,17 @@ char	*handle_remaining_chars(const char *input, int *i, int *result_index)
 	return (result);
 }
 
-char	*extract_env_key(const char *input, int *i)
+char	*extract_env_key(const char *input)
 {
 	char	*env_key;
-	int		start = *i;
+	int		start = 1;
 	int		length = 0;
+	int i = 1;
 
-	while (input[*i] && ft_isalnum(input[*i]))
+	while (input[i] && ft_isalnum(input[i]))
 	{
 		length++;
-		(*i)++;
+		i++;
 	}
 
 	env_key = malloc(sizeof(char) * (length + 1));

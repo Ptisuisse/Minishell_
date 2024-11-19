@@ -27,7 +27,7 @@ int	choose_command_pipe(t_command *command, t_env **env_list)
 	return (result);
 }
 
-int	exec_pipe_command(t_command *command, t_env **env_list)
+void	exec_pipe_command(t_command *command, t_env **env_list)
 {
 	char	*cmd;
 	char	**envp;
@@ -35,25 +35,22 @@ int	exec_pipe_command(t_command *command, t_env **env_list)
 	envp = create_envp(*env_list);
 	cmd = ft_strdup(command->args[0]);
 	if (!check_path(command->args[0]))
-		cmd = find_path(env_list, command);
+		cmd = find_path(env_list, command, cmd);
 	if (execve(cmd, &command->args[0], envp) == -1)
 	{
 		command->exit_code = 127;
 		ft_printf_error("%s: command not found\n", command->args[0]);
-		free(cmd);
-		free_split(envp);
 		exit(command->exit_code);
 	}
-	command->exit_code = WEXITSTATUS(command->status);
 	free(cmd);
-	free_split(envp);
-	return (1);
 }
 
 void	handle_command(t_command *commands, t_env **env_list, int *prev_pipe_fd)
 {
 	setup_pipes(commands);
 	commands->pid = fork();
+	if (commands->pid == -1)
+		perror("fork error");
 	if (commands->pid == 0)
 		process_child_pipe(commands, env_list, prev_pipe_fd);
 	else if (commands->pid > 0)
@@ -63,11 +60,6 @@ void	handle_command(t_command *commands, t_env **env_list, int *prev_pipe_fd)
 		if (commands->next)
 			close(commands->pipe[1]);
 		*prev_pipe_fd = commands->pipe[0];
-	}
-	else
-	{
-		perror("fork error");
-		exit(EXIT_FAILURE);
 	}
 }
 
@@ -90,9 +82,10 @@ void	commands_pipe_manager(t_command *commands, t_env **env_list)
 		handle_command(commands, env_list, &prev_pipe_fd);
 		commands = commands->next;
 	}
-	if (prev_pipe_fd != -1)
-	{
-		close(prev_pipe_fd);
-	}
+	commands = cmd;
+	// if (prev_pipe_fd != -1)
+	//{
+	//	close(prev_pipe_fd);
+	//}
 	wait_for_commands(cmd);
 }
