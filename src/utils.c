@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:06:00 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/07 11:06:33 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 10:58:56 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,49 +96,64 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
+static void	free_command_args(t_command *command)
+{
+	int i = 0;
+
+	if (!command)
+		return;
+	while (command->args[i])
+	{
+		free(command->args[i]);
+		command->args[i] = NULL;
+		i++;
+	}
+}
+
+static void	free_command_files(t_command *command)
+{
+	if (!command)
+		return;
+	if (command->output_file)
+	{
+		free(command->output_file);
+		command->output_file = NULL;
+	}
+	if (command->input_file)
+	{
+		free(command->input_file);
+		command->input_file = NULL;
+	}
+	if (command->append_file)
+	{
+		free(command->append_file);
+		command->append_file = NULL;
+	}
+}
+
+static void	free_command_error_message(t_command *command)
+{
+	if (command && command->error_message)
+	{
+		free(command->error_message);
+		command->error_message = NULL;
+	}
+}
+
 void	free_command_list(t_command **command_list)
 {
-	t_command	*tmp;
-	int			i;
+	t_command *tmp;
 
-	if (!command_list)
-		return ;
 	while (*command_list)
 	{
 		tmp = (*command_list)->next;
-		i = 0;
-		while ((*command_list)->args[i])
-		{
-			if ((*command_list)->args[i])
-			{
-				free((*command_list)->args[i]);
-				(*command_list)->args[i] = NULL;
-			}
-			i++;
-		}
-		if ((*command_list)->output_file)
-		{
-			free((*command_list)->output_file);
-			(*command_list)->output_file = NULL;
-		}
-		if ((*command_list)->input_file)
-		{
-			free((*command_list)->input_file);
-			(*command_list)->input_file = NULL;
-		}
-		if ((*command_list)->append_file)
-		{
-			free((*command_list)->append_file);
-			(*command_list)->append_file = NULL;
-		}
-		if ((*command_list)->error_message)
-		{
-			free((*command_list)->error_message);
-			(*command_list)->error_message = NULL;
-		}
-		free((*command_list));
+
+		free_command_args(*command_list);
+		free_command_files(*command_list);
+		free_command_error_message(*command_list);
+
+		free(*command_list);
 		*command_list = tmp;
 	}
-	// free(command_list);
 	*command_list = NULL;
 }
