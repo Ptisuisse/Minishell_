@@ -22,14 +22,19 @@ void	free_env_node(t_env *node)
 	}
 }
 
-void	free_env_list(t_env *env_list)
+void	free_env_list(t_env **env_list)
 {
 	t_env	*tmp;
 
-	while (env_list)
+	while ((*env_list))
 	{
-		tmp = env_list;
-		env_list = env_list->next;
-		free_env_node(tmp);
+		tmp = (*env_list)->next;
+		if ((*env_list)->name)
+			free((*env_list)->name);
+		if ((*env_list)->value)
+			free((*env_list)->value);
+		free((*env_list));
+		(*env_list) = tmp;
 	}
+	(*env_list) = NULL;
 }

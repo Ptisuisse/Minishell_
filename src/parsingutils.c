@@ -31,13 +31,13 @@ t_command	*init_command(int exit_code, t_env **env_list)
 	element->heredoc_file = NULL;
 	if (exit_code != 0)
 		element->exit_code = exit_code;
-	ft_memset(element->args, 0, sizeof(element->args));
-	// element->args = NULL;
+	memset(element->args, 0, sizeof(element->args));
 	element->next = NULL;
 	element->prev = NULL;
 	element->env = *env_list;
 	return (element);
 }
+
 
 t_command	*ft_lstlst(t_command *lst)
 {
@@ -54,7 +54,8 @@ void	append_command_node(t_command **lst, t_command *new)
 
 	if (!new)
 		return ;
-	if ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->file == 0 && (*lst)->args[0] == NULL)
+	if ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->file == 0
+		&& (*lst)->args[0] == NULL)
 		*lst = new;
 	else
 	{

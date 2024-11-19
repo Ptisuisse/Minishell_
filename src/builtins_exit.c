@@ -57,7 +57,7 @@ int	exit_cmd(t_command *command, t_env **env_list, int save_exit_code)
 		exit(command->exit_code);
 	}
 	ft_printf("exit\n");
-	free_env_list(*env_list);
+	free_env_list(env_list);
 	free_command_list(&command);
 	exit(save_exit_code);
 	return (0);

@@ -94,7 +94,6 @@ void					advance_to_end_or_pipe(const char **input);
 void					free_split(char **split);
 char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);
-void					free_env_list(t_env *env_list);
 int						just_a_path(t_command *command);
 char					*find_path(t_env **env_list, t_command *command);
 int						choose_command_pipe(t_command *command,
@@ -315,7 +314,7 @@ void					error_message(const char *token, t_command **cmd);
 char					*replace_by_exit_code(char *result, int *result_index,
 							t_command **command);
 
-void					free_env_list(t_env *env_list);
+void					free_env_list(t_env **env_list);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						exec_pipe_command(t_command *command, t_env **env_list);

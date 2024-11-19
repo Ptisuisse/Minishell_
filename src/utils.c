@@ -113,8 +113,8 @@ void	free_command_list(t_command **command_list)
 			{
 				free((*command_list)->args[i]);
 				(*command_list)->args[i] = NULL;
-				i++;
 			}
+			i++;
 		}
 		if ((*command_list)->output_file)
 		{
@@ -139,6 +139,6 @@ void	free_command_list(t_command **command_list)
 		free((*command_list));
 		*command_list = tmp;
 	}
-	//free(command_list);
+	// free(command_list);
 	*command_list = NULL;
 }

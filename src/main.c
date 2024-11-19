@@ -113,6 +113,6 @@ int	main(int argc, char **argv, char **envp)
 		input = NULL;
 	}
 	free_command_list(&command_list);
-	free_env_list(env_list);
+	free_env_list(&env_list);
 	return (0);
 }

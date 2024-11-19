@@ -31,7 +31,7 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 	close(heredoc_fd);
 	if (!ft_strcmp(command->args[0], "cat") || !ft_strcmp(command->args[0],
 			"grep"))
-		put_into_args(command);
+	put_into_args(command);
 }
 
 void	heredoc_child(t_command *command, int *pipe_fd)

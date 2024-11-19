@@ -97,8 +97,10 @@ char	*handle_dollar(const char *input, int *i, int *result_index,
 {
 	char	*env_value;
 	int		j;
+	t_command	*head;
 
 	(void)result_index;
+	head = *cmd;
 	(*i)++;
 	j = 0;
 	env_value = malloc(sizeof(char *) * (ft_strlen(input)));
@@ -109,9 +111,21 @@ char	*handle_dollar(const char *input, int *i, int *result_index,
 		(*i)++;
 	}
 	env_value[j] = '\0';
-	while (ft_strcmp((*cmd)->env->name, env_value) != 0)
+	while ((*cmd)->env)
+	{
+		if (ft_strcmp((*cmd)->env->name, env_value) == 0)
+		{
+			env_value = (*cmd)->env->value;
+			j = 1;
+			break ;
+		}
+		else
+			j = -1;
 		(*cmd)->env = (*cmd)->env->next;
-	env_value = (*cmd)->env->value;
+	}
+	*cmd = head;
+	if (j == -1)
+		env_value[0] = '\0';
 	if (env_value)
 		return (env_value);
 	else if (!env_value && (input[*i] == '"' || input[*i] == '\'')
