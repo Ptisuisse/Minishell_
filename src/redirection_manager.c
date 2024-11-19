@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:28 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/14 12:33:33 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 10:21:03 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	process_input(t_command **command_list, char *input, int *save_exit_code, t_
 		return (0);
 	if (ft_strlen(input) > 1024 && ft_strncmp(input, "echo", 4) != 0)
 	{
-		input = strncpy(input, input, 10);
+		input = ft_memmove(input, input, 10);
 		input[10] = '\0';
 	}
 	if (parse_command_line(input, command_list, *save_exit_code, env_list))

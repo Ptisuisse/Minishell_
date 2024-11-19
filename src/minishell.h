@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:34 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/14 12:34:16 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:29:12 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,14 @@ void					heredoc_child(t_command *command, int *pipe_fd);
 void					heredoc(t_command *command);
 
 /*PARSING_C*/
-
+char	*handle_special_cases(const char *input, int *i);
+char	*handle_remaining_chars(const char *input, int *i, int *result_index);
+void	skip_quotes(const char *input, int *i);
+char	*extract_env_key(const char *input, int *i);
+char	*find_env_value(const char *env_key, t_env *env);
+char	*process_character(const char *input, int *i, int *result_index, t_command **command_list);
+char	*concatenate_results(char *result, char *temp);
+char	*process_dollar_case(const char *input, int *i, int *result_index, t_command **command_list);
 void					parse_argument(const char **input, char *buffer,
 							int *buf_index, t_command **cmd);
 
