@@ -32,6 +32,8 @@ SRCS =	main.c \
 		execution_w_pipe_utils.c \
 		env_exec.c \
 		path_exec.c \
+		start_builtins.c \
+		dollar_utils.c \
 
 
 OBJS = $(SRCS:.c=.o)
