@@ -34,6 +34,10 @@ SRCS =	main.c \
 		path_exec.c \
 		start_builtins.c \
 		dollar_utils.c \
+		paths.c \
+		setting.c \
+		free.c \
+		check_redirections.c \
 
 
 OBJS = $(SRCS:.c=.o)
