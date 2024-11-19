@@ -33,6 +33,14 @@
 
 extern int				g_received_signal;
 
+typedef struct s_env
+{
+	char				*name;
+	char				*value;
+	char				**env;
+	struct s_env		*next;
+}						t_env;
+
 typedef struct s_command
 {
 	int					file;
@@ -50,15 +58,8 @@ typedef struct s_command
 	struct s_command	*next;
 	struct s_command	*prev;
 	pid_t				pid;
+	t_env				*env;
 }						t_command;
-
-typedef struct s_env
-{
-	char				*name;
-	char				*value;
-	char				**env;
-	struct s_env		*next;
-}						t_env;
 
 typedef struct s_data
 {
@@ -93,7 +94,6 @@ void					advance_to_end_or_pipe(const char **input);
 void					free_split(char **split);
 char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);
-void					free_env_list(t_env *env_list);
 int						just_a_path(t_command *command);
 char					*find_path(t_env **env_list, t_command *command);
 int						choose_command_pipe(t_command *command,
@@ -102,7 +102,6 @@ int						exec_pipe_command(t_command *command, t_env **env_list);
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
-void					free_command_list(t_command *command_list);
 /*APPEND_FILE_C*/
 void					append_file(t_command *command, t_env **env_list);
 
@@ -118,35 +117,37 @@ void					heredoc(t_command *command);
 /*PARSING_C*/
 
 void					parse_argument(const char **input, char *buffer,
-							int *buf_index, t_command *cmd);
+							int *buf_index, t_command **cmd);
 
 void					handle_quotes(const char **input, char *buffer,
-							int *buf_index, t_command *command_list);
+							int *buf_index, t_command **command_list);
 
-int						parse_arguments(const char **input, t_command *cmd,
+int						parse_arguments(const char **input, t_command **cmd,
 							int *arg_index);
 
-int						parse_command(const char **input, t_command *cmd);
+int						parse_command(const char **input, t_command **cmd);
 
 int						parse_command_line(const char *input,
-							t_command **command_list, int exit_code);
+							t_command **command_list, int exit_code,
+							t_env **env_list);
 int						check_and_init_command(const char *input,
-							t_command **command_list, int exit_code);
+							t_command **command_list, int exit_code,
+							t_env **env_list);
 int						parse_and_append_command(const char **input,
 							t_command *new_node, t_command **command_list);
 int						process_input_commands(const char *input,
-							t_command **command_list, int exit_code);
-int						parse_command_line(const char *input,
-							t_command **command_list, int exit_code);
+							t_command **command_list, int exit_code,
+							t_env **env_list);
 int						check_initial_conditions(const char *input,
-							t_command **command_list, int exit_code);
+							t_command **command_list, int exit_code,
+							t_env **env_list);
 
 /*PARSING_UTILS_C*/
 
 int						process_input(t_command **command_list, char *input,
-							int *save_exit_code);
+							int *save_exit_code, t_env **env_list);
 
-t_command				*init_command(int exit_code);
+t_command				*init_command(int exit_code, t_env **env_list);
 
 t_command				*ft_lstlst(t_command *lst);
 
@@ -162,22 +163,20 @@ int						open_quote(const char *line);
 int						check_builtins(t_command *command, t_env **env_list);
 
 void					process_dollar(const char **input, char *buffer,
-							int *buf_index, t_command *command_list);
+							int *buf_index, t_command **command_list);
 
 void					handle_dollar_sign(const char **input, char *buffer,
-							int *buf_index, t_command *command_list);
+							int *buf_index, t_command **command_list);
 
-int						handle_dollar(const char *input, int *i, char *result,
-							int *result_index);
+char					*handle_dollar(const char *input, int *i,
+							int *result_index, t_command **command_list);
 
 char					*search_dollar(const char *input,
-							t_command *command_list);
+							t_command **command_list);
 
 /*ENV_VAR_C*/
 
 void					skip_spaces(const char **input);
-
-char					*get_env_value(const char *input, int *i);
 
 /*REDIRECTIONS_C*/
 
@@ -185,23 +184,23 @@ int						detect_invalid_double_redirection(const char **input,
 							char **token);
 
 int						handle_redirection_error(const char *token,
-							t_command *cmd);
+							t_command **cmd);
 
 int						check_double_redirection(const char **input,
-							t_command *cmd);
+							t_command **cmd);
 
-int						handle_redirection(const char **input, t_command *cmd);
+int						handle_redirection(const char **input, t_command **cmd);
 
 int						handle_redirection_and_arguments(const char **input,
-							t_command *cmd, int *arg_index);
+							t_command **cmd, int *arg_index);
 
 int						handle_input_redirection(const char **input,
-							t_command *cmd);
+							t_command **cmd);
 
 int						handle_output_redirection(const char **input,
-							t_command *cmd);
+							t_command **cmd);
 
-int						parse_redirection(const char **input, t_command *cmd);
+int						parse_redirection(const char **input, t_command **cmd);
 
 /*REDIRECTIONS_MANAGEMENT_C*/
 
@@ -311,11 +310,11 @@ void					setup_signal_handling(void);
 
 /*ERROR_C*/
 int						last_exitcode(t_command *command);
-void					error_message(const char *token, t_command *cmd);
+void					error_message(const char *token, t_command **cmd);
 char					*replace_by_exit_code(char *result, int *result_index,
-							t_command *command);
+							t_command **command);
 
-void					free_env_list(t_env *env_list);
+void					free_env_list(t_env **env_list);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						exec_pipe_command(t_command *command, t_env **env_list);
@@ -325,6 +324,6 @@ int						parsing_error_inputfile(t_command *commands,
 int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
-void					free_command_list(t_command *command_list);
+void					free_command_list(t_command **command_list);
 
 #endif

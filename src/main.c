@@ -81,9 +81,9 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env_list = malloc(sizeof(t_env));
-	command_list = malloc(sizeof(t_command));
-	command_list = init_command(0);
+	// command_list = malloc(sizeof(t_command));
 	create_env_list(envp, &env_list);
+	command_list = init_command(0, &env_list);
 	setup_signal_handling();
 	while (1)
 	{
@@ -93,7 +93,7 @@ int	main(int argc, char **argv, char **envp)
 		handle_received_signal(&save_exit_code);
 		if (input && *input)
 			add_history(input);
-		if (process_input(&command_list, input, &save_exit_code))
+		if (process_input(&command_list, input, &save_exit_code, &env_list))
 		{
 			if (command_list->error_file > 0 && command_list->next == NULL)
 				check_error_file(command_list);
@@ -107,11 +107,12 @@ int	main(int argc, char **argv, char **envp)
 			}
 		}
 		save_exit_code = last_exitcode(command_list);
-		free_command_list(command_list);
-		command_list = init_command(save_exit_code);
+		free_command_list(&command_list);
+		command_list = init_command(save_exit_code, &env_list);
 		free(input);
 		input = NULL;
 	}
-	free_env_list(env_list);
+	free_command_list(&command_list);
+	free_env_list(&env_list);
 	return (0);
 }

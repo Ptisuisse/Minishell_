@@ -13,21 +13,21 @@
 #include "minishell.h"
 
 int	check_and_init_command(const char *input, t_command **command_list,
-		int exit_code)
+		int exit_code, t_env **env_list)
 {
 	int			check;
 	t_command	*new_node;
 
-	check = check_initial_conditions(input, command_list, exit_code);
+	check = check_initial_conditions(input, command_list, exit_code, env_list);
 	if (check != -1)
 		return (check);
 	if (*input == '|')
 	{
-		new_node = init_command(exit_code);
+		new_node = init_command(exit_code, env_list);
 		if (!new_node)
 			return (1);
 		append_command_node(command_list, new_node);
-		error_message("|", *command_list);
+		error_message("|", command_list);
 		return (1);
 	}
 	return (0);
@@ -36,7 +36,7 @@ int	check_and_init_command(const char *input, t_command **command_list,
 int	parse_and_append_command(const char **input, t_command *new_node,
 		t_command **command_list)
 {
-	if (parse_command(input, new_node))
+	if (parse_command(input, &new_node))
 	{
 		append_command_node(command_list, new_node);
 		return (1);
@@ -49,7 +49,7 @@ int	parse_and_append_command(const char **input, t_command *new_node,
 			(*input)++;
 		if (**input == '|')
 			(*input)++;
-		parse_command(input, new_node);
+		parse_command(input, &new_node);
 		append_command_node(command_list, new_node);
 		return (1);
 	}
@@ -57,13 +57,13 @@ int	parse_and_append_command(const char **input, t_command *new_node,
 }
 
 int	process_input_commands(const char *input, t_command **command_list,
-		int exit_code)
+		int exit_code, t_env **env_list)
 {
 	t_command	*new_node;
 
 	while (*input)
 	{
-		new_node = init_command(exit_code);
+		new_node = init_command(exit_code, env_list);
 		if (!new_node)
 			return (1);
 		if (parse_and_append_command(&input, new_node, command_list))
@@ -73,14 +73,14 @@ int	process_input_commands(const char *input, t_command **command_list,
 }
 
 int	parse_command_line(const char *input, t_command **command_list,
-		int exit_code)
+		int exit_code, t_env **env_list)
 {
-	if (check_and_init_command(input, command_list, exit_code))
+	if (check_and_init_command(input, command_list, exit_code, env_list))
 		return (1);
-	return (process_input_commands(input, command_list, exit_code));
+	return (process_input_commands(input, command_list, exit_code, env_list));
 }
 
-int	parse_command(const char **input, t_command *cmd)
+int	parse_command(const char **input, t_command **cmd)
 {
 	int	arg_index;
 
@@ -95,7 +95,7 @@ int	parse_command(const char **input, t_command *cmd)
 				return (1);
 		}
 	}
-	cmd->args[arg_index] = NULL;
+	(*cmd)->args[arg_index] = NULL;
 	if (**input == '|')
 	{
 		(*input)++;

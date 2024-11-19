@@ -46,7 +46,7 @@ int	detect_invalid_double_redirection(const char **input, char **token)
 
 //	else if (*(*input + 3) == '\0' && *(*input + 2) == '>')
 
-int	handle_redirection_error(const char *token, t_command *cmd)
+int	handle_redirection_error(const char *token, t_command **cmd)
 {
 	if (token)
 	{
@@ -56,7 +56,7 @@ int	handle_redirection_error(const char *token, t_command *cmd)
 	return (0);
 }
 
-int	check_double_redirection(const char **input, t_command *cmd)
+int	check_double_redirection(const char **input, t_command **cmd)
 {
 	char	*token;
 
@@ -65,7 +65,7 @@ int	check_double_redirection(const char **input, t_command *cmd)
 	return (0);
 }
 
-int	handle_redirection(const char **input, t_command *cmd)
+int	handle_redirection(const char **input, t_command **cmd)
 {
 	char	*token;
 
@@ -87,7 +87,7 @@ int	handle_redirection(const char **input, t_command *cmd)
 	return (parse_redirection(input, cmd));
 }
 
-int	handle_redirection_and_arguments(const char **input, t_command *cmd,
+int	handle_redirection_and_arguments(const char **input, t_command **cmd,
 		int *arg_index)
 {
 	if (**input == '<' || **input == '>')
