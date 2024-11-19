@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:20:34 by lisambet          #+#    #+#             */
-/*   Updated: 2024/11/19 13:30:22 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:19:09 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,14 @@ char	*process_character(const char *input, int *i, int *result_index, t_command 
 {
 	char	*temp;
 
-	if (input[*i] == '$')
+    temp = NULL;
+    if (input[*i] == '$' && input[(*i + 1)] == '?')
+		{
+			temp = replace_by_exit_code(temp, result_index, command_list);
+			(*result_index) +=ft_strlen(temp);
+			*i += 2;
+		}
+	else if (input[*i] == '$'&& ft_isalnum(input[(*i + 1)]))
 	{
 		temp = process_dollar_case(input, i, result_index, command_list);
 	}
@@ -55,6 +62,7 @@ char	*process_dollar_case(const char *input, int *i, int *result_index, t_comman
 
 	if (!env_value)
 		return (ft_strdup("")); 
-		
+	(*result_index) += ft_strlen(env_value);
+    (*i) += ft_strlen(env_value);
 	return (ft_strdup(env_value));
 }
