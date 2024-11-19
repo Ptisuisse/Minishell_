@@ -28,13 +28,10 @@ void	free_env_list(t_env **env_list)
 
 	while ((*env_list))
 	{
-		tmp = (*env_list)->next;
-		if ((*env_list)->name)
-			free((*env_list)->name);
-		if ((*env_list)->value)
-			free((*env_list)->value);
-		free((*env_list));
-		(*env_list) = tmp;
+		tmp = (*env_list);
+		(*env_list) = (*env_list)->next;
+		free(tmp->name);
+		free(tmp->value);
+		free(tmp);
 	}
-	(*env_list) = NULL;
 }

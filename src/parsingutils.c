@@ -24,6 +24,8 @@ t_command	*init_command(int exit_code, t_env **env_list)
 	element->status = 0;
 	element->error_file = 0;
 	element->exit_code = 0;
+	element->save_in = 0;
+	element->save_out = 0;
 	element->error_message = NULL;
 	element->output_file = NULL;
 	element->input_file = NULL;
@@ -54,8 +56,8 @@ void	append_command_node(t_command **lst, t_command *new)
 
 	if (!new)
 		return ;
-	if ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->file == 0
-		&& (*lst)->args[0] == NULL)
+	if (!(*lst) || ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->file == 0
+		&& (*lst)->args[0] == NULL))
 		*lst = new;
 	else
 	{

@@ -19,7 +19,7 @@ int	check_path(char *pathname)
 	return (0);
 }
 
-void	join_path(t_command *command, char **path)
+char	*join_path(t_command *command, char **path, char *cmd)
 {
 	char	*temp_path;
 	char	*full_path;
@@ -34,16 +34,19 @@ void	join_path(t_command *command, char **path)
 		free(temp_path);
 		if (!(access(full_path, F_OK)))
 		{
-			command->args[0] = full_path;
+			cmd= ft_strdup(full_path);
 			break ;
 		}
 		free(full_path);
 		full_path = NULL;
 		i++;
 	}
+	free(full_path);
+	full_path = NULL;
+	return (cmd);
 }
 
-char	*find_path(t_env **env_list, t_command *command)
+char	*find_path(t_env **env_list, t_command *command, char *cmd)
 {
 	t_env	*head;
 	char	**path;
@@ -58,7 +61,7 @@ char	*find_path(t_env **env_list, t_command *command)
 	if (!head)
 		return (NULL);
 	path = ft_split(head->value, ':');
-	join_path(command, path);
+	cmd = join_path(command, path, cmd);
 	free_split(path);
-	return (command->args[0]);
+	return (cmd);
 }

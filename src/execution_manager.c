@@ -14,11 +14,8 @@
 
 void	select_type(t_command *command, t_env **list)
 {
-	int	save_in;
-	int	save_out;
-
-	save_in = dup(STDIN_FILENO);
-	save_out = dup(STDOUT_FILENO);
+	command->save_in = dup(STDIN_FILENO);
+	command->save_out = dup(STDOUT_FILENO);
 	if (command->next)
 		commands_pipe_manager(command, list);
 	else
@@ -31,8 +28,10 @@ void	select_type(t_command *command, t_env **list)
 	}
 	if (command->heredoc_file != NULL)
 		remove(".heredoc");
-	dup2(save_out, STDOUT_FILENO);
-	dup2(save_in, STDIN_FILENO);
+	dup2(command->save_out, STDOUT_FILENO);
+	dup2(command->save_in, STDIN_FILENO);
+	close(command->save_in);
+	close(command->save_out);
 }
 
 void	start_builtins(t_command *command, t_env **env_list)
