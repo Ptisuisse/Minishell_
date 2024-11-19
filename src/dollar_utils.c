@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:20:34 by lisambet          #+#    #+#             */
-/*   Updated: 2024/11/19 15:19:09 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:33:19 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,18 @@ char	*concatenate_results(char *result, char *temp)
 char	*process_dollar_case(const char *input, int *i, int *result_index,
 		t_command **command_list)
 {
-	char *env_key;
-	char *env_value;
+	char	*env_key;
+	char	*env_value;
 
 	(void)result_index;
 	(void)*i;
 	env_key = extract_env_key(input);
 	if (!env_key || env_key[0] == '\0')
 		return (handle_special_cases(input, i));
-
 	env_value = find_env_value(env_key, (*command_list)->env);
 	free(env_key);
-
 	if (!env_value)
 		return (ft_strdup(""));
 	(*result_index) += ft_strlen(env_value);
-	//(*i) += ft_strlen(env_value);
 	return (ft_strdup(env_value));
 }

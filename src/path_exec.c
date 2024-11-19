@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:31:19 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/15 15:31:20 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:34:52 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*join_path(t_command *command, char **path, char *cmd)
 		free(temp_path);
 		if (!(access(full_path, F_OK)))
 		{
-			cmd= ft_strdup(full_path);
+			cmd = ft_strdup(full_path);
 			break ;
 		}
 		free(full_path);
@@ -64,4 +64,11 @@ char	*find_path(t_env **env_list, t_command *command, char *cmd)
 	cmd = join_path(command, path, cmd);
 	free_split(path);
 	return (cmd);
+}
+
+int	process_command_path(const char *path, t_command *command)
+{
+	if (path[0] == '.' && path[1] != '/')
+		return (1);
+	return (validate_path(path, command));
 }

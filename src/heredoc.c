@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 15:11:58 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 15:11:59 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:30:50 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 	close(heredoc_fd);
 	if (!ft_strcmp(command->args[0], "cat") || !ft_strcmp(command->args[0],
 			"grep"))
-	put_into_args(command);
+		put_into_args(command);
 }
 
 void	heredoc_child(t_command *command, int *pipe_fd)
@@ -69,4 +69,17 @@ void	heredoc(t_command *command)
 		dup2(stdin_backup, STDIN_FILENO);
 		close(stdin_backup);
 	}
+}
+
+int	handle_heredoc(const char **input, t_command *cmd, char *buffer)
+{
+	int	buf_index;
+
+	buf_index = 0;
+	(*input)++;
+	while (**input == ' ')
+		(*input)++;
+	parse_argument(input, buffer, &buf_index, &cmd);
+	cmd->heredoc_file = ft_strdup(buffer);
+	return (0);
 }

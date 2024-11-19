@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsingutils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:43 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/10/17 13:05:43 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:20:54 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_command	*init_command(int exit_code, t_env **env_list)
 	return (element);
 }
 
-
 t_command	*ft_lstlst(t_command *lst)
 {
 	if (lst == NULL)
@@ -56,8 +55,8 @@ void	append_command_node(t_command **lst, t_command *new)
 
 	if (!new)
 		return ;
-	if (!(*lst) || ((*lst)->next == NULL && (*lst)->prev == NULL && (*lst)->file == 0
-		&& (*lst)->args[0] == NULL))
+	if (!(*lst) || ((*lst)->next == NULL && (*lst)->prev == NULL
+			&& (*lst)->file == 0 && (*lst)->args[0] == NULL))
 		*lst = new;
 	else
 	{
