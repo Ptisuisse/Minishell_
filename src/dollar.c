@@ -19,7 +19,8 @@ int	check_builtins(t_command *command, t_env **env_list)
 	status = 0;
 	if (ft_strcmp(command->args[0], "") == 0)
 		status = 0;
-	else if (ft_strcmp(command->args[0], "exit") == 0)
+	else if (ft_strcmp(command->args[0], "exit") == 0
+		&& ft_strlen(command->args[0]) == 4)
 		status = 1;
 	else if (ft_strcmp(command->args[0], "echo") == 0
 		&& ft_strlen(command->args[0]) == 4)
@@ -45,7 +46,7 @@ int	check_builtins(t_command *command, t_env **env_list)
 }
 
 void	process_dollar(const char **input, char *buffer, int *buf_index,
-		t_command *command_list)
+		t_command **command_list)
 {
 	char	*dollar;
 	int		temp_index;
@@ -65,10 +66,11 @@ void	process_dollar(const char **input, char *buffer, int *buf_index,
 	while (**input && **input != ' ' && **input != '"' && **input != '\''
 		&& **input != '=')
 		(*input)++;
+	// free(dollar);
 }
 
 void	handle_dollar_sign(const char **input, char *buffer, int *buf_index,
-		t_command *command_list)
+		t_command **command_list)
 {
 	char	quote_type;
 
@@ -88,42 +90,63 @@ void	handle_dollar_sign(const char **input, char *buffer, int *buf_index,
 	}
 	else
 		process_dollar(input, buffer, buf_index, command_list);
-	// while (**input)
-	// 	input++;
 }
 
-int	handle_dollar(const char *input, int *i, char *result, int *result_index)
+char	*handle_dollar(const char *input, int *i, int *result_index,
+		t_command **cmd)
 {
 	char	*env_value;
+	int		j;
+	t_command	*head;
 
+	(void)result_index;
+	head = *cmd;
 	(*i)++;
-	env_value = get_env_value(input, i);
-	if (env_value)
+	j = 0;
+	env_value = malloc(sizeof(char *) * (ft_strlen(input)));
+	while (input[j])
 	{
-		while (*env_value)
-			result[(*result_index)++] = *env_value++;
-		return (1);
+		env_value[j] = input[*i];
+		j++;
+		(*i)++;
 	}
+	env_value[j] = '\0';
+	while ((*cmd)->env)
+	{
+		if (ft_strcmp((*cmd)->env->name, env_value) == 0)
+		{
+			env_value = (*cmd)->env->value;
+			j = 1;
+			break ;
+		}
+		else
+			j = -1;
+		(*cmd)->env = (*cmd)->env->next;
+	}
+	*cmd = head;
+	if (j == -1)
+		env_value[0] = '\0';
+	if (env_value)
+		return (env_value);
 	else if (!env_value && (input[*i] == '"' || input[*i] == '\'')
 			&& !ft_isalpha(input[*i + 1]))
 	{
 		(*i)++;
-		return (0);
+		return (NULL);
 	}
 	else
 	{
 		(*i)++;
-		return (0);
+		return (NULL);
 	}
 }
-char	*search_dollar(const char *input, t_command *command_list)
+
+char	*search_dollar(const char *input, t_command **command_list)
 {
-	char	result[1024];
+	char	*result;
 	int		result_index;
 	int		i;
 
-	// int dollar = 1;
-	//	char *exit_code;
 	result_index = 0;
 	i = 0;
 	while (ft_isprint(input[i]) && input[i] != ' ' && input[i] != '=')
@@ -135,17 +158,24 @@ char	*search_dollar(const char *input, t_command *command_list)
 		}
 		if (input[i] == '$' && (input[i + 1] == '?'))
 		{
-			replace_by_exit_code(result, &result_index, command_list);
+			result = replace_by_exit_code(result, &result_index, command_list);
+			result_index++;
 			i += 2;
 			continue ;
 		}
 		if (input[i] == '$' && ft_isalnum(input[i + 1]))
 		{
-			if (!handle_dollar(input, &i, result, &result_index))
-				return (0);
+			result = handle_dollar(input, &i, &result_index, command_list);
+			if (result == NULL)
+				return (NULL);
+			result_index += ft_strlen(result);
 		}
 		else
-			result[result_index++] = input[i++];
+		{
+			result = ft_strdup((char *)input);
+			result_index += ft_strlen(result);
+			i += 2;
+		}
 	}
 	result[result_index] = '\0';
 	return (ft_strdup(result));
