@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:34 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 13:29:12 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:34:27 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ typedef struct s_env
 
 typedef struct s_command
 {
-	int	save_in;
-	int	save_out;
+	int					save_in;
+	int					save_out;
 	int					file;
 	int					output;
 	int					error_file;
@@ -70,8 +70,17 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
-void	handle_signal_parent(int g_received_signal);
-void	handle_signal_child(int g_received_signal);
+int						validate_path(const char *path, t_command *command);
+int						process_command_path(const char *path,
+							t_command *command);
+void					cleanup(t_command **command_list, char **input);
+void					process_commands(t_command **command_list, char *input,
+							int *save_exit_code, t_env **env_list);
+void					handle_input(char **input, int save_exit_code,
+							t_env **env_list, t_command **command_list);
+void					setup_environment(t_env **env_list, char **envp);
+void					handle_signal_parent(int g_received_signal);
+void					handle_signal_child(int g_received_signal);
 void					process_child_pipe(t_command *commands,
 							t_env **env_list, int *prev_pipe_fd);
 void					setup_pipes(t_command *commands);
@@ -99,7 +108,8 @@ void					free_split(char **split);
 char					**create_envp(t_env *env_list);
 void					check_error_file(t_command *cmd);
 int						just_a_path(t_command *command);
-char					*find_path(t_env **env_list, t_command *command, char *cmd);
+char					*find_path(t_env **env_list, t_command *command,
+							char *cmd);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 int						parsing_error_outputfile(t_command *commands);
@@ -118,14 +128,17 @@ void					heredoc_child(t_command *command, int *pipe_fd);
 void					heredoc(t_command *command);
 
 /*PARSING_C*/
-char	*handle_special_cases(const char *input, int *i);
-char	*handle_remaining_chars(const char *input, int *i, int *result_index);
-void	skip_quotes(const char *input, int *i);
-char	*extract_env_key(const char *input);
-char	*find_env_value(const char *env_key, t_env *env);
-char	*process_character(const char *input, int *i, int *result_index, t_command **command_list);
-char	*concatenate_results(char *result, char *temp);
-char	*process_dollar_case(const char *input, int *i, int *result_index, t_command **command_list);
+char					*handle_special_cases(const char *input, int *i);
+char					*handle_remaining_chars(const char *input, int *i,
+							int *result_index);
+void					skip_quotes(const char *input, int *i);
+char					*extract_env_key(const char *input);
+char					*find_env_value(const char *env_key, t_env *env);
+char					*process_character(const char *input, int *i,
+							int *result_index, t_command **command_list);
+char					*concatenate_results(char *result, char *temp);
+char					*process_dollar_case(const char *input, int *i,
+							int *result_index, t_command **command_list);
 void					parse_argument(const char **input, char *buffer,
 							int *buf_index, t_command **cmd);
 
@@ -245,6 +258,8 @@ int						choose_command(t_command *command, t_env **env_list);
 void					ft_process_wait(t_command *commands);
 
 /*HEREDOC_C*/
+int						handle_heredoc(const char **input, t_command *cmd,
+							char *buffer);
 void					handle_heredoc_signal(int sig);
 void					setup_heredoc_signal_handling(void);
 void					check_heredoc(t_command *command);
@@ -327,7 +342,7 @@ char					*replace_by_exit_code(char *result, int *result_index,
 void					free_env_list(t_env **env_list);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
-void						exec_pipe_command(t_command *command, t_env **env_list);
+void					exec_pipe_command(t_command *command, t_env **env_list);
 void					put_into_args(t_command *commands);
 int						parsing_error_inputfile(t_command *commands,
 							char *filename);

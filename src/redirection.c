@@ -6,24 +6,11 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:47 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 10:56:56 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:26:37 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	handle_heredoc(const char **input, t_command *cmd, char *buffer)
-{
-	int	buf_index;
-
-	buf_index = 0;
-	(*input)++;
-	while (**input == ' ')
-		(*input)++;
-	parse_argument(input, buffer, &buf_index, &cmd);
-	cmd->heredoc_file = ft_strdup(buffer);
-	return (0);
-}
 
 int	handle_input_file(const char **input, t_command *cmd, char *buffer)
 {
@@ -61,6 +48,7 @@ int	handle_input_redirection(const char **input, t_command **cmd)
 	else
 		return (handle_input_file(input, *cmd, buffer));
 }
+
 int	handle_append_redirection(const char **input, t_command *cmd, char *buffer)
 {
 	int	buf_index;
@@ -119,22 +107,4 @@ int	handle_output_redirection(const char **input, t_command **cmd)
 		return (handle_append_redirection(input, *cmd, buffer));
 	else
 		return (handle_trunc_redirection(input, *cmd, buffer));
-}
-
-void	advance_to_end_or_pipe(const char **input)
-{
-	while (**input != '\0' && **input != '|')
-		(*input)++;
-}
-
-int	parse_redirection(const char **input, t_command **cmd)
-{
-	int result;
-
-	result = 0;
-	if (**input == '<')
-		handle_input_redirection(input, cmd);
-	else if (**input == '>')
-		handle_output_redirection(input, cmd);
-	return (result);
 }

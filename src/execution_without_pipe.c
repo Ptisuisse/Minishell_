@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:18 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/07 11:08:04 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:34:12 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ void	exec_child_process(char *cmd, char **envp, t_command *command)
 
 int	exec_command(t_command *command, t_env **env_list)
 {
-	char	*cmd = NULL;
+	char	*cmd;
 	char	**envp;
 
+	cmd = NULL;
 	envp = create_envp(*env_list);
 	if (!check_path(command->args[0]))
 		cmd = find_path(env_list, command, cmd);

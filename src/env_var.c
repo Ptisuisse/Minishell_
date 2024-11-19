@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:06 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 13:26:46 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:13:00 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,35 +23,42 @@ void	skip_quotes(const char *input, int *i)
 	while (input[*i] == '"' || input[*i] == '\'')
 		(*i)++;
 }
+
 char	*handle_remaining_chars(const char *input, int *i, int *result_index)
 {
 	char	*result;
 
 	result = ft_strdup((char *)input);
 	*result_index += ft_strlen(result);
-	(*i) += 2; // Skip non-dollar special cases
+	(*i) += 2;
 	return (result);
 }
 
 char	*extract_env_key(const char *input)
 {
 	char	*env_key;
-	int		start = 1;
-	int		length = 0;
-	int i = 1;
+	int		start;
+	int		length;
+	int		i;
+	int		j;
 
+	start = 1;
+	length = 0;
+	i = 1;
 	while (input[i] && ft_isalnum(input[i]))
 	{
 		length++;
 		i++;
 	}
-
 	env_key = malloc(sizeof(char) * (length + 1));
 	if (!env_key)
 		return (NULL);
-
-	for (int j = 0; j < length; j++)
+	j = 0;
+	while (j < length)
+	{
 		env_key[j] = input[start + j];
+		j++;
+	}
 	env_key[length] = '\0';
 	return (env_key);
 }
