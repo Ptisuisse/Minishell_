@@ -27,21 +27,27 @@ void	wait_for_commands(t_command *commands)
 		commands->exit_code = last_exit_code;
 		commands = commands->next;
 	}
+	commands = cmd;
 	check_error_file(cmd);
 }
 
 void	setup_pipes(t_command *commands)
 {
-	if (commands->next && pipe(commands->pipe) == -1)
+	if (commands->next != NULL)
 	{
-		perror("pipe error");
-		exit(EXIT_FAILURE);
+		if (pipe(commands->pipe) == -1)
+		{
+			ft_printf_error("pipe error\n");
+			exit_cmd(commands, &commands->env, EXIT_FAILURE);
+		}
 	}
 }
 
 void	process_child_pipe(t_command *commands, t_env **env_list,
 		int *prev_pipe_fd)
 {
+	close(commands->save_in);
+	close(commands->save_out);
 	if (*prev_pipe_fd != -1)
 	{
 		dup2(*prev_pipe_fd, STDIN_FILENO);

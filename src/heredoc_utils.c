@@ -42,7 +42,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 	g_received_signal = 0;
 	while (1)
 	{
-		setup_heredoc_signal_handling();
+		//setup_heredoc_signal_handling();
 		input = readline("> ");
 		if (!input)
 		{

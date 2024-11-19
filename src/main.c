@@ -83,16 +83,18 @@ int	main(int argc, char **argv, char **envp)
 	env_list = malloc(sizeof(t_env));
 	// command_list = malloc(sizeof(t_command));
 	create_env_list(envp, &env_list);
-	command_list = init_command(0, &env_list);
-	setup_signal_handling();
+	//command_list = init_command(0, &env_list);
+	command_list = NULL;
 	while (1)
 	{
-		input = readline("Minishell > ");
-		if (!input)
-			exit_cmd(command_list, &env_list, save_exit_code);
+		setup_signal_handling();
 		handle_received_signal(&save_exit_code);
+		input = readline("Minishell > ");
+		if (!input)		
+			exit_cmd(command_list, &env_list, save_exit_code);
 		if (input && *input)
 			add_history(input);
+		command_list = init_command(save_exit_code, &env_list);
 		if (process_input(&command_list, input, &save_exit_code, &env_list))
 		{
 			if (command_list->error_file > 0 && command_list->next == NULL)
@@ -108,7 +110,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		save_exit_code = last_exitcode(command_list);
 		free_command_list(&command_list);
-		command_list = init_command(save_exit_code, &env_list);
 		free(input);
 		input = NULL;
 	}

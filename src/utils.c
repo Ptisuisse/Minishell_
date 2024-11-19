@@ -98,10 +98,11 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 static void	free_command_args(t_command *command)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!command)
-		return;
+		return ;
 	while (command->args[i])
 	{
 		free(command->args[i]);
@@ -113,7 +114,7 @@ static void	free_command_args(t_command *command)
 static void	free_command_files(t_command *command)
 {
 	if (!command)
-		return;
+		return ;
 	if (command->output_file)
 	{
 		free(command->output_file);
@@ -129,6 +130,11 @@ static void	free_command_files(t_command *command)
 		free(command->append_file);
 		command->append_file = NULL;
 	}
+	if (command->heredoc_file)
+	{
+		free(command->heredoc_file);
+		command->heredoc_file = NULL;
+	}
 }
 
 static void	free_command_error_message(t_command *command)
@@ -142,18 +148,17 @@ static void	free_command_error_message(t_command *command)
 
 void	free_command_list(t_command **command_list)
 {
-	t_command *tmp;
+	t_command	*tmp;
 
 	while (*command_list)
 	{
 		tmp = (*command_list)->next;
-
 		free_command_args(*command_list);
 		free_command_files(*command_list);
 		free_command_error_message(*command_list);
-
 		free(*command_list);
 		*command_list = tmp;
 	}
 	*command_list = NULL;
+	free((*command_list));
 }
