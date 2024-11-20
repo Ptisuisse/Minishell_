@@ -114,7 +114,6 @@ char					*find_path(t_env **env_list, t_command *command,
 							char *cmd);
 int						choose_command_pipe(t_command *command,
 							t_env **env_list);
-int						parsing_error_outputfile(t_command *commands);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
 /*APPEND_FILE_C*/
@@ -346,9 +345,9 @@ int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 void					exec_pipe_command(t_command *command, t_env **env_list);
 void					put_into_args(t_command *commands);
-int						parsing_error_inputfile(t_command *commands,
-							char *filename);
-int						parsing_error_outputfile(t_command *commands);
+int						parsing_error_inputfile(t_command *commands, char *buffer);
+int						parsing_error_outputfile(t_command *commands,
+							char *buffer);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
 void					free_command_list(t_command **command_list);

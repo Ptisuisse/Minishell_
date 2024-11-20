@@ -37,33 +37,30 @@ void	append_child(t_command *command, t_env **env_list, int *pipe)
 	dup2(pipe_fd, STDOUT_FILENO);
 	close(pipe_fd);
 	choose_command_pipe(command, env_list);
+	exit(EXIT_SUCCESS);
 	return ;
 }
 
 void	append_file(t_command *command, t_env **env_list)
 {
 	int	pipe_fd[2];
-	int	pid;
 
 	if (pipe(pipe_fd) < 0)
 	{
 		perror("pipe error");
 		return ;
 	}
-	pid = fork();
-	if (pid == -1)
+	command->pid = fork();
+	if (command->pid == -1)
 	{
 		perror("fork error");
 		return ;
 	}
-	if (pid == 0)
-	{
+	if (command->pid == 0)
 		append_child(command, env_list, pipe_fd);
-		exit(EXIT_SUCCESS);
-	}
 	else
 	{
-		waitpid(pid, &command->status, 0);
+		waitpid(command->pid, &command->status, 0);
 		if (WIFEXITED(command->status))
 			command->exit_code = WEXITSTATUS(command->status);
 	}

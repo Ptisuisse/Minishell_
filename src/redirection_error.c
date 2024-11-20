@@ -12,23 +12,24 @@
 
 #include "minishell.h"
 
-int	parsing_error_inputfile(t_command *commands, char *filename)
+int	parsing_error_inputfile(t_command *commands, char *buffer)
 {
 	struct stat	filestat;
 
-	if (access(filename, F_OK) == -1)
+	commands->input_file = ft_strdup(buffer);
+	if (access(commands->input_file, F_OK) == -1)
 	{
 		commands->error_file = 1;
 		commands->error_message = ft_strdup(" No such file or directory");
 		return (2);
 	}
-	else if (access(filename, R_OK) == -1)
+	else if (access(commands->input_file, R_OK) == -1)
 	{
 		commands->error_file = 1;
 		commands->error_message = ft_strdup(" Permission denied");
 		return (1);
 	}
-	else if (stat(filename, &filestat) == 0 && S_ISDIR(filestat.st_mode))
+	else if (stat(commands->input_file, &filestat) == 0 && S_ISDIR(filestat.st_mode))
 	{
 		commands->error_file = 1;
 		commands->error_message = ft_strdup(" is a directory");
@@ -53,10 +54,14 @@ int	parsing_error_appendfile(t_command *commands)
 	return (0);
 }
 
-int	parsing_error_outputfile(t_command *commands)
+int	parsing_error_outputfile(t_command *commands, char *buffer)
 {
 	char	*filename;
+	int		fd;
 
+	commands->output_file = ft_strdup(buffer);
+	fd = open(commands->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	close(fd);
 	filename = commands->output_file;
 	if (check_file(filename, commands) > 0)
 	{

@@ -30,6 +30,7 @@ void	multiple_append_child(t_command *command)
 void	multiple_append_file(t_command *command)
 {
 	multiple_append_child(command);
+	free(command->append_file);
 	command->append_file = NULL;
 	return ;
 }
@@ -49,6 +50,7 @@ int	multiple_redirection_input(t_command *command, t_env **env_list)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
+	free(command->input_file);
 	command->input_file = NULL;
 	return (0);
 }
@@ -68,6 +70,7 @@ int	multiple_redirection_output(t_command *command, t_env **env_list)
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
+	free(command->output_file);
 	command->output_file = NULL;
 	return (0);
 }
