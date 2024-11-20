@@ -26,6 +26,7 @@ t_command	*init_command(int exit_code, t_env **env_list)
 	element->exit_code = 0;
 	element->save_in = 0;
 	element->save_out = 0;
+	// element->fd[2];
 	element->error_message = NULL;
 	element->output_file = NULL;
 	element->input_file = NULL;

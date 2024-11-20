@@ -48,15 +48,5 @@ void	check_error_file(t_command *cmd)
 		}
 		cmd = cmd->next;
 	}
-	cmd = head;
 }
 
-void	ft_close_fd(t_command *commands)
-{
-	while (commands)
-	{
-		close(commands->pipe[0]);
-		close(commands->pipe[1]);
-		commands = commands->next;
-	}
-}
