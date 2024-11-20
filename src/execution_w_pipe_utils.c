@@ -28,12 +28,12 @@ void	wait_for_commands(t_command *commands)
 		commands = commands->next;
 	}
 	commands = cmd;
-	check_error_file(cmd);
+	check_error_file(commands);
 }
 
 void	setup_pipes(t_command *commands)
 {
-	if (commands->next != NULL)
+	if (commands->next)
 	{
 		if (pipe(commands->pipe) == -1)
 		{

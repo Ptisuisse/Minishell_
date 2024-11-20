@@ -12,10 +12,24 @@
 
 #include "minishell.h"
 
+void	save_stdin_stdout(t_command *command)
+{
+	int	save_in;
+	int	save_out;
+
+	save_in = dup(STDIN_FILENO);
+	save_out = dup(STDOUT_FILENO);
+	while (command)
+	{
+		command->save_in = save_in;
+		command->save_out = save_out;
+		command = command->next;
+	}
+}
+
 void	select_type(t_command *command, t_env **list)
 {
-	command->save_in = dup(STDIN_FILENO);
-	command->save_out = dup(STDOUT_FILENO);
+	save_stdin_stdout(command);
 	if (command->next)
 		commands_pipe_manager(command, list);
 	else
@@ -28,10 +42,10 @@ void	select_type(t_command *command, t_env **list)
 	}
 	if (command->heredoc_file != NULL)
 		remove(".heredoc");
-	dup2(command->save_out, STDOUT_FILENO);
-	dup2(command->save_in, STDIN_FILENO);
-	close(command->save_in);
-	close(command->save_out);
+	// dup2(command->save_out, 1);
+	// close(command->save_out);
+	// dup2(command->save_in, 0);
+	// close(command->save_in);
 }
 
 void	start_builtins(t_command *command, t_env **env_list)

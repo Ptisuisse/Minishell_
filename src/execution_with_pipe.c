@@ -83,9 +83,6 @@ void	commands_pipe_manager(t_command *commands, t_env **env_list)
 		commands = commands->next;
 	}
 	commands = cmd;
-	// if (prev_pipe_fd != -1)
-	//{
-	//	close(prev_pipe_fd);
-	//}
-	wait_for_commands(cmd);
+	wait_for_commands(commands);
+	commands = cmd;
 }
