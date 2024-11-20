@@ -71,13 +71,15 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+void					ft_prompt(int save_exit_code, t_command *command_list,
+							t_env **env_list, char *input);
 int						validate_path(const char *path, t_command *command);
 int						process_command_path(const char *path,
 							t_command *command);
-void					cleanup(t_command **command_list, char **input);
+void					cleanup(t_command **command_list, char *input);
 void					process_commands(t_command **command_list, char *input,
 							int *save_exit_code, t_env **env_list);
-void					handle_input(char **input, int save_exit_code,
+char					*handle_input(char *input, int save_exit_code,
 							t_env **env_list, t_command **command_list);
 void					setup_environment(t_env **env_list, char **envp);
 void					handle_signal_parent(int g_received_signal);

@@ -66,7 +66,7 @@ int	handle_append_redirection(const char **input, t_command *cmd, char *buffer)
 		advance_to_end_or_pipe(input);
 		return (status);
 	}
-	open(cmd->append_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	//open(cmd->append_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	cmd->output = 3;
 	return (0);
 }
