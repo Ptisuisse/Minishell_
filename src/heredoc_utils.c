@@ -32,6 +32,7 @@ void	write_to_heredoc(int pipe_fd_read)
 		write(heredoc_fd, buffer, bytes_read);
 		bytes_read = read(pipe_fd_read, buffer, sizeof(buffer));
 	}
+	close(pipe_fd_read);
 	close(heredoc_fd);
 }
 

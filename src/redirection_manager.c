@@ -77,6 +77,7 @@ void	put_into_args(t_command *commands)
 int	process_input(t_command **command_list, char *input, int *save_exit_code,
 		t_env **env_list)
 {
+
 	if (!input || !(*input))
 		return (0);
 	if (ft_strlen(input) > 1024 && ft_strncmp(input, "echo", 4) != 0)

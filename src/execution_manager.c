@@ -12,6 +12,14 @@
 
 #include "minishell.h"
 
+void	close_backup_fd(int save_out, int save_in)
+{
+	dup2(save_out, 1);
+	close(save_out);
+	dup2(save_in, 0);
+	close(save_in);
+}
+
 void	save_stdin_stdout(t_command *command, int save_in, int save_out)
 {
 	t_command	*head;
@@ -48,12 +56,9 @@ void	select_type(t_command *command, t_env **list)
 			choose_command(command, list);
 		check_error_file(command);
 	}
-	if (command->heredoc_file != NULL)
-		remove(".heredoc");
-	dup2(save_out, 1);
-	close(save_out);
-	dup2(save_in, 0);
-	close(save_in);
+	close_backup_fd(save_out, save_in);
+	// if (command->heredoc_file != NULL)
+	// 	remove(".heredoc");
 }
 
 void	start_builtins(t_command *command, t_env **env_list)

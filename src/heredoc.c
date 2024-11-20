@@ -14,20 +14,9 @@
 
 void	heredoc_parent(t_command *command, int *pipe_fd)
 {
-	int	heredoc_fd;
-
 	close(pipe_fd[WRITE_END]);
 	write_to_heredoc(pipe_fd[READ_END]);
 	close(pipe_fd[READ_END]);
-	heredoc_fd = open(".heredoc", O_RDONLY);
-	if (heredoc_fd == -1)
-	{
-		perror("Failed to reopen .heredoc");
-		return ;
-	}
-	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
-		perror("dup2 error");
-	close(heredoc_fd);
 	if (!ft_strcmp(command->args[0], "cat") || !ft_strcmp(command->args[0],
 			"grep"))
 		put_into_args(command);
@@ -45,9 +34,7 @@ void	heredoc(t_command *command)
 {
 	int	pipe_fd[2];
 	int	pid;
-	int	stdin_backup;
 
-	stdin_backup = dup(STDIN_FILENO);
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe error");
@@ -65,8 +52,6 @@ void	heredoc(t_command *command)
 	{
 		waitpid(pid, &command->status, 0);
 		heredoc_parent(command, pipe_fd);
-		dup2(stdin_backup, STDIN_FILENO);
-		close(stdin_backup);
 	}
 }
 

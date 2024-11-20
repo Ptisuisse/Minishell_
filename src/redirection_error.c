@@ -29,7 +29,8 @@ int	parsing_error_inputfile(t_command *commands, char *buffer)
 		commands->error_message = ft_strdup(" Permission denied");
 		return (1);
 	}
-	else if (stat(commands->input_file, &filestat) == 0 && S_ISDIR(filestat.st_mode))
+	else if (stat(commands->input_file, &filestat) == 0
+		&& S_ISDIR(filestat.st_mode))
 	{
 		commands->error_file = 1;
 		commands->error_message = ft_strdup(" is a directory");

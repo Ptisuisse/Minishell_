@@ -70,6 +70,7 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
+void	close_fd(void);
 void					ft_prompt(int save_exit_code, t_command *command_list,
 							t_env **env_list, char *input);
 int						validate_path(const char *path, t_command *command);
