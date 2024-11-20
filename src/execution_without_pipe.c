@@ -29,8 +29,8 @@ int	choose_command(t_command *command, t_env **env_list)
 
 void	exec_child_process(char *cmd, char **envp, t_command *command)
 {
-	//signal(SIGINT, handle_signal_child);
-	//signal(SIGQUIT, SIG_IGN);
+	// signal(SIGINT, handle_signal_child);
+	// signal(SIGQUIT, SIG_IGN);
 	close(command->save_in);
 	close(command->save_out);
 	if (execve(cmd, command->args, envp) == -1)
@@ -60,8 +60,8 @@ int	exec_command(t_command *command, t_env **env_list)
 	else
 	{
 		ft_process_wait(command);
-		signal(SIGINT, handle_signal_parent);
-		signal(SIGQUIT, SIG_IGN);
+		// signal(SIGINT, handle_signal_parent);
+		// signal(SIGQUIT, SIG_IGN);
 	}
 	command->exit_code = WEXITSTATUS(command->status);
 	free_split(envp);
