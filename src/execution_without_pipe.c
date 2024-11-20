@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:18 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 17:34:12 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:20:19 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int	choose_command(t_command *command, t_env **env_list)
 
 void	exec_child_process(char *cmd, char **envp, t_command *command)
 {
-	// signal(SIGINT, handle_signal_child);
-	// signal(SIGQUIT, SIG_IGN);
 	close(command->save_in);
 	close(command->save_out);
 	if (execve(cmd, command->args, envp) == -1)
@@ -58,11 +56,7 @@ int	exec_command(t_command *command, t_env **env_list)
 	if (command->pid == 0)
 		exec_child_process(cmd, envp, command);
 	else
-	{
 		ft_process_wait(command);
-		// signal(SIGINT, handle_signal_parent);
-		// signal(SIGQUIT, SIG_IGN);
-	}
 	command->exit_code = WEXITSTATUS(command->status);
 	free_split(envp);
 	free(cmd);
@@ -73,7 +67,4 @@ void	ft_process_wait(t_command *command)
 {
 	if (command->pid != 0)
 		waitpid(command->pid, &command->status, 0);
-	// waitpid(command->pid, &command->status, 0);
-	// if (WIFEXITED(command->status))
-	// 	command->exit_code = WEXITSTATUS(command->status);
 }

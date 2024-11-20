@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_manager.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:04:55 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/06 11:52:05 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:19:41 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	save_stdin_stdout(t_command *command, int save_in, int save_out)
 {
-	t_command *head;
+	t_command	*head;
 
 	head = command;
 	while (command)
@@ -28,19 +28,20 @@ void	save_stdin_stdout(t_command *command, int save_in, int save_out)
 
 void	select_type(t_command *command, t_env **list)
 {
-	int save_in = dup(STDIN_FILENO);
-	int save_out = dup(STDOUT_FILENO);
+	int	save_in;
+	int	save_out;
+
+	save_in = dup(STDIN_FILENO);
+	save_out = dup(STDOUT_FILENO);
 	command->save_in = save_in;
 	command->save_out = save_out;
 	if (command->next)
 	{
-		save_stdin_stdout(command, save_in, save_out);	
+		save_stdin_stdout(command, save_in, save_out);
 		commands_pipe_manager(command, list);
 	}
 	else
 	{
-		//command->save_in = save_in;
-		//command->save_out = save_out;
 		if (command->file > 0 && command->heredoc_file == NULL)
 			redirect_management(command, list);
 		else

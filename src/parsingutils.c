@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:43 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 17:20:54 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:20:34 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_command	*init_command(int exit_code, t_env **env_list)
 	element->exit_code = 0;
 	element->save_in = 0;
 	element->save_out = 0;
-	// element->fd[2];
 	element->error_message = NULL;
 	element->output_file = NULL;
 	element->input_file = NULL;

@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:47 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 17:26:37 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:18:15 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	handle_append_redirection(const char **input, t_command *cmd, char *buffer)
 		advance_to_end_or_pipe(input);
 		return (status);
 	}
-	//open(cmd->append_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	cmd->output = 3;
 	return (0);
 }
