@@ -26,7 +26,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-static void	free_command_args(t_command *command)
+void	free_command_args(t_command *command)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ static void	free_command_args(t_command *command)
 	}
 }
 
-static void	free_command_files(t_command *command)
+void	free_command_files(t_command *command)
 {
 	if (!command)
 		return ;
@@ -67,9 +67,9 @@ static void	free_command_files(t_command *command)
 	}
 }
 
-static void	free_command_error_message(t_command *command)
+void	free_command_error_message(t_command *command)
 {
-	if (command && command->error_message)
+	if (command->error_message)
 	{
 		free(command->error_message);
 		command->error_message = NULL;
@@ -86,6 +86,12 @@ void	free_command_list(t_command **command_list)
 		free_command_args(*command_list);
 		free_command_files(*command_list);
 		free_command_error_message(*command_list);
+		if ((*command_list)->error_message)
+		{	
+			free((*command_list)->error_message);
+			(*command_list)->error_message = NULL;
+		}
+		//*command_list = NULL;
 		free(*command_list);
 		*command_list = tmp;
 	}
