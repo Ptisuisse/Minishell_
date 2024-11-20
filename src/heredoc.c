@@ -16,7 +16,6 @@ void	heredoc_parent(t_command *command, int *pipe_fd)
 {
 	int	heredoc_fd;
 
-	(void)command;
 	close(pipe_fd[WRITE_END]);
 	write_to_heredoc(pipe_fd[READ_END]);
 	close(pipe_fd[READ_END]);
