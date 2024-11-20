@@ -87,6 +87,7 @@ void	free_command_list(t_command **command_list)
 		free_command_files(*command_list);
 		free_command_error_message(*command_list);
 		free(*command_list);
+		*command_list = NULL;
 		*command_list = tmp;
 	}
 	*command_list = NULL;

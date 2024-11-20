@@ -12,10 +12,14 @@
 
 #include "minishell.h"
 
-void	append_child(t_command *command, t_env **env_list)
+void	append_child(t_command *command, t_env **env_list, int *pipe)
 {
 	int	pipe_fd;
 
+	close(command->save_in);
+	close(command->save_out);
+	close(pipe[0]);
+	close(pipe[1]);
 	pipe_fd = open(command->append_file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (pipe_fd < 0)
 	{
@@ -31,8 +35,8 @@ void	append_child(t_command *command, t_env **env_list)
 		}
 	}
 	dup2(pipe_fd, STDOUT_FILENO);
-	choose_command_pipe(command, env_list);
 	close(pipe_fd);
+	choose_command_pipe(command, env_list);
 	return ;
 }
 
@@ -54,7 +58,7 @@ void	append_file(t_command *command, t_env **env_list)
 	}
 	if (pid == 0)
 	{
-		append_child(command, env_list);
+		append_child(command, env_list, pipe_fd);
 		exit(EXIT_SUCCESS);
 	}
 	else
@@ -63,4 +67,10 @@ void	append_file(t_command *command, t_env **env_list)
 		if (WIFEXITED(command->status))
 			command->exit_code = WEXITSTATUS(command->status);
 	}
+	close(command->save_in);
+	close(command->save_out);
+	close(pipe_fd[1]);
+	close(pipe_fd[0]);
+	// close(pipe_fd[1]);
+	// close(pipe_fd[0]);
 }

@@ -20,14 +20,15 @@ void	setup_environment(t_env **env_list, char **envp)
 	create_env_list(envp, env_list);
 }
 
-void	handle_input(char **input, int save_exit_code, t_env **env_list,
+char	*handle_input(char *input, int save_exit_code, t_env **env_list,
 		t_command **command_list)
 {
-	*input = readline("Minishell > ");
-	if (!*input)
+	input = readline("Minishell > ");
+	if (input == NULL)
 		exit_cmd(*command_list, env_list, save_exit_code);
-	if (**input)
-		add_history(*input);
+	if (input && *input)
+		add_history(input);
+	return (input);
 }
 
 void	process_commands(t_command **command_list, char *input,
@@ -47,9 +48,9 @@ void	process_commands(t_command **command_list, char *input,
 	*save_exit_code = last_exitcode(*command_list);
 }
 
-void	cleanup(t_command **command_list, char **input)
+void	cleanup(t_command **command_list, char *input)
 {
 	free_command_list(command_list);
-	free(*input);
-	*input = NULL;
+	free(input);
+	input = NULL;
 }

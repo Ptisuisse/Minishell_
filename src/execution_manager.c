@@ -12,28 +12,35 @@
 
 #include "minishell.h"
 
-void	save_stdin_stdout(t_command *command)
+void	save_stdin_stdout(t_command *command, int save_in, int save_out)
 {
-	int	save_in;
-	int	save_out;
+	t_command *head;
 
-	save_in = dup(STDIN_FILENO);
-	save_out = dup(STDOUT_FILENO);
+	head = command;
 	while (command)
 	{
 		command->save_in = save_in;
 		command->save_out = save_out;
 		command = command->next;
 	}
+	command = head;
 }
 
 void	select_type(t_command *command, t_env **list)
 {
-	save_stdin_stdout(command);
+	int save_in = dup(STDIN_FILENO);
+	int save_out = dup(STDOUT_FILENO);
+	command->save_in = save_in;
+	command->save_out = save_out;
 	if (command->next)
+	{
+		save_stdin_stdout(command, save_in, save_out);	
 		commands_pipe_manager(command, list);
+	}
 	else
 	{
+		//command->save_in = save_in;
+		//command->save_out = save_out;
 		if (command->file > 0 && command->heredoc_file == NULL)
 			redirect_management(command, list);
 		else
@@ -42,10 +49,10 @@ void	select_type(t_command *command, t_env **list)
 	}
 	if (command->heredoc_file != NULL)
 		remove(".heredoc");
-	// dup2(command->save_out, 1);
-	// close(command->save_out);
-	// dup2(command->save_in, 0);
-	// close(command->save_in);
+	dup2(save_out, 1);
+	close(save_out);
+	dup2(save_in, 0);
+	close(save_in);
 }
 
 void	start_builtins(t_command *command, t_env **env_list)
