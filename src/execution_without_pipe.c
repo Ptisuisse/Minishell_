@@ -69,8 +69,11 @@ int	exec_command(t_command *command, t_env **env_list)
 	return (1);
 }
 
-void	ft_process_wait(t_command *commands)
+void	ft_process_wait(t_command *command)
 {
-	if (commands->pid != 0)
-		waitpid(commands->pid, &commands->status, 0);
+	if (command->pid != 0)
+		waitpid(command->pid, &command->status, 0);
+	// waitpid(command->pid, &command->status, 0);
+	// if (WIFEXITED(command->status))
+	// 	command->exit_code = WEXITSTATUS(command->status);
 }

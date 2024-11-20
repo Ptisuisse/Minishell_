@@ -29,6 +29,8 @@ void	close_fd(void)
 void	ft_prompt(int save_exit_code, t_command *command_list, t_env **env_list,
 		char *input)
 {
+
+	//command_list = init_command(save_exit_code, env_list);
 	while (1)
 	{
 		setup_signal_handling();

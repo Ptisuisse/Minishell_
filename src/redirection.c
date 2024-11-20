@@ -92,7 +92,6 @@ int	handle_trunc_redirection(const char **input, t_command *cmd, char *buffer)
 		advance_to_end_or_pipe(input);
 		return (status);
 	}
-	open(cmd->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	cmd->output = 4;
 	return (0);
 }
