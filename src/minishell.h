@@ -43,7 +43,6 @@ typedef struct s_env
 
 typedef struct s_command
 {
-	int					fd[2];
 	int					save_in;
 	int					save_out;
 	int					file;

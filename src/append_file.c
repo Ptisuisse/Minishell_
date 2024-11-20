@@ -69,8 +69,6 @@ void	append_file(t_command *command, t_env **env_list)
 	}
 	close(command->save_in);
 	close(command->save_out);
-	close(pipe_fd[1]);
 	close(pipe_fd[0]);
-	// close(pipe_fd[1]);
-	// close(pipe_fd[0]);
+	close(pipe_fd[1]);
 }
