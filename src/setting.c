@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 17:04:27 by lisambet          #+#    #+#             */
-/*   Updated: 2024/11/19 17:21:19 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:22:40 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,16 @@ void	cleanup(t_command **command_list, char *input)
 	free_command_list(command_list);
 	free(input);
 	input = NULL;
+}
+
+void	close_fd(void)
+{
+	int	i;
+
+	i = 3;
+	while (i < 1024)
+	{
+		close(i);
+		i++;
+	}
 }

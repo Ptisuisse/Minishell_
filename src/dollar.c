@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:01 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 17:08:58 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:17:06 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ char	*search_dollar(const char *input, t_command **command_list)
 	temp = NULL;
 	result_index = 0;
 	i = 0;
-	// while (ft_isprint(input[i]) && input[i] != ' ' && input[i] != '=')
-	// {
 	skip_quotes(input, &i);
 	temp = process_character(input, &i, &result_index, command_list);
 	if (!temp)
@@ -107,7 +105,6 @@ char	*search_dollar(const char *input, t_command **command_list)
 	result = concatenate_results(result, temp);
 	if (!result)
 		return (NULL);
-	//}
 	if (result)
 		result[result_index] = '\0';
 	return (result);

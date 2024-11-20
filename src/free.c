@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 17:11:29 by lisambet          #+#    #+#             */
-/*   Updated: 2024/11/19 17:22:30 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:17:22 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,10 @@ void	free_command_list(t_command **command_list)
 		free_command_files(*command_list);
 		free_command_error_message(*command_list);
 		if ((*command_list)->error_message)
-		{	
+		{
 			free((*command_list)->error_message);
 			(*command_list)->error_message = NULL;
 		}
-		//*command_list = NULL;
 		free(*command_list);
 		*command_list = tmp;
 	}

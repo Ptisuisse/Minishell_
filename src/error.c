@@ -6,7 +6,7 @@
 /*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:05:12 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/19 17:20:43 by lisambet         ###   ########.fr       */
+/*   Updated: 2024/11/20 10:07:33 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ char	*replace_by_exit_code(char *result, int *result_index,
 		t_command **command)
 {
 	char	*exit_code;
-	int		i;
 
-	i = 0;
 	(void)result;
 	(void)result_index;
 	exit_code = ft_itoa((*command)->exit_code);
