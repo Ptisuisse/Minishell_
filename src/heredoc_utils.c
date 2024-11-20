@@ -40,7 +40,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 {
 	char	*input;
 
-	g_received_signal = 0;
+	(void)end_of_input;
 	while (1)
 	{
 		input = readline("> ");
@@ -50,7 +50,8 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 			close(pipe_fd_write);
 			exit(EXIT_FAILURE);
 		}
-		if (ft_strcmp(input, end_of_input) == 0)
+		if (ft_strcmp(input, end_of_input) == 0
+			&& ft_strlen(input) == ft_strlen(end_of_input))
 		{
 			free(input);
 			break ;

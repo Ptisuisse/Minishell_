@@ -72,6 +72,12 @@ void	commands_pipe_manager(t_command *commands, t_env **env_list)
 	cmd = commands;
 	while (commands)
 	{
+		if (commands->heredoc_file != NULL && commands->next == NULL)
+		{
+			if (commands->next == NULL && commands->heredoc_file != NULL)
+				choose_command(commands, env_list);
+			close_backup_fd(commands->save_out, commands->save_in);
+		}
 		if (commands->error_file > 0)
 		{
 			if (commands->next != NULL)
@@ -84,5 +90,4 @@ void	commands_pipe_manager(t_command *commands, t_env **env_list)
 	}
 	commands = cmd;
 	wait_for_commands(commands);
-	commands = cmd;
 }

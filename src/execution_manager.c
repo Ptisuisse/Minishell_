@@ -57,8 +57,8 @@ void	select_type(t_command *command, t_env **list)
 		check_error_file(command);
 	}
 	close_backup_fd(save_out, save_in);
-	// if (command->heredoc_file != NULL)
-	// 	remove(".heredoc");
+	if (command->heredoc_file != NULL)
+		remove(".heredoc");
 }
 
 void	start_builtins(t_command *command, t_env **env_list)
@@ -91,5 +91,4 @@ void	check_heredoc(t_command *command)
 			heredoc(command);
 		command = command->next;
 	}
-	command = head;
 }

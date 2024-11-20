@@ -70,7 +70,7 @@ typedef struct s_data
 	t_command			*command;
 }						t_data;
 
-void	close_fd(void);
+void					close_fd(void);
 void					ft_prompt(int save_exit_code, t_command *command_list,
 							t_env **env_list, char *input);
 int						validate_path(const char *path, t_command *command);
@@ -346,11 +346,13 @@ int						choose_command_pipe(t_command *command,
 							t_env **env_list);
 void					exec_pipe_command(t_command *command, t_env **env_list);
 void					put_into_args(t_command *commands);
-int						parsing_error_inputfile(t_command *commands, char *buffer);
+int						parsing_error_inputfile(t_command *commands,
+							char *buffer);
 int						parsing_error_outputfile(t_command *commands,
 							char *buffer);
 void					select_type(t_command *command, t_env **list);
 void					setup_signal_handling(void);
 void					free_command_list(t_command **command_list);
+void					close_backup_fd(int save_out, int save_in);
 
 #endif
