@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-slu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lisambet <lisambet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 16:24:27 by lvan-slu          #+#    #+#             */
-/*   Updated: 2024/11/14 16:24:36 by lvan-slu         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:12:27 by lisambet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	read_heredoc(int pipe_fd_write, const char *end_of_input)
 			close(pipe_fd_write);
 			exit(EXIT_FAILURE);
 		}
-		if (strcmp(input, end_of_input) == 0)
+		if (ft_strcmp(input, end_of_input) == 0)
 		{
 			free(input);
 			break ;
