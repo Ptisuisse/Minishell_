@@ -32,7 +32,6 @@ int	redirect_input(t_command *commands, t_env **env_list)
 	char	*filename;
 	int		fd;
 
-	(void)env_list;
 	filename = commands->input_file;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)

@@ -27,7 +27,9 @@ int	main(int argc, char **argv, char **envp)
 	save_exit_code = 0;
 	(void)argc;
 	(void)argv;
-	setup_environment(&env_list, envp);
+	create_env_list(envp, &env_list);
+	command_list = NULL;
+	command_list = init_command(0, &env_list);
 	while (1)
 	{
 		setup_signal_handling();
